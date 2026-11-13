@@ -22,7 +22,6 @@ import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { loadToastSettings } from "./util-frontend";
 import DOMPurify from "dompurify";
-import { createSemanticProjector } from "@agent-om/core";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
@@ -71,13 +70,18 @@ const semanticContext = () => {
         state,
     };
 };
-const semanticProjector = createSemanticProjector({ context: semanticContext });
-window.__semanticUI = semanticProjector;
-router.afterEach(() => semanticProjector.refresh());
-vm.$watch(
-    () => [vm.loggedIn, vm.allowLoginDialog, vm.socket.connected, vm.socket.firstConnect],
-    () => semanticProjector.refresh()
-);
+// Built with AGENT_OM=off (the benchmark's patched-off build), the app has no projector.
+if (import.meta.env.VITE_AGENT_OM !== "off") {
+    import("@agent-om/core").then(({ createSemanticProjector }) => {
+        const semanticProjector = createSemanticProjector({ context: semanticContext });
+        window.__semanticUI = semanticProjector;
+        router.afterEach(() => semanticProjector.refresh());
+        vm.$watch(
+            () => [vm.loggedIn, vm.allowLoginDialog, vm.socket.connected, vm.socket.firstConnect],
+            () => semanticProjector.refresh()
+        );
+    });
+}
 
 // Service Worker
 // Mainly for Webpush notification

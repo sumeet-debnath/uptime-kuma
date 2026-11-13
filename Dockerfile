@@ -5,9 +5,18 @@ FROM node:22-bookworm-slim AS build
 WORKDIR /app
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 COPY .npmrc package.json package-lock.json ./
+# the Agent Object Model's core, packed (package.json installs it from here)
+COPY vendor vendor
 RUN npm ci
 COPY . .
-RUN npm run build && npm prune --omit=dev
+# AGENT_OM=off: the guideline changes without the Agent Object Model's projector or its sitemap
+ARG AGENT_OM=on
+ENV VITE_AGENT_OM=$AGENT_OM
+RUN if [ "$AGENT_OM" = off ]; then \
+        sed -i '/rel="semantic-sitemap"/d' index.html && rm public/semantic-sitemap.json && \
+        npx vite build --config ./config/vite.config.js; \
+    else npm run build; fi && \
+    npm prune --omit=dev
 
 FROM louislam/uptime-kuma:base2-slim
 WORKDIR /app
