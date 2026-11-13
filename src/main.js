@@ -21,6 +21,7 @@ import timezone from "./modules/dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { loadToastSettings } from "./util-frontend";
+import { watchMultiselects } from "./util-multiselect-a11y";
 import DOMPurify from "dompurify";
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -52,6 +53,9 @@ app.component("Editable", contenteditable);
 app.component("FontAwesomeIcon", FontAwesomeIcon);
 
 const vm = app.mount("#app");
+
+// vue-multiselect's own markup hides its choices from accessibility: corrected by attributes alone
+watchMultiselects();
 
 // The Agent Object Model's projector, with the screen (from the route) and its state
 // as context. window.__semanticUI is where agents and the audit find it.

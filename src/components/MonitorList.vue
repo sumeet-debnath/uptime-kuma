@@ -147,6 +147,7 @@
                         ? $t("monitorListStatusAria", [
                               sortedMonitorList.length,
                               Object.values($root.monitorList).filter((m) => !m.parent).length,
+                              Object.values($root.monitorList).filter((m) => m.parent).length,
                           ])
                         : $t("monitorListNoMatchAria")
                 }}
