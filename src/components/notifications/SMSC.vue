@@ -7,10 +7,11 @@
             </template>
         </i18n-t>
         <input id="smsc-login" v-model="$parent.notification.smscLogin" type="text" class="form-control" required />
-        <label for="smsc-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="smsc-key-label" for="smsc-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="smsc-key"
             v-model="$parent.notification.smscPassword"
+            labelledby="smsc-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -42,9 +43,10 @@
             type="text"
             minlength="1"
             maxlength="15"
+            aria-describedby="smsc-sender-name-hint"
             class="form-control"
         />
-        <div class="form-text">{{ $t("Leave blank to use a shared sender number.") }}</div>
+        <div id="smsc-sender-name-hint" class="form-text">{{ $t("Leave blank to use a shared sender number.") }}</div>
     </div>
     <div class="mb-3">
         <label for="smsc-platform" class="form-label">{{ $t("smscTranslit") }}</label>

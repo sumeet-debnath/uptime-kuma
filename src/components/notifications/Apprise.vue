@@ -1,8 +1,15 @@
 <template>
     <div class="mb-3">
         <label for="apprise-url" class="form-label">{{ $t("Apprise URL") }}</label>
-        <input id="apprise-url" v-model="$parent.notification.appriseURL" type="text" class="form-control" required />
-        <div class="form-text">
+        <input
+            id="apprise-url"
+            v-model="$parent.notification.appriseURL"
+            type="text"
+            class="form-control"
+            required
+            aria-describedby="apprise-url-hint"
+        />
+        <div id="apprise-url-hint" class="form-text">
             <p>{{ $t("Example:", ["twilio://AccountSid:AuthToken@FromPhoneNo"]) }}</p>
             <i18n-t tag="p" keypath="Read more:">
                 <a href="https://github.com/caronc/apprise/wiki#notification-services" target="_blank">

@@ -7,8 +7,10 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="teams-webhookurl-hint"
+            data-agentom-redact
         />
-        <i18n-t tag="div" keypath="wayToGetTeamsURL" class="form-text">
+        <i18n-t id="teams-webhookurl-hint" tag="div" keypath="wayToGetTeamsURL" class="form-text">
             <a
                 href="https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook"
                 target="_blank"
@@ -20,11 +22,17 @@
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.teamsEnableTags" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("teamsEnableTags") }}</label>
+            <input
+                v-model="$parent.notification.teamsEnableTags"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="teams-enable-tags-label"
+                aria-describedby="teams-enable-tags-hint"
+            />
+            <label id="teams-enable-tags-label" class="form-check-label">{{ $t("teamsEnableTags") }}</label>
         </div>
 
-        <div class="form-text">
+        <div id="teams-enable-tags-hint" class="form-text">
             {{ $t("teamsEnableTagsDescription") }}
         </div>
     </div>

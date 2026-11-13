@@ -1,24 +1,26 @@
 <template>
     <div class="mb-3">
-        <label for="heiioncall-apikey" class="form-label">
+        <label id="heiioncall-apikey-label" for="heiioncall-apikey" class="form-label">
             {{ $t("API Key") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="heiioncall-apikey"
             v-model="$parent.notification.heiiOnCallApiKey"
+            labelledby="heiioncall-apikey-label"
             required="true"
             autocomplete="false"
         ></HiddenInput>
     </div>
     <div class="mb-3">
-        <label for="heiioncall-trigger-id" class="form-label">
+        <label id="heiioncall-trigger-id-label" for="heiioncall-trigger-id" class="form-label">
             Trigger ID
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="heiioncall-trigger-id"
             v-model="$parent.notification.heiiOnCallTriggerId"
+            labelledby="heiioncall-trigger-id-label"
             required="true"
             autocomplete="false"
         ></HiddenInput>

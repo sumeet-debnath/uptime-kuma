@@ -5,11 +5,23 @@
                 {{ $t("Not available, please setup.") }}
             </p>
 
-            <ul class="list-group mb-3" style="border-radius: 1rem">
+            <ul
+                class="list-group mb-3"
+                style="border-radius: 1rem"
+                :aria-label="$t('settingsListAria', [$t('Remote Browsers')])"
+            >
                 <li v-for="(remoteBrowser, index) in $root.remoteBrowserList" :key="index" class="list-group-item">
                     {{ remoteBrowser.name }}
                     <br />
-                    <a href="#" @click="$refs.remoteBrowserDialog.show(remoteBrowser.id)">{{ $t("Edit") }}</a>
+                    <a
+                        href="#"
+                        role="button"
+                        :aria-label="$t('editNamedAria', [remoteBrowser.name])"
+                        :data-agentom-id="`remote-browser.${remoteBrowser.id}.edit`"
+                        @click="$refs.remoteBrowserDialog.show(remoteBrowser.id)"
+                    >
+                        {{ $t("Edit") }}
+                    </a>
                 </li>
             </ul>
 

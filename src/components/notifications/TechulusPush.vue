@@ -1,9 +1,10 @@
 <template>
     <div class="mb-3">
-        <label for="push-api-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="push-api-key-label" for="push-api-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="push-api-key"
             v-model="$parent.notification.pushAPIKey"
+            labelledby="push-api-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -22,15 +23,21 @@
             type="text"
             class="form-control"
             pattern="[A-Za-z0-9-]+"
+            aria-describedby="techuluspush-channel-hint"
         />
-        <div class="form-text">
+        <div id="techuluspush-channel-hint" class="form-text">
             {{ $t("Alphanumerical string and hyphens only") }}
         </div>
     </div>
 
     <div class="mb-3">
         <label for="push-api-sound" class="form-label">{{ $t("Sound") }}</label>
-        <select id="push-api-sound" v-model="$parent.notification.pushSound" class="form-select">
+        <select
+            id="push-api-sound"
+            v-model="$parent.notification.pushSound"
+            class="form-select"
+            aria-describedby="techuluspush-sound-hint"
+        >
             <option value="default">{{ $t("Default") }}</option>
             <option value="arcade">{{ $t("Arcade") }}</option>
             <option value="correct">{{ $t("Correct") }}</option>
@@ -47,17 +54,25 @@
             <option value="guitar">{{ $t("Guitar") }}</option>
             <option value="pop">{{ $t("Pop") }}</option>
         </select>
-        <div class="form-text">
+        <div id="techuluspush-sound-hint" class="form-text">
             {{ $t("Custom sound to override default notification sound") }}
         </div>
     </div>
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.pushTimeSensitive" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("Time Sensitive (iOS Only)") }}</label>
+            <input
+                v-model="$parent.notification.pushTimeSensitive"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="techuluspush-time-sensitive-label"
+                aria-describedby="techuluspush-time-sensitive-hint"
+            />
+            <label id="techuluspush-time-sensitive-label" class="form-check-label">
+                {{ $t("Time Sensitive (iOS Only)") }}
+            </label>
         </div>
-        <div class="form-text">
+        <div id="techuluspush-time-sensitive-hint" class="form-text">
             {{
                 $t(
                     "Time sensitive notifications will be delivered immediately, even if the device is in do not disturb mode."

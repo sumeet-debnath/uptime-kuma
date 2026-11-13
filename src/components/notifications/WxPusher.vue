@@ -1,14 +1,16 @@
 <template>
     <div class="mb-3">
-        <label for="wxpusher-spt" class="form-label">WxPusher SPT</label>
+        <label id="wxpusher-spt-label" for="wxpusher-spt" class="form-label">WxPusher SPT</label>
         <HiddenInput
             id="wxpusher-spt"
             v-model="$parent.notification.wxpusherSPT"
+            labelledby="wxpusher-spt-label"
+            describedby="wxpusher-spt-hint"
             :required="true"
             autocomplete="new-password"
             placeholder="SPT_xxxxxxxxxxxx"
         ></HiddenInput>
-        <div class="form-text">
+        <div id="wxpusher-spt-hint" class="form-text">
             <i18n-t tag="p" keypath="wxPusherSptDescription">
                 <template #download>
                     <a

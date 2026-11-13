@@ -8,11 +8,23 @@
                 {{ $t("notificationDescription") }}
             </p>
 
-            <ul class="list-group mb-3" style="border-radius: 1rem">
+            <ul
+                class="list-group mb-3"
+                style="border-radius: 1rem"
+                :aria-label="$t('settingsListAria', [$t('Notifications')])"
+            >
                 <li v-for="(notification, index) in $root.notificationList" :key="index" class="list-group-item">
                     {{ notification.name }}
                     <br />
-                    <a href="#" @click="$refs.notificationDialog.show(notification.id)">{{ $t("Edit") }}</a>
+                    <a
+                        href="#"
+                        role="button"
+                        :aria-label="$t('editNamedAria', [notification.name])"
+                        :data-agentom-id="`notification.${notification.id}.edit`"
+                        @click="$refs.notificationDialog.show(notification.id)"
+                    >
+                        {{ $t("Edit") }}
+                    </a>
                 </li>
             </ul>
 
@@ -58,17 +70,22 @@
             <h5 class="my-4 settings-subheading">{{ $t("settingsCertificateExpiry") }}</h5>
             <p>{{ $t("certificationExpiryDescription") }}</p>
             <p>{{ $t("notificationDescription") }}</p>
-            <div class="mt-1 mb-3 ps-2 cert-exp-days col-12 col-xl-6">
+            <div
+                class="mt-1 mb-3 ps-2 cert-exp-days col-12 col-xl-6"
+                role="list"
+                :aria-label="$t('settingsCertificateExpiry')"
+            >
                 <div
                     v-for="day in settings.tlsExpiryNotifyDays"
                     :key="day"
                     class="d-flex align-items-center justify-content-between cert-exp-day-row py-2"
+                    role="listitem"
                 >
                     <span>{{ $t("days", day) }}</span>
                     <button
                         type="button"
                         class="btn-rm-expiry btn btn-outline-danger ms-2 py-1"
-                        :aria-label="$t('Remove the expiry notification')"
+                        :aria-label="$t('removeExpiryDayAria', [$t('days', day), $t('settingsCertificateExpiry')])"
                         @click="removeTlsExpiryNotifDay(day)"
                     >
                         <font-awesome-icon icon="times" />
@@ -79,14 +96,22 @@
                 <ActionInput
                     v-model="tlsExpiryNotifInput"
                     :type="'number'"
+                    :input-aria-label="`${$t('expiryDayInputAria')}: ${$t('settingsCertificateExpiry')}`"
                     :placeholder="$t('days', 1)"
                     :icon="'plus'"
                     :action="() => addTlsExpiryNotifDay(tlsExpiryNotifInput)"
-                    :action-aria-label="$t('Add a new expiry notification day')"
+                    :action-aria-label="`${$t('Add a new expiry notification day')}: ${$t('settingsCertificateExpiry')}`"
                 />
             </div>
             <div>
-                <button class="btn btn-primary" type="button" @click="saveSettings()">
+                <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-agentom-id="settings.notifications.save-tls"
+                    data-agentom-action="save-settings"
+                    aria-describedby="settings-save-all-hint"
+                    @click="saveSettings()"
+                >
                     {{ $t("Save") }}
                 </button>
             </div>
@@ -96,17 +121,22 @@
             <h5 class="my-4 settings-subheading">{{ $t("settingsDomainExpiry") }}</h5>
             <p>{{ $t("domainExpiryDescription") }}</p>
             <p>{{ $t("notificationDescription") }}</p>
-            <div class="mt-1 mb-3 ps-2 cert-exp-days col-12 col-xl-6">
+            <div
+                class="mt-1 mb-3 ps-2 cert-exp-days col-12 col-xl-6"
+                role="list"
+                :aria-label="$t('settingsDomainExpiry')"
+            >
                 <div
                     v-for="day in settings.domainExpiryNotifyDays"
                     :key="day"
                     class="d-flex align-items-center justify-content-between cert-exp-day-row py-2"
+                    role="listitem"
                 >
                     <span>{{ $t("days", day) }}</span>
                     <button
                         type="button"
                         class="btn-rm-expiry btn btn-outline-danger ms-2 py-1"
-                        :aria-label="$t('Remove the expiry notification')"
+                        :aria-label="$t('removeExpiryDayAria', [$t('days', day), $t('settingsDomainExpiry')])"
                         @click="removeDomainExpiryNotifDay(day)"
                     >
                         <font-awesome-icon icon="times" />
@@ -117,18 +147,28 @@
                 <ActionInput
                     v-model="domainExpiryNotifInput"
                     :type="'number'"
+                    :input-aria-label="`${$t('expiryDayInputAria')}: ${$t('settingsDomainExpiry')}`"
                     :placeholder="$t('days', 1)"
                     :icon="'plus'"
                     :action="() => addDomainExpiryNotifDay(domainExpiryNotifInput)"
-                    :action-aria-label="$t('Add a new expiry notification day')"
+                    :action-aria-label="`${$t('Add a new expiry notification day')}: ${$t('settingsDomainExpiry')}`"
                 />
             </div>
             <div>
-                <button class="btn btn-primary" type="button" @click="saveSettings()">
+                <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-agentom-id="settings.notifications.save-domain"
+                    data-agentom-action="save-settings"
+                    aria-describedby="settings-save-all-hint"
+                    @click="saveSettings()"
+                >
                     {{ $t("Save") }}
                 </button>
             </div>
         </div>
+
+        <span id="settings-save-all-hint" hidden>{{ $t("saveAllSettingsAria") }}</span>
 
         <NotificationDialog ref="notificationDialog" />
     </div>

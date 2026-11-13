@@ -1,9 +1,10 @@
 <template>
     <div class="mb-3">
-        <label for="splunk-rest-url" class="form-label">{{ $t("Splunk Rest URL") }}</label>
+        <label id="splunk-rest-url-label" for="splunk-rest-url" class="form-label">{{ $t("Splunk Rest URL") }}</label>
         <HiddenInput
             id="splunk-rest-url"
             v-model="$parent.notification.splunkRestURL"
+            labelledby="splunk-rest-url-label"
             :required="true"
             autocomplete="false"
         ></HiddenInput>

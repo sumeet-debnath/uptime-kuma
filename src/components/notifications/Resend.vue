@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="resend-api-key" class="form-label">{{ $t("resendApiKey") }}</label>
+        <label id="resend-api-key-label" for="resend-api-key" class="form-label">{{ $t("resendApiKey") }}</label>
         <HiddenInput
             id="resend-api-key"
             v-model="$parent.notification.resendApiKey"
+            labelledby="resend-api-key-label"
+            describedby="resend-api-key-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="resendApiHelp" class="form-text">
+        <i18n-t id="resend-api-key-hint" tag="div" keypath="resendApiHelp" class="form-text">
             <a href="https://resend.com/api-keys" target="_blank">https://resend.com/api-keys</a>
         </i18n-t>
     </div>
@@ -23,8 +25,14 @@
     </div>
     <div class="mb-3">
         <label for="resend-from-name" class="form-label">{{ $t("resendFromName") }}</label>
-        <input id="resend-from-name" v-model="$parent.notification.resendFromName" type="text" class="form-control" />
-        <div class="form-text">{{ $t("resendLeaveBlankForDefaultName") }}</div>
+        <input
+            id="resend-from-name"
+            v-model="$parent.notification.resendFromName"
+            type="text"
+            class="form-control"
+            aria-describedby="resend-from-name-hint"
+        />
+        <div id="resend-from-name-hint" class="form-text">{{ $t("resendLeaveBlankForDefaultName") }}</div>
     </div>
     <div class="mb-3">
         <label for="resend-to-email" class="form-label">{{ $t("resendToEmail") }}</label>
@@ -38,8 +46,16 @@
     </div>
     <div class="mb-3">
         <label for="resend-subject" class="form-label">{{ $t("resendSubject") }}</label>
-        <input id="resend-subject" v-model="$parent.notification.resendSubject" type="text" class="form-control" />
-        <small class="form-text text-muted">{{ $t("resendLeaveBlankForDefaultSubject") }}</small>
+        <input
+            id="resend-subject"
+            v-model="$parent.notification.resendSubject"
+            type="text"
+            class="form-control"
+            aria-describedby="resend-subject-hint"
+        />
+        <small id="resend-subject-hint" class="form-text text-muted">
+            {{ $t("resendLeaveBlankForDefaultSubject") }}
+        </small>
     </div>
     <i18n-t tag="p" keypath="More info on:" style="margin-top: 8px">
         <a href="https://resend.com/docs/dashboard/emails/introduction" target="_blank">

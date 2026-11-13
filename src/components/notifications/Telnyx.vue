@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="telnyx-api-key" class="form-label">{{ $t("telnyxApiKey") }}</label>
+        <label id="telnyx-api-key-label" for="telnyx-api-key" class="form-label">{{ $t("telnyxApiKey") }}</label>
         <HiddenInput
             id="telnyx-api-key"
             v-model="$parent.notification.telnyxApiKey"
+            labelledby="telnyx-api-key-label"
+            describedby="telnyx-api-key-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <div class="form-text">{{ $t("telnyxApiKeyHelptext") }}</div>
+        <div id="telnyx-api-key-hint" class="form-text">{{ $t("telnyxApiKeyHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -19,8 +21,9 @@
             class="form-control"
             placeholder="+15551234567"
             required
+            aria-describedby="telnyx-phone-number-hint"
         />
-        <div class="form-text">{{ $t("telnyxPhoneNumberHelptext") }}</div>
+        <div id="telnyx-phone-number-hint" class="form-text">{{ $t("telnyxPhoneNumberHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -32,8 +35,9 @@
             class="form-control"
             placeholder="+15559876543"
             required
+            aria-describedby="telnyx-to-number-hint"
         />
-        <div class="form-text">{{ $t("telnyxToNumberHelptext") }}</div>
+        <div id="telnyx-to-number-hint" class="form-text">{{ $t("telnyxToNumberHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -43,8 +47,9 @@
             v-model="$parent.notification.telnyxMessagingProfileId"
             type="text"
             class="form-control"
+            aria-describedby="telnyx-messaging-profile-id-hint"
         />
-        <div class="form-text">{{ $t("telnyxMessagingProfileIdHelptext") }}</div>
+        <div id="telnyx-messaging-profile-id-hint" class="form-text">{{ $t("telnyxMessagingProfileIdHelptext") }}</div>
     </div>
 
     <div class="mb-3">

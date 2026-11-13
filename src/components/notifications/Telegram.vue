@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="telegram-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
+        <label id="telegram-bot-token-label" for="telegram-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
         <HiddenInput
             id="telegram-bot-token"
             v-model="$parent.notification.telegramBotToken"
+            labelledby="telegram-bot-token-label"
+            describedby="telegram-bot-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="wayToGetTelegramToken" class="form-text">
+        <i18n-t id="telegram-bot-token-hint" tag="div" keypath="wayToGetTelegramToken" class="form-text">
             <a href="https://t.me/BotFather" target="_blank">https://t.me/BotFather</a>
         </i18n-t>
     </div>
@@ -22,6 +24,7 @@
                 type="text"
                 class="form-control"
                 required
+                aria-describedby="telegram-chat-id-hint"
             />
             <button
                 v-if="$parent.notification.telegramBotToken"
@@ -33,7 +36,7 @@
             </button>
         </div>
 
-        <div class="form-text">
+        <div id="telegram-chat-id-hint" class="form-text">
             {{ $t("supportTelegramChatID") }}
 
             <p style="margin-top: 8px">
@@ -53,12 +56,19 @@
             v-model="$parent.notification.telegramMessageThreadID"
             type="text"
             class="form-control"
+            aria-describedby="telegram-message-thread-id-hint"
         />
-        <p class="form-text">{{ $t("telegramMessageThreadIDDescription") }}</p>
+        <p id="telegram-message-thread-id-hint" class="form-text">{{ $t("telegramMessageThreadIDDescription") }}</p>
 
         <label for="server_url" class="form-label">{{ $t("telegramServerUrl") }}</label>
-        <input id="server_url" v-model="$parent.notification.telegramServerUrl" type="text" class="form-control" />
-        <div class="form-text">
+        <input
+            id="server_url"
+            v-model="$parent.notification.telegramServerUrl"
+            type="text"
+            class="form-control"
+            aria-describedby="telegram-server-url-hint"
+        />
+        <div id="telegram-server-url-hint" class="form-text">
             <i18n-t keypath="telegramServerUrlDescription">
                 <a href="https://core.telegram.org/bots/api#using-a-local-bot-api-server" target="_blank">
                     {{ $t("here") }}
@@ -70,11 +80,17 @@
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.telegramUseTemplate" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("telegramUseTemplate") }}</label>
+            <input
+                v-model="$parent.notification.telegramUseTemplate"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="telegram-use-template-label"
+                aria-describedby="telegram-use-template-hint"
+            />
+            <label id="telegram-use-template-label" class="form-check-label">{{ $t("telegramUseTemplate") }}</label>
         </div>
 
-        <div class="form-text">
+        <div id="telegram-use-template-hint" class="form-text">
             {{ $t("telegramUseTemplateDescription") }}
         </div>
     </div>
@@ -87,12 +103,13 @@
                 v-model="$parent.notification.telegramTemplateParseMode"
                 class="form-select"
                 required
+                aria-describedby="telegram-parse-mode-hint"
             >
                 <option value="plain">{{ $t("Plain Text") }}</option>
                 <option value="HTML">HTML</option>
                 <option value="MarkdownV2">MarkdownV2</option>
             </select>
-            <i18n-t tag="p" keypath="telegramTemplateFormatDescription" class="form-text">
+            <i18n-t id="telegram-parse-mode-hint" tag="p" keypath="telegramTemplateFormatDescription" class="form-text">
                 <a href="https://core.telegram.org/bots/api#formatting-options" target="_blank">
                     {{ $t("documentation") }}
                 </a>
@@ -110,22 +127,36 @@
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.telegramSendSilently" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("telegramSendSilently") }}</label>
+            <input
+                v-model="$parent.notification.telegramSendSilently"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="telegram-send-silently-label"
+                aria-describedby="telegram-send-silently-hint"
+            />
+            <label id="telegram-send-silently-label" class="form-check-label">{{ $t("telegramSendSilently") }}</label>
         </div>
 
-        <div class="form-text">
+        <div id="telegram-send-silently-hint" class="form-text">
             {{ $t("telegramSendSilentlyDescription") }}
         </div>
     </div>
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.telegramProtectContent" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("telegramProtectContent") }}</label>
+            <input
+                v-model="$parent.notification.telegramProtectContent"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="telegram-protect-content-label"
+                aria-describedby="telegram-protect-content-hint"
+            />
+            <label id="telegram-protect-content-label" class="form-check-label">
+                {{ $t("telegramProtectContent") }}
+            </label>
         </div>
 
-        <div class="form-text">
+        <div id="telegram-protect-content-hint" class="form-text">
             {{ $t("telegramProtectContentDescription") }}
         </div>
     </div>

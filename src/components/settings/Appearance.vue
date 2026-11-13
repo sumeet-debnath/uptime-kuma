@@ -11,9 +11,9 @@
             </select>
         </div>
         <div class="my-4">
-            <label for="timezone" class="form-label">{{ $t("Theme") }}</label>
+            <label id="theme-label" class="form-label">{{ $t("Theme") }}</label>
             <div>
-                <div class="btn-group" role="group" :aria-label="$t('Basic checkbox toggle button group')">
+                <div class="btn-group" role="group" aria-labelledby="theme-label">
                     <input
                         id="btncheck1"
                         v-model="$root.userTheme"
@@ -56,9 +56,9 @@
             </div>
         </div>
         <div class="my-4">
-            <label class="form-label">{{ $t("Theme - Heartbeat Bar") }}</label>
+            <label id="heartbeat-bar-theme-label" class="form-label">{{ $t("Theme - Heartbeat Bar") }}</label>
             <div>
-                <div class="btn-group" role="group" :aria-label="$t('Basic checkbox toggle button group')">
+                <div class="btn-group" role="group" aria-labelledby="heartbeat-bar-theme-label">
                     <input
                         id="btncheck4"
                         v-model="$root.userHeartbeatBar"
@@ -103,9 +103,9 @@
 
         <!-- Timeline -->
         <div class="my-4">
-            <label class="form-label">{{ $t("styleElapsedTime") }}</label>
+            <label id="elapsed-time-label" class="form-label">{{ $t("styleElapsedTime") }}</label>
             <div>
-                <div class="btn-group" role="group">
+                <div class="btn-group" role="group" aria-labelledby="elapsed-time-label">
                     <input
                         id="styleElapsedTimeShowNoLine"
                         v-model="$root.styleElapsedTime"

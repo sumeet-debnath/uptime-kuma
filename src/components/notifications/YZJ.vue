@@ -10,6 +10,7 @@
             type="url"
             class="form-control"
             required
+            data-agentom-redact
         />
         <i18n-t class="form-text" keypath="wayToGetTeamsURL">
             <a href="https://www.yunzhijia.com/opendocs/docs.html#/tutorial/index/robot" target="_blank">
@@ -18,13 +19,14 @@
         </i18n-t>
     </div>
     <div class="mb-3">
-        <label for="yzjToken" class="form-label">
+        <label id="yzjToken-label" for="yzjToken" class="form-label">
             {{ $t("YZJ Robot Token") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="yzjToken"
             v-model="$parent.notification.yzjToken"
+            labelledby="yzjToken-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

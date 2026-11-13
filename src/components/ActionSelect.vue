@@ -1,6 +1,14 @@
 <template>
     <div class="input-group mb-3">
-        <select :id="id" ref="select" v-model="model" class="form-select" :disabled="disabled" :required="required">
+        <select
+            :id="id"
+            ref="select"
+            v-model="model"
+            class="form-select"
+            :aria-labelledby="selectLabelledby || undefined"
+            :disabled="disabled"
+            :required="required"
+        >
             <option v-for="option in options" :key="option" :value="option.value" :disabled="option.disabled">
                 {{ option.label }}
             </option>
@@ -24,6 +32,11 @@
  */
 export default {
     props: {
+        /** The id of an element that names the select, when no label's `for` does */
+        selectLabelledby: {
+            type: String,
+            default: null,
+        },
         options: {
             type: Array,
             default: () => [],

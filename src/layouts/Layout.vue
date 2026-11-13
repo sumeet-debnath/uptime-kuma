@@ -40,20 +40,39 @@
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
-                    <router-link to="/dashboard" class="nav-link">
+                    <router-link
+                        to="/dashboard"
+                        class="nav-link"
+                        :aria-current="
+                            $route.path === '/dashboard'
+                                ? 'page'
+                                : $route.matched.some((r) => r.name === 'DashboardHome')
+                                  ? 'true'
+                                  : undefined
+                        "
+                    >
                         <font-awesome-icon icon="tachometer-alt" />
                         {{ $t("Dashboard") }}
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item">
                     <div class="dropdown dropdown-profile-pic">
-                        <div class="nav-link" data-bs-toggle="dropdown">
+                        <div
+                            class="nav-link"
+                            data-bs-toggle="dropdown"
+                            role="button"
+                            aria-expanded="false"
+                            aria-controls="header-account-menu"
+                            :aria-label="$t('accountMenuAria')"
+                            aria-describedby="header-account-menu-choices"
+                            data-agentom-id="header.account-menu"
+                        >
                             <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
                             <font-awesome-icon icon="angle-down" />
                         </div>
 
                         <!-- Header's Dropdown Menu -->
-                        <ul class="dropdown-menu">
+                        <ul id="header-account-menu" class="dropdown-menu">
                             <!-- Username -->
                             <li>
                                 <i18n-t
@@ -88,6 +107,13 @@
                                     to="/settings/general"
                                     class="dropdown-item"
                                     :class="{ active: $route.path.includes('settings') }"
+                                    :aria-current="
+                                        $route.path === '/settings/general'
+                                            ? 'page'
+                                            : $route.path.includes('settings')
+                                              ? 'true'
+                                              : undefined
+                                    "
                                 >
                                     <font-awesome-icon icon="cog" />
                                     {{ $t("Settings") }}
@@ -112,6 +138,18 @@
                                 </button>
                             </li>
                         </ul>
+                        <span id="header-account-menu-choices" hidden>
+                            {{
+                                $t("choicesAria", [
+                                    [
+                                        $t("Maintenance"),
+                                        $t("Settings"),
+                                        $t("Help"),
+                                        ...($root.loggedIn && $root.socket.token !== "autoLogin" ? [$t("Logout")] : []),
+                                    ].join(", "),
+                                ])
+                            }}
+                        </span>
                     </div>
                 </li>
             </ul>
@@ -158,6 +196,7 @@
             v-if="numActiveToasts != 0"
             type="button"
             class="btn btn-normal clear-all-toast-btn"
+            :aria-label="$t('clearAllNoticesAria')"
             @click="clearToasts"
         >
             <font-awesome-icon icon="times" />

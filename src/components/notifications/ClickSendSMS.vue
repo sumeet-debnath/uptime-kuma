@@ -11,10 +11,11 @@
             class="form-control"
             required
         />
-        <label for="clicksendsms-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="clicksendsms-key-label" for="clicksendsms-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="clicksendsms-key"
             v-model="$parent.notification.clicksendsmsPassword"
+            labelledby="clicksendsms-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -56,8 +57,11 @@
             minlength="3"
             maxlength="11"
             class="form-control"
+            aria-describedby="clicksendsms-sender-name-hint"
         />
-        <div class="form-text">{{ $t("Leave blank to use a shared sender number.") }}</div>
+        <div id="clicksendsms-sender-name-hint" class="form-text">
+            {{ $t("Leave blank to use a shared sender number.") }}
+        </div>
     </div>
 </template>
 <script>

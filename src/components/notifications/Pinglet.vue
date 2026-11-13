@@ -7,24 +7,26 @@
         <input
             id="pinglet-publish-url"
             v-model="$parent.notification.pingletPublishUrl"
+            aria-describedby="pinglet-publish-url-hint"
             type="url"
             class="form-control"
             required
             autocomplete="false"
             placeholder="https://app.pinglet.co.uk/your-namespace/alerts"
         />
-        <div class="form-text">
+        <div id="pinglet-publish-url-hint" class="form-text">
             {{ $t("pingletTopicUrlDescription") }}
         </div>
     </div>
     <div class="mb-3">
-        <label for="pinglet-api-key" class="form-label">
+        <label id="pinglet-api-key-label" for="pinglet-api-key" class="form-label">
             {{ $t("API Key") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="pinglet-api-key"
             v-model="$parent.notification.pingletApiKey"
+            labelledby="pinglet-api-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

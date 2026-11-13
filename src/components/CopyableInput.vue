@@ -14,9 +14,18 @@
         />
 
         <!-- A hidden textarea for copying text on non-https -->
-        <textarea ref="hiddenTextarea" style="position: fixed; left: -999999px; top: -999999px"></textarea>
+        <textarea
+            ref="hiddenTextarea"
+            data-agentom-ignore
+            style="position: fixed; left: -999999px; top: -999999px"
+        ></textarea>
 
-        <a class="btn btn-outline-primary" @click="copyToClipboard(model)">
+        <a
+            class="btn btn-outline-primary"
+            role="button"
+            :aria-label="$t('Copy to Clipboard')"
+            @click="copyToClipboard(model)"
+        >
             <font-awesome-icon :icon="icon" />
         </a>
     </div>

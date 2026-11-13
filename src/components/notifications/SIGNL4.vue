@@ -4,12 +4,14 @@
         <input
             id="signl4-webhook-url"
             v-model="$parent.notification.webhookURL"
+            aria-describedby="signl4-webhook-url-hint"
+            data-agentom-redact
             type="url"
             pattern="https?://.+"
             class="form-control"
             required
         />
-        <i18n-t tag="div" keypath="signl4Docs" class="form-text">
+        <i18n-t id="signl4-webhook-url-hint" tag="div" keypath="signl4Docs" class="form-text">
             <a href="https://docs.signl4.com/integrations/uptime-kuma/uptime-kuma.html" target="_blank">SIGNL4 Docs</a>
         </i18n-t>
     </div>

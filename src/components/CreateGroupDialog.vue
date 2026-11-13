@@ -1,9 +1,9 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1" aria-labelledby="create-group-dialog-title">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 id="create-group-dialog-title" class="modal-title">
                         {{ $t("New Group") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -12,7 +12,14 @@
                     <form @submit.prevent="confirm">
                         <div>
                             <label for="draftGroupName" class="form-label">{{ $t("Group Name") }}</label>
-                            <input id="draftGroupName" v-model="groupName" type="text" class="form-control" />
+                            <input
+                                id="draftGroupName"
+                                v-model="groupName"
+                                type="text"
+                                class="form-control"
+                                aria-required="true"
+                                data-agentom-id="group-dialog.name"
+                            />
                         </div>
                     </form>
                 </div>
@@ -25,6 +32,8 @@
                         class="btn btn-primary"
                         data-bs-dismiss="modal"
                         :disabled="groupName == '' || groupName == null"
+                        data-agentom-id="group-dialog.confirm"
+                        data-agentom-requires="group-dialog.name"
                         @click="confirm"
                     >
                         {{ $t("Confirm") }}

@@ -1,18 +1,24 @@
 <template>
     <div class="mb-3">
-        <label for="turbosmtp-consumer-key" class="form-label">{{ $t("turbosmtpConsumerKey") }}</label>
+        <label id="turbosmtp-consumer-key-label" for="turbosmtp-consumer-key" class="form-label">
+            {{ $t("turbosmtpConsumerKey") }}
+        </label>
         <HiddenInput
             id="turbosmtp-consumer-key"
             v-model="$parent.notification.turbosmtpConsumerKey"
+            labelledby="turbosmtp-consumer-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
     </div>
     <div class="mb-3">
-        <label for="turbosmtp-consumer-secret" class="form-label">{{ $t("turbosmtpConsumerSecret") }}</label>
+        <label id="turbosmtp-consumer-secret-label" for="turbosmtp-consumer-secret" class="form-label">
+            {{ $t("turbosmtpConsumerSecret") }}
+        </label>
         <HiddenInput
             id="turbosmtp-consumer-secret"
             v-model="$parent.notification.turbosmtpConsumerSecret"
+            labelledby="turbosmtp-consumer-secret-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -47,8 +53,11 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="turbosmtp-to-email-hint"
         />
-        <div class="form-text">{{ $t("Separate multiple email addresses with commas") }}</div>
+        <div id="turbosmtp-to-email-hint" class="form-text">
+            {{ $t("Separate multiple email addresses with commas") }}
+        </div>
     </div>
     <div class="mb-3">
         <label for="turbosmtp-cc-email" class="form-label">{{ $t("smtpCC") }}</label>
@@ -57,8 +66,11 @@
             v-model="$parent.notification.turbosmtpCcEmail"
             type="text"
             class="form-control"
+            aria-describedby="turbosmtp-cc-email-hint"
         />
-        <div class="form-text">{{ $t("Separate multiple email addresses with commas") }}</div>
+        <div id="turbosmtp-cc-email-hint" class="form-text">
+            {{ $t("Separate multiple email addresses with commas") }}
+        </div>
     </div>
     <div class="mb-3">
         <label for="turbosmtp-bcc-email" class="form-label">{{ $t("smtpBCC") }}</label>
@@ -67,8 +79,11 @@
             v-model="$parent.notification.turbosmtpBccEmail"
             type="text"
             class="form-control"
+            aria-describedby="turbosmtp-bcc-email-hint"
         />
-        <div class="form-text">{{ $t("Separate multiple email addresses with commas") }}</div>
+        <div id="turbosmtp-bcc-email-hint" class="form-text">
+            {{ $t("Separate multiple email addresses with commas") }}
+        </div>
     </div>
     <div class="mb-3">
         <label for="turbosmtp-subject" class="form-label">{{ $t("Subject:") }}</label>
@@ -77,8 +92,11 @@
             v-model="$parent.notification.turbosmtpSubject"
             type="text"
             class="form-control"
+            aria-describedby="turbosmtp-subject-hint"
         />
-        <small class="form-text text-muted">{{ $t("leave blank for default subject") }}</small>
+        <small id="turbosmtp-subject-hint" class="form-text text-muted">
+            {{ $t("leave blank for default subject") }}
+        </small>
     </div>
     <i18n-t tag="p" keypath="More info on:" style="margin-top: 8px">
         <a href="https://serversmtp.com/turbo-api/" target="_blank">https://serversmtp.com/turbo-api/</a>

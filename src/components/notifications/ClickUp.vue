@@ -1,16 +1,18 @@
 <template>
     <div class="mb-3">
-        <label for="clickup-token" class="form-label">
+        <label id="clickup-token-label" for="clickup-token" class="form-label">
             {{ $t("ClickUp API Token") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="clickup-token"
             v-model="$parent.notification.clickupToken"
+            labelledby="clickup-token-label"
+            describedby="clickup-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <div class="form-text">
+        <div id="clickup-token-hint" class="form-text">
             {{ $t("ClickUp API Token Description") }}
         </div>
     </div>
@@ -27,8 +29,9 @@
             class="form-control"
             required
             autocomplete="off"
+            aria-describedby="clickup-workspace-id-hint"
         />
-        <div class="form-text">
+        <div id="clickup-workspace-id-hint" class="form-text">
             {{ $t("ClickUp Workspace ID Description") }}
         </div>
     </div>
@@ -45,8 +48,9 @@
             class="form-control"
             required
             autocomplete="off"
+            aria-describedby="clickup-channel-id-hint"
         />
-        <div class="form-text">
+        <div id="clickup-channel-id-hint" class="form-text">
             {{ $t("ClickUp Channel ID Description") }}
         </div>
     </div>

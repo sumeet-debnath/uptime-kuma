@@ -13,10 +13,11 @@
         />
     </div>
     <div class="mb-3">
-        <label for="egosms-password" class="form-label">{{ $t("Password") }}</label>
+        <label id="egosms-password-label" for="egosms-password" class="form-label">{{ $t("Password") }}</label>
         <HiddenInput
             id="egosms-password"
             v-model="$parent.notification.egosmsPassword"
+            labelledby="egosms-password-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -30,8 +31,9 @@
             maxlength="11"
             class="form-control"
             placeholder="EGOSMS"
+            aria-describedby="egosms-sender-hint"
         />
-        <div class="form-text">{{ $t("egosmsSenderDescription") }}</div>
+        <div id="egosms-sender-hint" class="form-text">{{ $t("egosmsSenderDescription") }}</div>
     </div>
     <div class="mb-3">
         <label for="egosms-phoneNumber" class="form-label">{{ $t("Recipient Number") }}</label>
@@ -42,8 +44,9 @@
             class="form-control"
             placeholder="2567XXXXXXXX"
             required
+            aria-describedby="egosms-phone-number-hint"
         />
-        <div class="form-text">{{ $t("egosmsPhoneNumberDescription") }}</div>
+        <div id="egosms-phone-number-hint" class="form-text">{{ $t("egosmsPhoneNumberDescription") }}</div>
     </div>
 </template>
 <script>

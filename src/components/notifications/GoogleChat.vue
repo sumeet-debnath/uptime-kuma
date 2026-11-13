@@ -10,9 +10,11 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
+            aria-describedby="googlechat-webhook-url-hint"
         />
 
-        <div class="form-text">
+        <div id="googlechat-webhook-url-hint" class="form-text">
             <span style="color: red"><sup>*</sup></span>
             {{ $t("Required") }}
             <i18n-t tag="p" keypath="aboutWebhooks" style="margin-top: 8px">
@@ -37,8 +39,9 @@
             max="10"
             step="1"
             required
+            aria-describedby="googlechat-max-retries-hint"
         />
-        <div class="form-text">
+        <div id="googlechat-max-retries-hint" class="form-text">
             {{ $t("Number of retry attempts if webhook fails") }}
         </div>
     </div>
@@ -50,11 +53,17 @@
                 v-model="$parent.notification.googleChatUseTemplate"
                 type="checkbox"
                 class="form-check-input"
+                aria-describedby="googlechat-use-template-hint"
             />
             <label for="google-chat-use-template" class="form-check-label">
                 {{ $t("Template plain text instead of using cards") }}
             </label>
-            <i18n-t tag="p" class="form-text" keypath="issueWithGoogleChatOnAndroidHelptext">
+            <i18n-t
+                id="googlechat-use-template-hint"
+                tag="p"
+                class="form-text"
+                keypath="issueWithGoogleChatOnAndroidHelptext"
+            >
                 <template #issuetackerURL>
                     <a href="https://issuetracker.google.com/issues/283746283" target="_blank">
                         issuetracker.google.com/issues/283746283

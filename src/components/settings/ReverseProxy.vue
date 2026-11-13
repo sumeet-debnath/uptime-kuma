@@ -33,10 +33,13 @@
         <!-- If installed show token input -->
         <div v-if="installed" class="mb-2">
             <div class="mb-4">
-                <label class="form-label" for="cloudflareTunnelToken">Cloudflare Tunnel {{ $t("Token") }}</label>
+                <label id="cloudflareTunnelToken-label" class="form-label" for="cloudflareTunnelToken">
+                    Cloudflare Tunnel {{ $t("Token") }}
+                </label>
                 <HiddenInput
                     id="cloudflareTunnelToken"
                     v-model="cloudflareTunnelToken"
+                    labelledby="cloudflareTunnelToken-label"
                     autocomplete="new-password"
                     :readonly="running"
                 />
@@ -70,6 +73,9 @@
                     btn-style="btn-danger"
                     :yes-text="$t('Stop') + ' cloudflared'"
                     :no-text="$t('Cancel')"
+                    :action="$t('stopCloudflaredAria')"
+                    yes-id="cloudflared.stop.confirm"
+                    risk="sensitive"
                     @yes="stop"
                 >
                     {{
@@ -108,8 +114,13 @@
         </div>
 
         <h4 class="my-4">{{ $t("HTTP Headers") }}</h4>
-        <div class="my-3">
-            <label class="form-label">
+        <div
+            class="my-3"
+            role="radiogroup"
+            aria-labelledby="trust-proxy-label"
+            aria-describedby="trust-proxy-description"
+        >
+            <label id="trust-proxy-label" class="form-label">
                 {{ $t("Trust Proxy") }}
             </label>
             <div class="form-check">
@@ -141,13 +152,20 @@
                 </label>
             </div>
 
-            <div class="form-text">
+            <div id="trust-proxy-description" class="form-text">
                 {{ $t("trustProxyDescription") }}
             </div>
         </div>
 
         <div>
-            <button class="btn btn-primary" type="submit" @click="saveSettings()">
+            <button
+                class="btn btn-primary"
+                type="submit"
+                data-agentom-id="settings.reverse-proxy.save"
+                data-agentom-risk="sensitive"
+                data-agentom-action="save-settings"
+                @click="saveSettings()"
+            >
                 {{ $t("Save") }}
             </button>
         </div>

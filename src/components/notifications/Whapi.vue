@@ -11,10 +11,11 @@
     </div>
 
     <div class="mb-3">
-        <label for="whapi-auth-token" class="form-label">{{ $t("Token") }}</label>
+        <label id="whapi-auth-token-label" for="whapi-auth-token" class="form-label">{{ $t("Token") }}</label>
         <HiddenInput
             id="whapi-auth-token"
             v-model="$parent.notification.whapiAuthToken"
+            labelledby="whapi-auth-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -32,8 +33,9 @@
             pattern="^[\d-]{10,31}(@[\w\.]{1,})?$"
             class="form-control"
             required
+            aria-describedby="whapi-recipient-hint"
         />
-        <div class="form-text">
+        <div id="whapi-recipient-hint" class="form-text">
             {{
                 $t("wayToWriteWhapiRecipient", [
                     "00117612345678",

@@ -1,12 +1,13 @@
 <template>
-    <div class="monitor-conditions">
-        <label class="form-label">{{ $t("Conditions") }}</label>
+    <div class="monitor-conditions" role="group" aria-labelledby="conditions-label">
+        <label id="conditions-label" class="form-label">{{ $t("Conditions") }}</label>
         <div class="monitor-conditions-conditions">
             <template v-for="(condition, conditionIndex) in model" :key="conditionIndex">
                 <EditMonitorConditionGroup
                     v-if="condition.type === 'group'"
                     v-model="model[conditionIndex]"
                     :is-first="conditionIndex === 0"
+                    :group-index="model.slice(0, conditionIndex).filter((c) => c.type === 'group').length"
                     :get-new-group="getNewGroup"
                     :get-new-condition="getNewCondition"
                     :condition-variables="conditionVariables"

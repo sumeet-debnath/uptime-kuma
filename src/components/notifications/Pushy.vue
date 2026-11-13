@@ -1,19 +1,21 @@
 <template>
     <div class="mb-3">
-        <label for="pushy-app-token" class="form-label">{{ $t("pushyAPIKey") }}</label>
+        <label id="pushy-app-token-label" for="pushy-app-token" class="form-label">{{ $t("pushyAPIKey") }}</label>
         <HiddenInput
             id="pushy-app-token"
             v-model="$parent.notification.pushyAPIKey"
+            labelledby="pushy-app-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
     </div>
 
     <div class="mb-3">
-        <label for="pushy-user-key" class="form-label">{{ $t("pushyToken") }}</label>
+        <label id="pushy-user-key-label" for="pushy-user-key" class="form-label">{{ $t("pushyToken") }}</label>
         <HiddenInput
             id="pushy-user-key"
             v-model="$parent.notification.pushyToken"
+            labelledby="pushy-user-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

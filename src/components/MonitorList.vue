@@ -1,20 +1,30 @@
 <template>
-    <div class="shadow-box mb-3 p-0" :style="boxStyle">
+    <div class="shadow-box mb-3 p-0" :style="boxStyle" data-agentom-id="monitors" data-agentom-kind="section">
         <div class="list-header">
             <!-- Line 1: Checkbox + Status + Tags + Search Bar -->
             <div class="filter-row">
                 <div class="search-wrapper">
-                    <a v-if="searchText != ''" class="search-icon" @click="clearSearchText">
+                    <a
+                        v-if="searchText != ''"
+                        class="search-icon"
+                        role="button"
+                        :aria-label="$t('clearSearchAria')"
+                        data-agentom-id="monitors.search.clear"
+                        @click="clearSearchText"
+                    >
                         <font-awesome-icon icon="times" />
                     </a>
-                    <form @submit.prevent>
+                    <form role="search" @submit.prevent>
                         <input
                             v-model="searchText"
                             class="form-control search-input"
                             :placeholder="$t('Search...')"
                             :aria-label="$t('Search monitored sites')"
+                            aria-describedby="monitor-search-hint"
+                            data-agentom-id="monitors.search"
                             autocomplete="off"
                         />
+                        <span id="monitor-search-hint" hidden>{{ $t("monitorSearchHintAria") }}</span>
                     </form>
                 </div>
 
@@ -25,6 +35,7 @@
                         class="form-check-input"
                         type="checkbox"
                         :aria-label="$t('selectAllMonitorsAria')"
+                        data-agentom-id="monitors.select-all"
                         @change="selectAll = selectMode"
                     />
                     <input
@@ -32,7 +43,8 @@
                         v-model="selectAll"
                         class="form-check-input"
                         type="checkbox"
-                        :aria-label="selectAll ? $t('deselectAllMonitorsAria') : $t('selectAllMonitorsAria')"
+                        :aria-label="$t('selectAllMonitorsAria')"
+                        data-agentom-id="monitors.select-all"
                     />
 
                     <MonitorListFilter
@@ -59,18 +71,36 @@
                             :aria-label="$t('Actions')"
                             :disabled="bulkActionInProgress"
                             aria-expanded="false"
+                            aria-controls="monitor-list-actions-menu"
+                            aria-describedby="monitor-list-actions-choices"
+                            data-agentom-id="monitors.bulk-actions"
                         >
                             {{ $t("Actions") }}
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul id="monitor-list-actions-menu" class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="#" @click.prevent="pauseDialog">
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    role="button"
+                                    data-agentom-id="monitors.bulk.pause"
+                                    data-agentom-risk="sensitive"
+                                    data-agentom-confirmation="required"
+                                    @click.prevent="pauseDialog"
+                                >
                                     <font-awesome-icon icon="pause" class="me-2" />
                                     {{ $t("Pause") }}
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#" @click.prevent="resumeSelected">
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    role="button"
+                                    data-agentom-id="monitors.bulk.resume"
+                                    data-agentom-risk="sensitive"
+                                    @click.prevent="resumeSelected"
+                                >
                                     <font-awesome-icon icon="play" class="me-2" />
                                     {{ $t("Resume") }}
                                 </a>
@@ -79,6 +109,10 @@
                                 <a
                                     class="dropdown-item text-danger"
                                     href="#"
+                                    role="button"
+                                    data-agentom-id="monitors.bulk.delete"
+                                    data-agentom-risk="destructive"
+                                    data-agentom-confirmation="required"
                                     @click.prevent="$refs.confirmDelete.show()"
                                 >
                                     <font-awesome-icon icon="trash" class="me-2" />
@@ -86,6 +120,9 @@
                                 </a>
                             </li>
                         </ul>
+                        <span id="monitor-list-actions-choices" hidden>
+                            {{ $t("choicesAria", [[$t("Pause"), $t("Resume"), $t("Delete")].join(", ")]) }}
+                        </span>
                     </div>
                 </div>
                 <span class="selected-count">
@@ -98,8 +135,22 @@
             class="monitor-list px-2"
             :class="{ scrollbar: scrollbar }"
             :style="monitorListStyle"
+            :role="sortedMonitorList.length ? 'list' : undefined"
+            :aria-label="$t('monitorListAria')"
+            aria-describedby="monitor-list-shown"
+            data-agentom-id="monitors.list"
             data-testid="monitor-list"
         >
+            <span id="monitor-list-shown" hidden>
+                {{
+                    sortedMonitorList.length
+                        ? $t("monitorListStatusAria", [
+                              sortedMonitorList.length,
+                              Object.values($root.monitorList).filter((m) => !m.parent).length,
+                          ])
+                        : $t("monitorListNoMatchAria")
+                }}
+            </span>
             <div v-if="Object.keys($root.monitorList).length === 0" class="text-center mt-3">
                 {{ $t("No Monitors, please") }}
                 <router-link to="/add">{{ $t("add one") }}</router-link>
@@ -119,11 +170,28 @@
         </div>
     </div>
 
-    <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseSelected">
+    <Confirm
+        ref="confirmPause"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        :action="$t('pauseSelectedAria', [selectedMonitorCount])"
+        yes-id="monitors.bulk.pause.confirm"
+        risk="sensitive"
+        @yes="pauseSelected"
+    >
         {{ $t("pauseMonitorMsg") }}
     </Confirm>
 
-    <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteSelected">
+    <Confirm
+        ref="confirmDelete"
+        btn-style="btn-danger"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        :action="$t('deleteSelectedAria', [selectedMonitorCount])"
+        yes-id="monitors.bulk.delete.confirm"
+        risk="destructive"
+        @yes="deleteSelected"
+    >
         {{ $t("deleteMonitorsMsg") }}
     </Confirm>
 </template>

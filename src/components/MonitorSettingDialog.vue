@@ -1,9 +1,9 @@
 <template>
-    <div ref="MonitorSettingDialog" class="modal fade" tabindex="-1">
+    <div ref="MonitorSettingDialog" class="modal fade" tabindex="-1" aria-labelledby="monitor-setting-dialog-title">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 id="monitor-setting-dialog-title" class="modal-title">
                         {{ $t("Monitor Setting", [monitor.name]) }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -16,12 +16,14 @@
                             class="form-check-input"
                             type="checkbox"
                             data-testid="show-clickable-link"
+                            aria-describedby="show-clickable-link-hint"
+                            data-agentom-id="monitor-setting.show-clickable-link"
                             @click="toggleLink(monitor.group_index, monitor.monitor_index)"
                         />
                         <label class="form-check-label" for="show-clickable-link">
                             {{ $t("Show Clickable Link") }}
                         </label>
-                        <div class="form-text">
+                        <div id="show-clickable-link-hint" class="form-text">
                             {{ $t("Show Clickable Link Description") }}
                         </div>
                     </div>

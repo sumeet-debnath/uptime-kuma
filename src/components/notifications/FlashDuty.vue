@@ -1,22 +1,24 @@
 <template>
     <div class="mb-3">
-        <label for="flashduty-integration-url" class="form-label">
+        <label id="flashduty-integration-url-label" for="flashduty-integration-url" class="form-label">
             {{ $t("FlashDuty Push URL") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="flashduty-integration-url"
             v-model="$parent.notification.flashdutyIntegrationKey"
+            labelledby="flashduty-integration-url-label"
+            describedby="flashduty-integration-url-hint flashduty-integration-url-hint-2"
             autocomplete="false"
             :placeholder="$t('FlashDuty Push URL Placeholder')"
         />
-        <div class="form-text">
+        <div id="flashduty-integration-url-hint" class="form-text">
             <p>
                 <span style="color: red"><sup>*</sup></span>
                 {{ $t("Required") }}
             </p>
         </div>
-        <i18n-t tag="div" keypath="wayToGetFlashDutyKey" class="form-text">
+        <i18n-t id="flashduty-integration-url-hint-2" tag="div" keypath="wayToGetFlashDutyKey" class="form-text">
             <a href="https://flashcat.cloud/product/flashduty?from=kuma" target="_blank">{{ $t("here") }}</a>
         </i18n-t>
     </div>

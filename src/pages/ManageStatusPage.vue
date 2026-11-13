@@ -27,15 +27,24 @@
                         :key="statusPage.slug"
                         :href="'/status/' + statusPage.slug"
                         class="item"
+                        :aria-labelledby="`status-page-${statusPage.slug}-title`"
+                        :aria-describedby="`status-page-${statusPage.slug}-slug`"
+                        :data-agentom-id="`status-page.${statusPage.slug}.open`"
                     >
                         <img :src="icon(statusPage.icon)" alt class="logo me-2" />
                         <div class="info">
-                            <div class="title">{{ statusPage.title }}</div>
-                            <div class="slug">/status/{{ statusPage.slug }}</div>
+                            <div :id="`status-page-${statusPage.slug}-title`" class="title">{{ statusPage.title }}</div>
+                            <div :id="`status-page-${statusPage.slug}-slug`" class="slug">
+                                /status/{{ statusPage.slug }}
+                            </div>
                         </div>
                         <div class="actions">
                             <button
                                 class="btn btn-danger delete-status-page"
+                                :aria-label="$t('deleteStatusPageNamedAria', [statusPage.title])"
+                                :data-agentom-id="`status-page.${statusPage.slug}.delete`"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
                                 @click.stop.prevent="deleteDialog(statusPage.slug)"
                             >
                                 <font-awesome-icon icon="trash" />
@@ -55,6 +64,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('deleteStatusPageAria', [selectedStatusSlug])"
+        yes-id="status-pages.delete.confirm"
+        risk="destructive"
         @yes="deleteStatusPage"
     >
         {{ $t("deleteStatusPageMsg") }}

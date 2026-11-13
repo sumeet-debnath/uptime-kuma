@@ -4,6 +4,7 @@
         type="button"
         :class="['btn', browserSupportsServiceWorkers ? 'btn-primary' : 'btn-danger']"
         :disabled="!btnEnabled"
+        aria-describedby="webpush-subscribe-hint"
         @click="registerWebpush"
     >
         <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
@@ -11,7 +12,7 @@
         {{ btnText }}
     </button>
 
-    <div class="form-text">
+    <div id="webpush-subscribe-hint" class="form-text">
         {{ $t("Webpush Helptext") }}
     </div>
 </template>

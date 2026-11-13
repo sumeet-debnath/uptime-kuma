@@ -10,9 +10,11 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
+            aria-describedby="alertnow-webhook-url-hint"
         />
 
-        <div class="form-text">
+        <div id="alertnow-webhook-url-hint" class="form-text">
             <span style="color: red"><sup>*</sup></span>
             {{ $t("Required") }}
             <i18n-t tag="p" keypath="aboutWebhooks" style="margin-top: 8px">

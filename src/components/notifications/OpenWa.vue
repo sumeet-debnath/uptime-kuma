@@ -7,20 +7,23 @@
             placeholder="http://localhost:2785/"
             type="url"
             class="form-control"
+            aria-describedby="openwa-api-url-hint"
             required
         />
-        <div class="form-text">{{ $t("wayToGetOpenwaApiUrl") }}</div>
+        <div id="openwa-api-url-hint" class="form-text">{{ $t("wayToGetOpenwaApiUrl") }}</div>
     </div>
 
     <div class="mb-3">
-        <label for="openwa-api-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="openwa-api-key-label" for="openwa-api-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="openwa-api-key"
             v-model="$parent.notification.openwaApiKey"
+            labelledby="openwa-api-key-label"
+            describedby="openwa-api-key-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <div class="form-text">{{ $t("wayToGetOpenwaApiKey") }}</div>
+        <div id="openwa-api-key-hint" class="form-text">{{ $t("wayToGetOpenwaApiKey") }}</div>
     </div>
 
     <div class="mb-3">
@@ -31,9 +34,10 @@
             type="text"
             placeholder="default"
             class="form-control"
+            aria-describedby="openwa-session-hint"
             required
         />
-        <div class="form-text">{{ $t("wayToGetOpenwaSession") }}</div>
+        <div id="openwa-session-hint" class="form-text">{{ $t("wayToGetOpenwaSession") }}</div>
     </div>
 
     <div class="mb-3">
@@ -43,19 +47,28 @@
             v-model="$parent.notification.openwaChatId"
             type="text"
             class="form-control"
+            aria-describedby="openwa-chat-id-hint"
             required
         />
-        <div class="form-text">
+        <div id="openwa-chat-id-hint" class="form-text">
             {{ $t("wayToWriteOpenwaChatId", ["00117612345678@c.us", "123456789012345678@g.us", "1234567890@lid"]) }}
         </div>
     </div>
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.openwaUseCustomMessage" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("openwaCustomMessageTitle") }}</label>
+            <input
+                v-model="$parent.notification.openwaUseCustomMessage"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="openwa-use-custom-message-label"
+                aria-describedby="openwa-use-custom-message-hint"
+            />
+            <label id="openwa-use-custom-message-label" class="form-check-label">
+                {{ $t("openwaCustomMessageTitle") }}
+            </label>
         </div>
-        <div class="form-text">{{ $t("openwaCustomMessageDesc") }}</div>
+        <div id="openwa-use-custom-message-hint" class="form-text">{{ $t("openwaCustomMessageDesc") }}</div>
     </div>
 
     <template v-if="$parent.notification.openwaUseCustomMessage">

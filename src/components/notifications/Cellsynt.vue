@@ -10,10 +10,11 @@
         />
     </div>
     <div class="mb-3">
-        <label for="cellsynt-key" class="form-label">{{ $t("Password") }}</label>
+        <label id="cellsynt-key-label" for="cellsynt-key" class="form-label">{{ $t("Password") }}</label>
         <HiddenInput
             id="cellsynt-key"
             v-model="$parent.notification.cellsyntPassword"
+            labelledby="cellsynt-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -25,11 +26,12 @@
             v-model="$parent.notification.cellsyntOriginatortype"
             :required="true"
             class="form-select"
+            aria-describedby="cellsynt-originator-type-hint"
         >
             <option value="alpha">{{ $t("Alphanumeric (recommended)") }}</option>
             <option value="numeric">{{ $t("Telephone number") }}</option>
         </select>
-        <div class="form-text">
+        <div id="cellsynt-originator-type-hint" class="form-text">
             <p>
                 <b>{{ $t("Alphanumeric (recommended)") }}:</b>
                 <br />
@@ -62,6 +64,7 @@
             pattern="[a-zA-Z0-9\s]+"
             maxlength="11"
             required
+            aria-describedby="cellsynt-originator-hint"
         />
         <input
             v-else
@@ -72,8 +75,9 @@
             pattern="[0-9]+"
             maxlength="15"
             required
+            aria-describedby="cellsynt-originator-hint"
         />
-        <div class="form-text">
+        <div id="cellsynt-originator-hint" class="form-text">
             <p>{{ $t("cellsyntOriginator") }}</p>
         </div>
     </div>
@@ -85,8 +89,9 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="cellsynt-destination-hint"
         />
-        <div class="form-text">
+        <div id="cellsynt-destination-hint" class="form-text">
             <p>{{ $t("cellsyntDestination") }}</p>
         </div>
     </div>
@@ -96,9 +101,10 @@
             v-model="$parent.notification.cellsyntAllowLongSMS"
             type="checkbox"
             class="form-check-input"
+            aria-describedby="cellsynt-allow-long-hint"
         />
         <label for="cellsynt-allow-long" class="form-label">{{ $t("Allow Long SMS") }}</label>
-        <div class="form-text">{{ $t("cellsyntSplitLongMessages") }}</div>
+        <div id="cellsynt-allow-long-hint" class="form-text">{{ $t("cellsyntSplitLongMessages") }}</div>
     </div>
     <i18n-t tag="p" keypath="More info on:" style="margin-top: 8px">
         <a href="https://www.cellsynt.com/en/" target="_blank">https://www.cellsynt.com/en/</a>

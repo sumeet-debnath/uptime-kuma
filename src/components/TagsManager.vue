@@ -24,7 +24,14 @@
                 {{ $t("Add") }}
             </button>
         </div>
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            :aria-label="$t('Add Tags')"
+        >
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -43,6 +50,7 @@
                         </div>
 
                         <vue-multiselect
+                            id="tags-manager-tag"
                             v-model="newDraftTag.select"
                             class="mb-2"
                             :options="tagOptions"
@@ -85,12 +93,14 @@
                                                 validateDraftTag.messageKey === 'tagNameExists'),
                                     }"
                                     :placeholder="$t('Name')"
+                                    :aria-label="$t('Name')"
                                     data-testid="tag-name-input"
                                     @keydown.enter.prevent="onEnter"
                                 />
                             </div>
                             <div class="w-50 ps-2">
                                 <vue-multiselect
+                                    id="tags-manager-color"
                                     v-model="newDraftTag.color"
                                     :options="colorOptions"
                                     :multiple="false"
@@ -133,6 +143,7 @@
                                         validateDraftTag.messageKey === 'tagAlreadyOnMonitor',
                                 }"
                                 :placeholder="$t('value (optional)')"
+                                :aria-label="$t('value (optional)')"
                                 data-testid="tag-value-input"
                                 @keydown.enter.prevent="onEnter"
                             />
@@ -153,6 +164,7 @@
                             type="button"
                             class="btn btn-outline-primary me-2"
                             :disabled="processing || validateDraftTag.invalid"
+                            aria-describedby="tags-add-hint"
                             @click.stop="stageCurrentTag"
                         >
                             {{ $t("Add Another Tag") }}
@@ -162,10 +174,12 @@
                             class="btn btn-primary"
                             :disabled="processing || (stagedForBatchAdd.length === 0 && validateDraftTag.invalid)"
                             data-testid="add-tags-final-button"
+                            aria-describedby="tags-add-hint"
                             @click.stop="confirmAndCommitStagedTags"
                         >
                             {{ $t("Done") }}
                         </button>
+                        <span id="tags-add-hint" hidden>{{ $t("tagsAddHintAria") }}</span>
                     </div>
                 </div>
             </div>

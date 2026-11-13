@@ -6,23 +6,31 @@
                 class="btn btn-light dropdown-toggle btn-period-toggle"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                :aria-label="`${chartPeriodOptions[chartPeriodHrs]}: ${$t('chartPeriodAria')}`"
+                aria-controls="chart-period-menu"
+                aria-describedby="chart-period-choices"
+                data-agentom-id="monitor.chart.period"
             >
                 {{ chartPeriodOptions[chartPeriodHrs] }}&nbsp;
             </button>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul id="chart-period-menu" class="dropdown-menu dropdown-menu-end">
                 <li v-for="(item, key) in chartPeriodOptions" :key="key">
                     <button
                         type="button"
                         class="dropdown-item"
                         :class="{ active: chartPeriodHrs == key }"
+                        :aria-pressed="chartPeriodHrs == key ? 'true' : 'false'"
                         @click="chartPeriodHrs = key"
                     >
                         {{ item }}
                     </button>
                 </li>
             </ul>
+            <span id="chart-period-choices" hidden>
+                {{ $t("choicesAria", [Object.values(chartPeriodOptions).join(", ")]) }}
+            </span>
         </div>
-        <div class="chart-wrapper" :class="{ loading: loading }">
+        <div class="chart-wrapper" :class="{ loading: loading }" :aria-busy="loading ? 'true' : null">
             <Line :data="chartData" :options="chartOptions" />
         </div>
     </div>

@@ -1,12 +1,13 @@
 <template>
     <div class="mb-3">
-        <label for="amoot-api-token" class="form-label">
+        <label id="amoot-api-token-label" for="amoot-api-token" class="form-label">
             {{ $t("API Token") }}
         </label>
 
         <HiddenInput
             id="amoot-api-token"
             v-model="$parent.notification.amootApiToken"
+            labelledby="amoot-api-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -24,9 +25,10 @@
             placeholder="9123456789,09987654321"
             class="form-control"
             required
+            aria-describedby="amootsms-mobiles-hint"
         />
 
-        <div class="form-text">
+        <div id="amootsms-mobiles-hint" class="form-text">
             {{ $t("Amoot SMS recipient numbers help") }}
         </div>
     </div>
@@ -57,9 +59,10 @@
             class="form-control"
             min="1"
             required
+            aria-describedby="amootsms-pattern-code-id-hint"
         />
 
-        <div class="form-text">
+        <div id="amootsms-pattern-code-id-hint" class="form-text">
             <i18n-t keypath="Amoot SMS pattern help">
                 <a href="https://portal.amootsms.com/dev/PatternCode" target="_blank" rel="noopener noreferrer">
                     {{ $t("Create an Amoot SMS pattern") }}

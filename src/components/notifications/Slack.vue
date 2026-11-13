@@ -10,16 +10,29 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <label for="slack-username" class="form-label">{{ $t("Username") }}</label>
-        <input id="slack-username" v-model="$parent.notification.slackusername" type="text" class="form-control" />
-        <div class="form-text">
+        <input
+            id="slack-username"
+            v-model="$parent.notification.slackusername"
+            type="text"
+            class="form-control"
+            aria-describedby="slack-username-hint"
+        />
+        <div id="slack-username-hint" class="form-text">
             {{ $t("aboutSlackUsername") }}
         </div>
         <label for="slack-iconemo" class="form-label">{{ $t("Icon Emoji") }}</label>
         <input id="slack-iconemo" v-model="$parent.notification.slackiconemo" type="text" class="form-control" />
-        <label for="slack-channel" class="form-label">{{ $t("Channel Name") }}</label>
-        <input id="slack-channel-name" v-model="$parent.notification.slackchannel" type="text" class="form-control" />
+        <label id="slack-channel-label" class="form-label">{{ $t("Channel Name") }}</label>
+        <input
+            id="slack-channel-name"
+            v-model="$parent.notification.slackchannel"
+            type="text"
+            class="form-control"
+            aria-labelledby="slack-channel-label"
+        />
 
         <label class="form-label">{{ $t("Message format") }}</label>
         <div class="form-check form-switch">
@@ -39,20 +52,27 @@
                     v-model="$parent.notification.slackIncludeGroupName"
                     type="checkbox"
                     class="form-check-input"
+                    aria-describedby="slack-include-group-name-hint"
                 />
                 <label for="slack-include-group-name" class="form-check-label">{{ $t("slackIncludeGroupName") }}</label>
             </div>
-            <div class="form-text">
+            <div id="slack-include-group-name-hint" class="form-text">
                 {{ $t("slackIncludeGroupNameDescription") }}
             </div>
         </div>
 
         <div class="mb-3">
             <div class="form-check form-switch">
-                <input v-model="$parent.notification.slackUseTemplate" class="form-check-input" type="checkbox" />
-                <label class="form-check-label">{{ $t("slackUseTemplate") }}</label>
+                <input
+                    v-model="$parent.notification.slackUseTemplate"
+                    class="form-check-input"
+                    type="checkbox"
+                    aria-labelledby="slack-use-template-label"
+                    aria-describedby="slack-use-template-hint"
+                />
+                <label id="slack-use-template-label" class="form-check-label">{{ $t("slackUseTemplate") }}</label>
             </div>
-            <div class="form-text">
+            <div id="slack-use-template-hint" class="form-text">
                 {{ $t("slackUseTemplateDescription") }}
             </div>
         </div>
@@ -96,10 +116,11 @@
                 v-model="$parent.notification.slackchannelnotify"
                 type="checkbox"
                 class="form-check-input"
+                aria-describedby="slack-channel-notify-hint"
             />
             <label for="slack-channel-notify" class="form-label">{{ $t("Notify Channel") }}</label>
         </div>
-        <div class="form-text">
+        <div id="slack-channel-notify-hint" class="form-text">
             {{ $t("aboutNotifyChannel") }}
         </div>
     </div>

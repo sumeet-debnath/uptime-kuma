@@ -2,16 +2,18 @@
     <div class="mb-3">
         <!-- Access Token Input -->
         <div class="mb-3">
-            <label for="onechat-access-token" class="form-label">
+            <label id="onechat-access-token-label" for="onechat-access-token" class="form-label">
                 OneChat Access Token
                 <span style="color: red"><sup>*</sup></span>
             </label>
             <HiddenInput
                 id="onechat-access-token"
                 v-model="$parent.notification.accessToken"
+                labelledby="onechat-access-token-label"
+                describedby="onechat-access-token-hint"
                 :required="true"
             ></HiddenInput>
-            <div class="form-text">
+            <div id="onechat-access-token-hint" class="form-text">
                 <p>{{ $t("OneChatAccessToken") }}</p>
             </div>
         </div>

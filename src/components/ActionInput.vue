@@ -4,6 +4,7 @@
             ref="input"
             v-model="model"
             class="form-control"
+            :aria-label="inputAriaLabel || undefined"
             :type="type"
             :placeholder="placeholder"
             :disabled="!enabled"
@@ -21,6 +22,11 @@
  */
 export default {
     props: {
+        /** The field's accessible name, when no label names it */
+        inputAriaLabel: {
+            type: String,
+            default: null,
+        },
         /**
          * The value of the input field.
          */

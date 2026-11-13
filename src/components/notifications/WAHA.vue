@@ -8,19 +8,22 @@
             type="url"
             class="form-control"
             required
+            aria-describedby="waha-api-url-hint"
         />
-        <div class="form-text">{{ $t("wayToGetWahaApiUrl") }}</div>
+        <div id="waha-api-url-hint" class="form-text">{{ $t("wayToGetWahaApiUrl") }}</div>
     </div>
 
     <div class="mb-3">
-        <label for="waha-api-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="waha-api-key-label" for="waha-api-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="waha-api-key"
             v-model="$parent.notification.wahaApiKey"
+            labelledby="waha-api-key-label"
+            describedby="waha-api-key-hint"
             :required="false"
             autocomplete="new-password"
         ></HiddenInput>
-        <div class="form-text">{{ $t("wayToGetWahaApiKey") }}</div>
+        <div id="waha-api-key-hint" class="form-text">{{ $t("wayToGetWahaApiKey") }}</div>
     </div>
 
     <div class="mb-3">
@@ -32,8 +35,9 @@
             placeholder="default"
             class="form-control"
             required
+            aria-describedby="waha-session-hint"
         />
-        <div class="form-text">{{ $t("wayToGetWahaSession") }}</div>
+        <div id="waha-session-hint" class="form-text">{{ $t("wayToGetWahaSession") }}</div>
     </div>
 
     <div class="mb-3">
@@ -45,8 +49,9 @@
             pattern="^[\d-]{10,31}$"
             class="form-control"
             required
+            aria-describedby="waha-chat-id-hint"
         />
-        <div class="form-text">
+        <div id="waha-chat-id-hint" class="form-text">
             {{ $t("wayToWriteWahaChatId", ["00117612345678", "00117612345678@c.us", "123456789012345678@g.us"]) }}
         </div>
     </div>

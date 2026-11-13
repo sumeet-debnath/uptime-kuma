@@ -1,9 +1,10 @@
 <template>
     <div class="mb-3">
-        <label for="vk-access-token" class="form-label">{{ $t("Access Token") }}</label>
+        <label id="vk-access-token-label" for="vk-access-token" class="form-label">{{ $t("Access Token") }}</label>
         <HiddenInput
             id="vk-access-token"
             v-model="$parent.notification.vkAccessToken"
+            labelledby="vk-access-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -17,26 +18,40 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="vk-api-version-hint"
         />
-        <div class="form-text">
+        <div id="vk-api-version-hint" class="form-text">
             {{ $t("vkApiVersionDescription") }}
         </div>
     </div>
 
     <div class="mb-3">
         <label for="vk-peer-id" class="form-label">{{ $t("Peer ID") }}</label>
-        <input id="vk-peer-id" v-model="$parent.notification.vkPeerId" type="text" class="form-control" required />
-        <div class="form-text">
+        <input
+            id="vk-peer-id"
+            v-model="$parent.notification.vkPeerId"
+            type="text"
+            class="form-control"
+            required
+            aria-describedby="vk-peer-id-hint"
+        />
+        <div id="vk-peer-id-hint" class="form-text">
             {{ $t("vkPeerIdDescription") }}
         </div>
     </div>
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.vkDontParseLinks" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("vkDontParseLinks") }}</label>
+            <input
+                v-model="$parent.notification.vkDontParseLinks"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="vk-dont-parse-links-label"
+                aria-describedby="vk-dont-parse-links-hint"
+            />
+            <label id="vk-dont-parse-links-label" class="form-check-label">{{ $t("vkDontParseLinks") }}</label>
         </div>
-        <div class="form-text">
+        <div id="vk-dont-parse-links-hint" class="form-text">
             {{ $t("vkDontParseLinksDescription") }}
         </div>
     </div>

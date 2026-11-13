@@ -1,9 +1,9 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1" aria-labelledby="screenshot-dialog-title">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 id="screenshot-dialog-title" class="modal-title">
                         {{ $t("Browser Screenshot") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />

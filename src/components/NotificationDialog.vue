@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="notification-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 id="notification-dialog-title" class="modal-title">
                             {{ $t("Setup Notification") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -115,18 +121,33 @@
                             <hr class="dropdown-divider mb-4" />
 
                             <div class="form-check form-switch">
-                                <input v-model="notification.isDefault" class="form-check-input" type="checkbox" />
-                                <label class="form-check-label">{{ $t("Default enabled") }}</label>
+                                <input
+                                    v-model="notification.isDefault"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    aria-labelledby="notification-default-label"
+                                    aria-describedby="notification-default-hint"
+                                />
+                                <label id="notification-default-label" class="form-check-label">
+                                    {{ $t("Default enabled") }}
+                                </label>
                             </div>
-                            <div class="form-text">
+                            <div id="notification-default-hint" class="form-text">
                                 {{ $t("enableDefaultNotificationDescription") }}
                             </div>
 
                             <br />
 
                             <div class="form-check form-switch">
-                                <input v-model="notification.applyExisting" class="form-check-input" type="checkbox" />
-                                <label class="form-check-label">{{ $t("Apply on all existing monitors") }}</label>
+                                <input
+                                    v-model="notification.applyExisting"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    aria-labelledby="notification-apply-existing-label"
+                                />
+                                <label id="notification-apply-existing-label" class="form-check-label">
+                                    {{ $t("Apply on all existing monitors") }}
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -137,14 +158,31 @@
                             type="button"
                             class="btn btn-danger"
                             :disabled="processing"
+                            data-agentom-id="notification-dialog.delete"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             @click="deleteConfirm"
                         >
                             {{ $t("Delete") }}
                         </button>
-                        <button type="button" class="btn btn-warning" :disabled="processing" @click="test">
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            :disabled="processing"
+                            data-agentom-id="notification-dialog.test"
+                            data-agentom-risk="sensitive"
+                            data-agentom-action="send-test-notification"
+                            @click="test"
+                        >
                             {{ $t("Test") }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="processing">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            :disabled="processing"
+                            data-agentom-id="notification-dialog.save"
+                            data-agentom-action="save-notification"
+                        >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
                             {{ $t("Save") }}
                         </button>
@@ -159,6 +197,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('deleteNotificationAria', [notification.name])"
+        yes-id="notification-dialog.delete.confirm"
+        risk="destructive"
         @yes="deleteNotification"
     >
         {{ $t("deleteNotificationMsg") }}

@@ -1,0 +1,92 @@
+{
+    "path": "/",
+    "name": "Uptime Kuma",
+    "children": [
+        {
+            "path": "dashboard",
+            "children": [
+                {
+                    "path": "{monitorId}",
+                    "name": "Monitor"
+                }
+            ]
+        },
+        {
+            "path": "edit/{monitorId}",
+            "name": "Edit Monitor"
+        },
+        {
+            "path": "add",
+            "name": "Add New Monitor"
+        },
+        {
+            "path": "clone/{monitorId}",
+            "name": "Clone Monitor"
+        },
+        {
+            "path": "settings/general"
+        },
+        {
+            "path": "settings/appearance"
+        },
+        {
+            "path": "settings/notifications"
+        },
+        {
+            "path": "settings/reverse-proxy"
+        },
+        {
+            "path": "settings/tags"
+        },
+        {
+            "path": "settings/monitor-history"
+        },
+        {
+            "path": "settings/docker-hosts"
+        },
+        {
+            "path": "settings/remote-browsers"
+        },
+        {
+            "path": "settings/security"
+        },
+        {
+            "path": "settings/api-keys"
+        },
+        {
+            "path": "settings/proxies"
+        },
+        {
+            "path": "settings/about"
+        },
+        {
+            "path": "manage-status-page",
+            "name": "Status Pages"
+        },
+        {
+            "path": "add-status-page",
+            "name": "Add New Status Page"
+        },
+        {
+            "path": "maintenance",
+            "children": [
+                {
+                    "path": "edit/{maintenanceId}",
+                    "name": "Edit Maintenance"
+                },
+                {
+                    "path": "clone/{maintenanceId}",
+                    "name": "Clone Maintenance"
+                }
+            ]
+        },
+        {
+            "path": "add-maintenance",
+            "name": "Add Maintenance"
+        },
+        {
+            "path": "status/{slug}",
+            "name": "Status Page"
+        }
+    ]
+}

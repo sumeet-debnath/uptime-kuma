@@ -20,8 +20,9 @@
             pattern="[A-Z0-9]{8}"
             required
             type="text"
+            aria-describedby="threema-recipient-identity-hint"
         />
-        <div class="form-text">
+        <div id="threema-recipient-identity-hint" class="form-text">
             <p>{{ $t("threemaRecipientTypeIdentityFormat") }}</p>
         </div>
     </div>
@@ -37,8 +38,9 @@
             pattern="\d{1,15}"
             required
             type="text"
+            aria-describedby="threema-recipient-phone-hint"
         />
-        <div class="form-text">
+        <div id="threema-recipient-phone-hint" class="form-text">
             <p>{{ $t("threemaRecipientTypePhoneFormat") }}</p>
         </div>
     </div>
@@ -66,16 +68,20 @@
             pattern="^\*[A-Z0-9]{7}$"
             required
             type="text"
+            aria-describedby="threema-sender-hint"
         />
-        <div class="form-text">
+        <div id="threema-sender-hint" class="form-text">
             <p>{{ $t("threemaSenderIdentityFormat") }}</p>
         </div>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="threema-secret">{{ $t("threemaApiAuthenticationSecret") }}</label>
+        <label id="threema-secret-label" class="form-label" for="threema-secret">
+            {{ $t("threemaApiAuthenticationSecret") }}
+        </label>
         <HiddenInput
             id="threema-secret"
             v-model="$parent.notification.threemaSecret"
+            labelledby="threema-secret-label"
             required
             autocomplete="false"
         ></HiddenInput>

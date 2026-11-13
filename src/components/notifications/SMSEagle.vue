@@ -12,16 +12,26 @@
         />
     </div>
     <div class="mb-3">
-        <label for="smseagle-token" class="form-label">{{ $t("smseagleToken") }}</label>
-        <HiddenInput id="smseagle-token" v-model="$parent.notification.smseagleToken" :required="true"></HiddenInput>
+        <label id="smseagle-token-label" for="smseagle-token" class="form-label">{{ $t("smseagleToken") }}</label>
+        <HiddenInput
+            id="smseagle-token"
+            v-model="$parent.notification.smseagleToken"
+            labelledby="smseagle-token-label"
+            :required="true"
+        ></HiddenInput>
     </div>
     <div class="mb-3">
         <label for="smseagle-api-type" class="form-label">{{ $t("smseagleApiType") }}</label>
-        <select id="smseagle-api-type" v-model="$parent.notification.smseagleApiType" class="form-select">
+        <select
+            id="smseagle-api-type"
+            v-model="$parent.notification.smseagleApiType"
+            class="form-select"
+            aria-describedby="smseagle-api-type-hint"
+        >
             <option value="smseagle-apiv1" selected>{{ $t("smseagleApiv1") }}</option>
             <option value="smseagle-apiv2">{{ $t("smseagleApiv2") }}</option>
         </select>
-        <i18n-t tag="div" keypath="smseagleDocs" class="form-text">
+        <i18n-t id="smseagle-api-type-hint" tag="div" keypath="smseagleDocs" class="form-text">
             <a href="https://www.smseagle.eu/api/" target="_blank">https://www.smseagle.eu/api/</a>
         </i18n-t>
     </div>
@@ -135,30 +145,33 @@
             <input
                 id="smseagle-recipient-to"
                 v-model="$parent.notification.smseagleRecipientTo"
+                aria-describedby="smseagle-recipient-to-hint"
                 type="text"
                 class="form-control"
             />
-            <i18n-t tag="div" keypath="smseagleComma" class="form-text" />
+            <i18n-t id="smseagle-recipient-to-hint" tag="div" keypath="smseagleComma" class="form-text" />
         </div>
         <div class="mb-3">
             <label for="smseagle-recipient-group" class="form-label">{{ $t("smseagleGroupV2") }}</label>
             <input
                 id="smseagle-recipient-group"
                 v-model="$parent.notification.smseagleRecipientGroup"
+                aria-describedby="smseagle-recipient-group-hint"
                 type="text"
                 class="form-control"
             />
-            <i18n-t tag="div" keypath="smseagleComma" class="form-text" />
+            <i18n-t id="smseagle-recipient-group-hint" tag="div" keypath="smseagleComma" class="form-text" />
         </div>
         <div class="mb-3">
             <label for="smseagle-recipient-contact" class="form-label">{{ $t("smseagleContactV2") }}</label>
             <input
                 id="smseagle-recipient-contact"
                 v-model="$parent.notification.smseagleRecipientContact"
+                aria-describedby="smseagle-recipient-contact-hint"
                 type="text"
                 class="form-control"
             />
-            <i18n-t tag="div" keypath="smseagleComma" class="form-text" />
+            <i18n-t id="smseagle-recipient-contact-hint" tag="div" keypath="smseagleComma" class="form-text" />
         </div>
         <div class="mb-3">
             <label for="smseagle-priority-v2" class="form-label">{{ $t("smseaglePriority") }}</label>

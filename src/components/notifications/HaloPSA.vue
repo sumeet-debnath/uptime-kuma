@@ -1,17 +1,19 @@
 <template>
     <div class="mb-3">
-        <label for="halopsa-webhook-url" class="form-label">
+        <label id="halopsa-secret-label" class="form-label">
             {{ $t("Halo PSA Webhook URL") }}
             <span class="test-danger">*</span>
         </label>
         <HiddenInput
             v-model="$parent.notification.halowebhookurl"
+            labelledby="halopsa-secret-label"
+            describedby="halopsa-webhook-url-hint"
             :maxlength="500"
             placeholder="https://your-instance.halopsa.com/api/v1/webhook"
             autocomplete="off"
             required
         />
-        <div class="form-text">
+        <div id="halopsa-webhook-url-hint" class="form-text">
             {{ $t("halopsa_webhook_url_desc") }}
         </div>
     </div>
@@ -26,9 +28,10 @@
             type="text"
             class="form-control"
             autocomplete="off"
+            aria-describedby="halopsa-username-hint"
             :placeholder="$t('Username')"
         />
-        <div class="form-text">
+        <div id="halopsa-username-hint" class="form-text">
             {{ $t("halopsa_username_desc") }}
         </div>
     </div>
@@ -44,9 +47,11 @@
             class="form-control"
             :maxlength="500"
             autocomplete="off"
+            aria-describedby="halopsa-password-hint"
+            data-agentom-redact
             :placeholder="$t('Password')"
         />
-        <div class="form-text">
+        <div id="halopsa-password-hint" class="form-text">
             {{ $t("halopsa_password_desc") }}
         </div>
     </div>

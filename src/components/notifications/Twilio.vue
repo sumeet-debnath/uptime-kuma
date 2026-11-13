@@ -12,8 +12,15 @@
 
     <div class="mb-3">
         <label for="twilio-apikey-token" class="form-label">{{ $t("twilioApiKey") }}</label>
-        <input id="twilio-apikey-token" v-model="$parent.notification.twilioApiKey" type="text" class="form-control" />
-        <div class="form-text">{{ $t("twilioApiKeyHelptext") }}</div>
+        <input
+            id="twilio-apikey-token"
+            v-model="$parent.notification.twilioApiKey"
+            type="text"
+            class="form-control"
+            aria-describedby="twilio-apikey-token-hint"
+            data-agentom-redact
+        />
+        <div id="twilio-apikey-token-hint" class="form-text">{{ $t("twilioApiKeyHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -23,8 +30,14 @@
             v-model="$parent.notification.twilioMessagingServiceSID"
             type="text"
             class="form-control"
+            aria-describedby="twilio-messaging-service-sid-hint"
         />
-        <i18n-t key="twilioMessagingServiceSIDHelptext" tag="div" class="form-text">
+        <i18n-t
+            id="twilio-messaging-service-sid-hint"
+            key="twilioMessagingServiceSIDHelptext"
+            tag="div"
+            class="form-text"
+        >
             <template #twillo_messaging_service_help_link>
                 <a href="https://help.twilio.com/articles/223134387-What-is-a-Message-SID-" target="_blank">
                     Twilio Messaging Service
@@ -41,6 +54,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
     </div>
 

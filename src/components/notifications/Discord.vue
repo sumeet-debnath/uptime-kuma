@@ -1,14 +1,18 @@
 <template>
     <div class="mb-3">
-        <label for="discord-webhook-url" class="form-label">{{ $t("Discord Webhook URL") }}</label>
+        <label id="discord-webhook-url-label" for="discord-webhook-url" class="form-label">
+            {{ $t("Discord Webhook URL") }}
+        </label>
         <HiddenInput
             id="discord-webhook-url"
             v-model="$parent.notification.discordWebhookUrl"
+            labelledby="discord-webhook-url-label"
+            describedby="discord-webhook-url-hint"
             type="text"
             required
             autocomplete="false"
         />
-        <div class="form-text">
+        <div id="discord-webhook-url-hint" class="form-text">
             {{ $t("wayToGetDiscordURL") }}
         </div>
     </div>
@@ -79,8 +83,9 @@
                 type="text"
                 class="form-control"
                 autocomplete="false"
+                aria-describedby="discord-forum-post-name-hint"
             />
-            <div class="form-text">
+            <div id="discord-forum-post-name-hint" class="form-text">
                 {{ $t("whatHappensAtForumPost", { option: $t("postToExistingThread") }) }}
             </div>
         </div>
@@ -97,8 +102,9 @@
                 class="form-control"
                 autocomplete="false"
                 :placeholder="$t('e.g. {discordThreadID}', { discordThreadID: 1177566663751782411 })"
+                aria-describedby="discord-thread-id-hint"
             />
-            <div class="form-text">
+            <div id="discord-thread-id-hint" class="form-text">
                 <i18n-t keypath="wayToGetDiscordThreadId">
                     <a
                         href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-"
@@ -132,12 +138,13 @@
                 class="form-check-input"
                 type="checkbox"
                 role="switch"
+                aria-describedby="discord-suppress-notifications-hint"
             />
             <label class="form-check-label" for="discord-suppress-notifications">
                 {{ $t("Suppress Notifications") }}
             </label>
         </div>
-        <div class="form-text">
+        <div id="discord-suppress-notifications-hint" class="form-text">
             {{ $t("discordSuppressNotificationsHelptext") }}
         </div>
     </div>

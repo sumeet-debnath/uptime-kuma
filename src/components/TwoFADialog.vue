@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="twofa-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 id="twofa-dialog-title" class="modal-title">
                             {{ $t("Setup 2FA") }}
                             <span v-if="twoFAStatus == true" class="badge bg-primary">{{ $t("Active") }}</span>
                             <span v-if="twoFAStatus == false" class="badge bg-primary">{{ $t("Inactive") }}</span>
@@ -39,12 +45,13 @@
                             <p v-if="showURI && twoFAStatus == false" class="text-break mt-2">{{ uri }}</p>
 
                             <div v-if="!(uri && twoFAStatus == false)" class="mb-3">
-                                <label for="current-password" class="form-label">
+                                <label id="twofa-current-password-label" for="current-password" class="form-label">
                                     {{ $t("Current Password") }}
                                 </label>
                                 <input
-                                    id="current-password"
+                                    id="twofa-current-password"
                                     v-model="currentPassword"
+                                    aria-labelledby="twofa-current-password-label"
                                     type="password"
                                     class="form-control"
                                     autocomplete="current-password"
@@ -56,6 +63,8 @@
                                 v-if="uri == null && twoFAStatus == false"
                                 class="btn btn-primary"
                                 type="button"
+                                data-agentom-id="settings.security.enable-2fa"
+                                data-agentom-risk="sensitive"
                                 @click="prepare2FA()"
                             >
                                 {{ $t("Enable 2FA") }}
@@ -66,16 +75,20 @@
                                 class="btn btn-danger"
                                 type="button"
                                 :disabled="processing"
+                                data-agentom-id="settings.security.disable-2fa"
+                                data-agentom-risk="sensitive"
+                                data-agentom-confirmation="required"
                                 @click="confirmDisableTwoFA()"
                             >
                                 {{ $t("Disable 2FA") }}
                             </button>
 
                             <div v-if="uri && twoFAStatus == false" class="mt-3">
-                                <label for="basic-url" class="form-label">{{ $t("twoFAVerifyLabel") }}</label>
+                                <label id="twofa-token-label" class="form-label">{{ $t("twoFAVerifyLabel") }}</label>
                                 <div class="input-group">
                                     <input
                                         v-model="token"
+                                        aria-labelledby="twofa-token-label"
                                         type="text"
                                         maxlength="6"
                                         class="form-control"
@@ -98,6 +111,9 @@
                             type="submit"
                             class="btn btn-primary"
                             :disabled="processing || tokenValid == false"
+                            data-agentom-id="settings.security.2fa-save"
+                            data-agentom-risk="sensitive"
+                            data-agentom-confirmation="required"
                             @click="confirmEnableTwoFA()"
                         >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
@@ -109,7 +125,16 @@
         </div>
     </form>
 
-    <Confirm ref="confirmEnableTwoFA" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="save2FA">
+    <Confirm
+        ref="confirmEnableTwoFA"
+        btn-style="btn-danger"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        :action="$t('enable2faAria')"
+        yes-id="settings.security.enable-2fa.confirm"
+        risk="sensitive"
+        @yes="save2FA"
+    >
         {{ $t("confirmEnableTwoFAMsg") }}
     </Confirm>
 
@@ -118,6 +143,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('disable2faAria')"
+        yes-id="settings.security.disable-2fa.confirm"
+        risk="sensitive"
         @yes="disable2FA"
     >
         {{ $t("confirmDisableTwoFAMsg") }}

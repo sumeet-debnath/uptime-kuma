@@ -4,22 +4,25 @@
         <input
             id="plivo-auth-id"
             v-model="$parent.notification.plivoAuthID"
+            aria-describedby="plivo-auth-id-hint"
             type="text"
             class="form-control"
             required
         />
-        <div class="form-text">{{ $t("plivoAuthIDHelptext") }}</div>
+        <div id="plivo-auth-id-hint" class="form-text">{{ $t("plivoAuthIDHelptext") }}</div>
     </div>
 
     <div class="mb-3">
-        <label for="plivo-auth-token" class="form-label">{{ $t("plivoAuthToken") }}</label>
+        <label id="plivo-auth-token-label" for="plivo-auth-token" class="form-label">{{ $t("plivoAuthToken") }}</label>
         <HiddenInput
             id="plivo-auth-token"
             v-model="$parent.notification.plivoAuthToken"
+            labelledby="plivo-auth-token-label"
+            describedby="plivo-auth-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <div class="form-text">{{ $t("plivoAuthTokenHelptext") }}</div>
+        <div id="plivo-auth-token-hint" class="form-text">{{ $t("plivoAuthTokenHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -27,12 +30,13 @@
         <input
             id="plivo-from-number"
             v-model="$parent.notification.plivoFromNumber"
+            aria-describedby="plivo-from-number-hint"
             type="text"
             class="form-control"
             placeholder="+15551234567"
             required
         />
-        <div class="form-text">{{ $t("plivoFromNumberHelptext") }}</div>
+        <div id="plivo-from-number-hint" class="form-text">{{ $t("plivoFromNumberHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -40,12 +44,13 @@
         <input
             id="plivo-to-number"
             v-model="$parent.notification.plivoToNumber"
+            aria-describedby="plivo-to-number-hint"
             type="text"
             class="form-control"
             placeholder="+15559876543"
             required
         />
-        <div class="form-text">{{ $t("plivoToNumberHelptext") }}</div>
+        <div id="plivo-to-number-hint" class="form-text">{{ $t("plivoToNumberHelptext") }}</div>
     </div>
 
     <div class="mb-3">
@@ -61,12 +66,13 @@
         <input
             id="plivo-answer-url"
             v-model="$parent.notification.plivoAnswerUrl"
+            aria-describedby="plivo-answer-url-hint"
             type="url"
             class="form-control"
             placeholder="https://example.com/answer.xml"
             :required="true"
         />
-        <div class="form-text">{{ $t("plivoAnswerUrlHelptext") }}</div>
+        <div id="plivo-answer-url-hint" class="form-text">{{ $t("plivoAnswerUrlHelptext") }}</div>
     </div>
 
     <div class="mb-3">

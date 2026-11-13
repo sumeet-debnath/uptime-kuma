@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="vkteams-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
+        <label id="vkteams-bot-token-label" for="vkteams-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
         <HiddenInput
             id="vkteams-bot-token"
             v-model="$parent.notification.vkteamsBotToken"
+            labelledby="vkteams-bot-token-label"
+            describedby="vkteams-bot-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="VKTeams Bot Token Description" class="form-text">
+        <i18n-t id="vkteams-bot-token-hint" tag="div" keypath="VKTeams Bot Token Description" class="form-text">
             <a href="https://teams.vk.com/botapi/" target="_blank">https://teams.vk.com/botapi/</a>
         </i18n-t>
     </div>
@@ -21,8 +23,9 @@
             class="form-control"
             placeholder="*****@chat.agent"
             required
+            aria-describedby="vkteams-chat-id-hint"
         />
-        <div class="form-text">
+        <div id="vkteams-chat-id-hint" class="form-text">
             {{ $t("VKTeams Chat Id Description") }}
         </div>
     </div>
@@ -35,18 +38,25 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="vkteams-api-url-hint"
         />
-        <div class="form-text">
+        <div id="vkteams-api-url-hint" class="form-text">
             {{ $t("VKTeams Base Url Description") }}
         </div>
     </div>
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.vkteamsUseTemplate" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("VKTeams Use Template") }}</label>
+            <input
+                v-model="$parent.notification.vkteamsUseTemplate"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="vkteams-use-template-label"
+                aria-describedby="vkteams-use-template-hint"
+            />
+            <label id="vkteams-use-template-label" class="form-check-label">{{ $t("VKTeams Use Template") }}</label>
         </div>
-        <div class="form-text">
+        <div id="vkteams-use-template-hint" class="form-text">
             {{ $t("VKTeams Use Template Description") }}
         </div>
     </div>
@@ -59,12 +69,13 @@
                 v-model="$parent.notification.vkteamsTemplateFormat"
                 class="form-select"
                 required
+                aria-describedby="vkteams-message-format-hint"
             >
                 <option value="plain">{{ $t("Plain Text") }}</option>
                 <option value="MarkdownV2">MarkdownV2</option>
                 <option value="HTML">HTML</option>
             </select>
-            <p class="form-text">
+            <p id="vkteams-message-format-hint" class="form-text">
                 {{ $t("VKTeams Template Format Description") }}
             </p>
 

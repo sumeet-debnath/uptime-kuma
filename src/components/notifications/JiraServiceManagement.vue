@@ -19,13 +19,14 @@
         <input id="jsm-email" v-model="$parent.notification.jsmEmail" type="email" class="form-control" required />
     </div>
     <div class="mb-3">
-        <label for="jsm-api-token" class="form-label">
+        <label id="jsm-api-token-label" for="jsm-api-token" class="form-label">
             {{ $t("API Token") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="jsm-api-token"
             v-model="$parent.notification.jsmApiToken"
+            labelledby="jsm-api-token-label"
             required="true"
             autocomplete="false"
         ></HiddenInput>

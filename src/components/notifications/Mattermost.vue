@@ -9,6 +9,7 @@
             v-model="$parent.notification.mattermostWebhookUrl"
             type="text"
             class="form-control"
+            data-agentom-redact
             required
         />
         <label for="mattermost-username" class="form-label">{{ $t("Username") }}</label>
@@ -32,12 +33,13 @@
             type="text"
             class="form-control"
         />
-        <label for="mattermost-channel" class="form-label">{{ $t("Channel Name") }}</label>
+        <label id="mattermost-channel-label" class="form-label">{{ $t("Channel Name") }}</label>
         <input
             id="mattermost-channel-name"
             v-model="$parent.notification.mattermostchannel"
             type="text"
             class="form-control"
+            aria-labelledby="mattermost-channel-label"
         />
         <div class="form-text">
             <span style="color: red"><sup>*</sup></span>

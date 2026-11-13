@@ -2,17 +2,29 @@
     <!-- Group List -->
     <Draggable v-model="$root.publicGroupList" :disabled="!editMode" item-key="id" :animation="100">
         <template #item="group">
-            <div class="mb-5" data-testid="group">
+            <div class="mb-5" data-testid="group" role="group" :aria-label="group.element.name">
                 <!-- Group Title -->
-                <h2 class="group-title">
+                <h2 class="group-title" :aria-label="group.element.name">
                     <font-awesome-icon v-if="editMode && showGroupDrag" icon="arrows-alt-v" class="action drag me-3" />
                     <font-awesome-icon
                         v-if="editMode"
                         icon="times"
                         class="action remove me-3"
+                        role="button"
+                        aria-hidden="false"
+                        :aria-label="$t('removeGroupAria', [group.element.name])"
+                        :data-agentom-id="`status-page.group.${group.element.id ?? 'new-' + group.index}.remove`"
                         @click="removeGroup(group.index)"
                     />
-                    <span class="collapse-toggle" @click="toggleGroup(group.element)">
+                    <span
+                        class="collapse-toggle"
+                        role="button"
+                        :aria-expanded="isGroupCollapsed(group.element) ? 'false' : 'true'"
+                        :aria-controls="isGroupCollapsed(group.element) ? undefined : `group-${group.index}-monitors`"
+                        :aria-label="$t('groupMonitorsToggleAria', [group.element.name])"
+                        :data-agentom-id="`status-page.group.${group.element.id ?? 'new-' + group.index}.toggle`"
+                        @click="toggleGroup(group.element)"
+                    >
                         <font-awesome-icon
                             icon="chevron-down"
                             class="chevron me-2"
@@ -25,12 +37,18 @@
                         tag="span"
                         :class="{ 'collapse-toggle': !editMode }"
                         data-testid="group-name"
+                        :role="editMode ? 'textbox' : undefined"
+                        :aria-label="editMode ? $t('Group Name') : undefined"
                         @click="!editMode && toggleGroup(group.element)"
                     />
                 </h2>
 
                 <transition name="slide-fade-up">
-                    <div v-if="!isGroupCollapsed(group.element)" class="shadow-box monitor-list mt-4 position-relative">
+                    <div
+                        v-if="!isGroupCollapsed(group.element)"
+                        :id="`group-${group.index}-monitors`"
+                        class="shadow-box monitor-list mt-4 position-relative"
+                    >
                         <div v-if="group.element.monitorList.length === 0" class="text-center no-monitor-msg">
                             {{ $t("No Monitors") }}
                         </div>
@@ -40,13 +58,19 @@
                         <Draggable
                             v-model="group.element.monitorList"
                             class="monitor-list"
+                            role="list"
                             group="same-group"
                             :disabled="!editMode"
                             :animation="100"
                             item-key="id"
                         >
                             <template #item="monitor">
-                                <div class="item" data-testid="monitor">
+                                <div
+                                    class="item"
+                                    data-testid="monitor"
+                                    role="listitem"
+                                    :data-agentom-id="`status-page.monitor.${monitor.element.id}`"
+                                >
                                     <div class="row">
                                         <div class="col-9 col-xl-6 small-padding">
                                             <div class="info">
@@ -59,6 +83,15 @@
                                                     v-if="editMode"
                                                     icon="times"
                                                     class="action remove me-3"
+                                                    role="button"
+                                                    aria-hidden="false"
+                                                    :aria-label="
+                                                        $t('removeMonitorFromGroupAria', [
+                                                            monitor.element.name,
+                                                            group.element.name,
+                                                        ])
+                                                    "
+                                                    :data-agentom-id="`status-page.monitor.${monitor.element.id}.remove`"
                                                     @click="removeMonitor(group.index, monitor.index)"
                                                 />
 
@@ -68,6 +101,10 @@
                                                     class="action me-3 ms-0"
                                                     :class="{ 'link-active': true, 'btn-link': true }"
                                                     data-testid="monitor-settings"
+                                                    role="button"
+                                                    aria-hidden="false"
+                                                    :aria-label="$t('Monitor Setting', [monitor.element.name])"
+                                                    :data-agentom-id="`status-page.monitor.${monitor.element.id}.settings`"
                                                     @click="$refs.monitorSettingDialog.show(group, monitor)"
                                                 />
                                                 <Status

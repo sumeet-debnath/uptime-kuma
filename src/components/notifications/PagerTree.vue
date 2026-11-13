@@ -7,11 +7,17 @@
         <input
             id="pagertree-integration-url"
             v-model="$parent.notification.pagertreeIntegrationUrl"
+            aria-describedby="pagertree-integration-url-hint"
             type="text"
             class="form-control"
             autocomplete="false"
         />
-        <i18n-t tag="div" keypath="wayToGetPagerTreeIntegrationURL" class="form-text">
+        <i18n-t
+            id="pagertree-integration-url-hint"
+            tag="div"
+            keypath="wayToGetPagerTreeIntegrationURL"
+            class="form-text"
+        >
             <a href="https://pagertree.com/docs/integration-guides/introduction#copy-the-endpoint-url" target="_blank">
                 {{ $t("here") }}
             </a>

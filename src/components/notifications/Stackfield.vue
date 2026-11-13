@@ -10,9 +10,11 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="stackfield-webhook-url-hint"
+            data-agentom-redact
         />
 
-        <div class="form-text">
+        <div id="stackfield-webhook-url-hint" class="form-text">
             <span style="color: red"><sup>*</sup></span>
             {{ $t("Required") }}
             <i18n-t tag="p" keypath="aboutWebhooks" style="margin-top: 8px">

@@ -10,13 +10,14 @@
         </select>
     </div>
     <div class="mb-3">
-        <label for="opsgenie-apikey" class="form-label">
+        <label id="opsgenie-apikey-label" for="opsgenie-apikey" class="form-label">
             {{ $t("API Key") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="opsgenie-apikey"
             v-model="$parent.notification.opsgenieApiKey"
+            labelledby="opsgenie-apikey-label"
             required="true"
             autocomplete="false"
         ></HiddenInput>

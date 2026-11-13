@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="keyaddmodal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="keyaddmodal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="api-key-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 id="api-key-dialog-title" class="modal-title">
                             {{ $t("Add API Key") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -23,6 +29,8 @@
                                 <div class="col-6">
                                     <Datepicker
                                         v-model="key.expires"
+                                        uid="api-key-expiry"
+                                        :aria-labels="{ input: $t('Expiry date'), menu: $t('Expiry date') }"
                                         :dark="$root.isDark"
                                         :monthChangeOnScroll="false"
                                         :minDate="minDate"
@@ -47,18 +55,32 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="monitor-submit-btn" class="btn btn-primary" type="submit" :disabled="processing">
+                        <button
+                            id="monitor-submit-btn"
+                            class="btn btn-primary"
+                            type="submit"
+                            :disabled="processing"
+                            data-agentom-id="api-key-dialog.generate"
+                            data-agentom-risk="sensitive"
+                            data-agentom-action="generate-api-key"
+                        >
                             {{ $t("Generate") }}
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div ref="keymodal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="keymodal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="api-key-added-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 id="api-key-added-dialog-title" class="modal-title">
                             {{ $t("Key Added") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -69,7 +91,13 @@
                             {{ $t("apiKeyAddedMsg") }}
                         </div>
                         <div class="mb-3">
-                            <CopyableInput v-model="clearKey" disabled="disabled" />
+                            <label for="new-api-key" class="visually-hidden">{{ $t("API Key") }}</label>
+                            <CopyableInput
+                                id="new-api-key"
+                                v-model="clearKey"
+                                disabled="disabled"
+                                data-agentom-redact
+                            />
                         </div>
                     </div>
 

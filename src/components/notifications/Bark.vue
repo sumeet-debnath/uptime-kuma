@@ -17,8 +17,9 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="bark-endpoint-hint"
         />
-        <i18n-t tag="div" keypath="wayToGetTeamsURL" class="form-text">
+        <i18n-t id="bark-endpoint-hint" tag="div" keypath="wayToGetTeamsURL" class="form-text">
             <a href="https://github.com/Finb/Bark" target="_blank">{{ $t("here") }}</a>
         </i18n-t>
     </div>

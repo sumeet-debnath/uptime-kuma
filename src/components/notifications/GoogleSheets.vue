@@ -1,14 +1,18 @@
 <template>
     <div class="mb-3">
-        <label for="google-sheets-webhook-url" class="form-label">{{ $t("Google Apps Script Webhook URL") }}</label>
+        <label id="google-sheets-webhook-url-label" for="google-sheets-webhook-url" class="form-label">
+            {{ $t("Google Apps Script Webhook URL") }}
+        </label>
         <HiddenInput
             id="google-sheets-webhook-url"
             v-model="$parent.notification.googleSheetsWebhookUrl"
+            labelledby="google-sheets-webhook-url-label"
+            describedby="googlesheets-webhook-url-hint"
             :required="true"
             placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
             autocomplete="off"
         />
-        <div class="form-text">
+        <div id="googlesheets-webhook-url-hint" class="form-text">
             <p>{{ $t("Deploy a Google Apps Script as a web app and paste the URL here") }}</p>
         </div>
     </div>

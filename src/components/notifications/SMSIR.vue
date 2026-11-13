@@ -1,9 +1,10 @@
 <template>
     <div class="mb-3">
-        <label for="smsir-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="smsir-key-label" for="smsir-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="smsir-key"
             v-model="$parent.notification.smsirApiKey"
+            labelledby="smsir-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -25,12 +26,13 @@
         <input
             id="smsir-template"
             v-model="$parent.notification.smsirTemplate"
+            aria-describedby="smsir-template-hint"
             placeholder="12345"
             type="text"
             class="form-control"
             required
         />
-        <i18n-t tag="div" class="form-text" keypath="wayToGetClickSMSIRTemplateID">
+        <i18n-t id="smsir-template-hint" tag="div" class="form-text" keypath="wayToGetClickSMSIRTemplateID">
             <template #uptkumaalert>
                 <code>#uptkumaalert#</code>
             </template>

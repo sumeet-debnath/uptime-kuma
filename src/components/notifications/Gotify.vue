@@ -1,9 +1,12 @@
 <template>
     <div class="mb-3">
-        <label for="gotify-application-token" class="form-label">{{ $t("Application Token") }}</label>
+        <label id="gotify-application-token-label" for="gotify-application-token" class="form-label">
+            {{ $t("Application Token") }}
+        </label>
         <HiddenInput
             id="gotify-application-token"
             v-model="$parent.notification.gotifyapplicationToken"
+            labelledby="gotify-application-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

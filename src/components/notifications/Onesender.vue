@@ -13,10 +13,13 @@
     </div>
 
     <div class="mb-3">
-        <label for="receiver-onesender" class="form-label">{{ $t("Token Onesender") }}</label>
+        <label id="receiver-onesender-label" for="receiver-onesender" class="form-label">
+            {{ $t("Token Onesender") }}
+        </label>
         <HiddenInput
             id="receiver-onesender"
             v-model="$parent.notification.onesenderToken"
+            labelledby="receiver-onesender-label"
             :required="true"
             autocomplete="false"
         ></HiddenInput>
@@ -37,10 +40,10 @@
             <option value="group">{{ $t("Group ID") }}</option>
         </select>
     </div>
-    <div v-if="$parent.notification.onesenderTypeReceiver == 'private'" class="form-text">
+    <div v-if="$parent.notification.onesenderTypeReceiver == 'private'" id="onesender-receiver-hint" class="form-text">
         {{ $t("privateOnesenderDesc", ['"application/json"']) }}
     </div>
-    <div v-else class="form-text">{{ $t("groupOnesenderDesc") }}</div>
+    <div v-else id="onesender-receiver-hint-2" class="form-text">{{ $t("groupOnesenderDesc") }}</div>
     <div class="mb-3">
         <input
             id="type-receiver-onesender"
@@ -48,6 +51,11 @@
             type="text"
             placeholder="628123456789 or 628123456789-34534"
             class="form-control"
+            :aria-describedby="
+                $parent.notification.onesenderTypeReceiver == 'private'
+                    ? 'onesender-receiver-hint'
+                    : 'onesender-receiver-hint-2'
+            "
             required
         />
     </div>

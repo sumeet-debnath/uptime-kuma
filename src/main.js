@@ -21,9 +21,19 @@ import timezone from "./modules/dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { loadToastSettings } from "./util-frontend";
+import DOMPurify from "dompurify";
+import { createSemanticProjector } from "@agent-om/core";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
+
+// Content the app shows as HTML (descriptions, footers, incidents) mustn't give itself
+// Agent Object Model metadata: drop data-agentom-* wherever DOMPurify sanitises.
+DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+    if (data.attrName.startsWith("data-agentom-")) {
+        data.keepAttr = false;
+    }
+});
 
 const app = createApp({
     mixins: [socket, theme, mobile, datetime, publicMixin, lang],
@@ -42,7 +52,32 @@ app.use(Toast, loadToastSettings());
 app.component("Editable", contenteditable);
 app.component("FontAwesomeIcon", FontAwesomeIcon);
 
-app.mount("#app");
+const vm = app.mount("#app");
+
+// The Agent Object Model's projector, with the screen (from the route) and its state
+// as context. window.__semanticUI is where agents and the audit find it.
+const semanticContext = () => {
+    const route = router.currentRoute.value;
+    const signedOutPage =
+        route.matched.some((record) => record.path === "/empty") && !vm.loggedIn && vm.allowLoginDialog;
+    let state = "ready";
+    if (!vm.socket.connected && !vm.socket.firstConnect) {
+        state = "error";
+    } else if (!vm.loggedIn && !vm.allowLoginDialog && !route.path.startsWith("/status")) {
+        state = "loading";
+    }
+    return {
+        screen: signedOutPage ? "login" : (route.meta.screen ?? "unknown"),
+        state,
+    };
+};
+const semanticProjector = createSemanticProjector({ context: semanticContext });
+window.__semanticUI = semanticProjector;
+router.afterEach(() => semanticProjector.refresh());
+vm.$watch(
+    () => [vm.loggedIn, vm.allowLoginDialog, vm.socket.connected, vm.socket.firstConnect],
+    () => semanticProjector.refresh()
+);
 
 // Service Worker
 // Mainly for Webpush notification

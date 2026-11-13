@@ -4,21 +4,30 @@
             {{ $t("WebHookUrl") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
-        <input id="WebHookUrl" v-model="$parent.notification.webHookUrl" type="text" class="form-control" required />
+        <input
+            id="WebHookUrl"
+            v-model="$parent.notification.webHookUrl"
+            type="text"
+            class="form-control"
+            required
+            data-agentom-redact
+        />
     </div>
     <div class="mb-3">
-        <label for="secretKey" class="form-label">
+        <label id="secretKey-label" for="secretKey" class="form-label">
             {{ $t("SecretKey") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="secretKey"
             v-model="$parent.notification.secretKey"
+            labelledby="secretKey-label"
+            describedby="dingding-secret-key-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
 
-        <div class="form-text">
+        <div id="dingding-secret-key-hint" class="form-text">
             <p>{{ $t("For safety, must use secret key") }}</p>
             <i18n-t tag="p" keypath="Read more:">
                 <a href="https://developers.dingtalk.com/document/robots/custom-robot-access" target="_blank">
@@ -52,13 +61,14 @@
         </select>
     </div>
     <div v-if="$parent.notification.mentioning === 'specify-mobiles'" class="mb-3">
-        <label for="mobileList" class="form-label">
+        <label id="dingding-mobile-list-label" class="form-label">
             {{ $t("Dingtalk Mobile List") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <VueMultiselect
             id="mobileList-select"
             v-model="$parent.notification.mobileList"
+            aria-labelledby="dingding-mobile-list-label"
             :required="$parent.notification.mentioning === 'specify-mobiles'"
             :placeholder="$t('Enter a list of mobile')"
             :multiple="true"
@@ -75,13 +85,14 @@
         ></VueMultiselect>
     </div>
     <div v-if="$parent.notification.mentioning === 'specify-users'" class="mb-3">
-        <label for="userList" class="form-label">
+        <label id="dingding-user-list-label" class="form-label">
             {{ $t("Dingtalk User List") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <VueMultiselect
             id="userList-select"
             v-model="$parent.notification.userList"
+            aria-labelledby="dingding-user-list-label"
             :required="$parent.notification.mentioning === 'specify-users'"
             :placeholder="$t('Enter a list of userId')"
             :multiple="true"

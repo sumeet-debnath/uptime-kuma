@@ -8,23 +8,29 @@
             class="form-control"
             required
         />
-        <label for="promosms-key" class="form-label">{{ $t("promosmsPassword") }}</label>
+        <label id="promosms-key-label" for="promosms-key" class="form-label">{{ $t("promosmsPassword") }}</label>
         <HiddenInput
             id="promosms-key"
             v-model="$parent.notification.promosmsPassword"
+            labelledby="promosms-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
     </div>
     <div class="mb-3">
         <label for="promosms-type-sms" class="form-label">{{ $t("SMS Type") }}</label>
-        <select id="promosms-type-sms" v-model="$parent.notification.promosmsSMSType" class="form-select">
+        <select
+            id="promosms-type-sms"
+            v-model="$parent.notification.promosmsSMSType"
+            class="form-select"
+            aria-describedby="promosms-type-sms-hint"
+        >
             <option value="0">{{ $t("promosmsTypeFlash") }}</option>
             <option value="1">{{ $t("promosmsTypeEco") }}</option>
             <option value="3">{{ $t("promosmsTypeFull") }}</option>
             <option value="4">{{ $t("promosmsTypeSpeed") }}</option>
         </select>
-        <i18n-t tag="div" keypath="checkPriceAt" class="form-text">
+        <i18n-t id="promosms-type-sms-hint" tag="div" keypath="checkPriceAt" class="form-text">
             <template #service>promosms</template>
             <template #url>
                 <a href="https://promosms.com/cennik/" target="_blank">https://promosms.com/cennik/</a>

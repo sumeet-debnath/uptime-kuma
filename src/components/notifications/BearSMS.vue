@@ -13,10 +13,11 @@
         />
     </div>
     <div class="mb-3">
-        <label for="bearsms-hashkey" class="form-label">{{ $t("Hash Key") }}</label>
+        <label id="bearsms-hashkey-label" for="bearsms-hashkey" class="form-label">{{ $t("Hash Key") }}</label>
         <HiddenInput
             id="bearsms-hashkey"
             v-model="$parent.notification.bearsmsHashKey"
+            labelledby="bearsms-hashkey-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -29,8 +30,9 @@
             type="text"
             maxlength="11"
             class="form-control"
+            aria-describedby="bearsms-sender-id-hint"
         />
-        <div class="form-text">{{ $t("bearsmsSenderDescription") }}</div>
+        <div id="bearsms-sender-id-hint" class="form-text">{{ $t("bearsmsSenderDescription") }}</div>
     </div>
     <div class="mb-3">
         <label for="bearsms-phoneNumber" class="form-label">{{ $t("Recipient Number") }}</label>
@@ -41,8 +43,9 @@
             class="form-control"
             placeholder="9725XXXXXXXX"
             required
+            aria-describedby="bearsms-phone-number-hint"
         />
-        <div class="form-text">{{ $t("bearsmsPhoneNumberDescription") }}</div>
+        <div id="bearsms-phone-number-hint" class="form-text">{{ $t("bearsmsPhoneNumberDescription") }}</div>
     </div>
 </template>
 <script>

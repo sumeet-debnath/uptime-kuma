@@ -1,9 +1,9 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1" aria-labelledby="incident-manage-dialog-title">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 id="incident-manage-dialog-title" class="modal-title">
                         {{ $t("Edit Incident") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -67,7 +67,14 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         {{ $t("Cancel") }}
                     </button>
-                    <button type="button" class="btn btn-primary" :disabled="processing" @click="submit">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        :disabled="processing"
+                        data-agentom-id="incident-dialog.save"
+                        data-agentom-action="save-incident"
+                        @click="submit"
+                    >
                         <span v-if="processing" class="spinner-border spinner-border-sm me-1" role="status"></span>
                         {{ $t("Save") }}
                     </button>
@@ -81,6 +88,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('deleteIncidentAria', [pendingDeleteIncident?.title])"
+        yes-id="incident-dialog.delete.confirm"
+        risk="destructive"
         @yes="confirmDeleteIncident"
     >
         {{ $t("deleteIncidentMsg") }}

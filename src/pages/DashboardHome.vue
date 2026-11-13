@@ -7,31 +7,74 @@
 
             <div class="shadow-box big-padding text-center mb-3">
                 <div class="row">
-                    <div class="col">
-                        <h3>{{ $t("Up") }}</h3>
-                        <span class="num" :class="$root.stats.up === 0 && 'text-secondary'">
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-up-label"
+                        aria-describedby="stat-up-value"
+                        data-agentom-id="stats.up"
+                        :data-agentom-value="$root.stats.up"
+                    >
+                        <h3 id="stat-up-label">{{ $t("Up") }}</h3>
+                        <span id="stat-up-value" class="num" :class="$root.stats.up === 0 && 'text-secondary'">
                             {{ $root.stats.up }}
                         </span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Down") }}</h3>
-                        <span class="num" :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'">
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-down-label"
+                        aria-describedby="stat-down-value"
+                        data-agentom-id="stats.down"
+                        :data-agentom-value="$root.stats.down"
+                    >
+                        <h3 id="stat-down-label">{{ $t("Down") }}</h3>
+                        <span
+                            id="stat-down-value"
+                            class="num"
+                            :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'"
+                        >
                             {{ $root.stats.down }}
                         </span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Maintenance") }}</h3>
-                        <span class="num" :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'">
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-maintenance-label"
+                        aria-describedby="stat-maintenance-value"
+                        data-agentom-id="stats.maintenance"
+                        :data-agentom-value="$root.stats.maintenance"
+                    >
+                        <h3 id="stat-maintenance-label">{{ $t("Maintenance") }}</h3>
+                        <span
+                            id="stat-maintenance-value"
+                            class="num"
+                            :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'"
+                        >
                             {{ $root.stats.maintenance }}
                         </span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Unknown") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.unknown }}</span>
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-unknown-label"
+                        aria-describedby="stat-unknown-value"
+                        data-agentom-id="stats.unknown"
+                        :data-agentom-value="$root.stats.unknown"
+                    >
+                        <h3 id="stat-unknown-label">{{ $t("Unknown") }}</h3>
+                        <span id="stat-unknown-value" class="num text-secondary">{{ $root.stats.unknown }}</span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("pauseDashboardHome") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.pause }}</span>
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-pause-label"
+                        aria-describedby="stat-pause-value"
+                        data-agentom-id="stats.pause"
+                        :data-agentom-value="$root.stats.pause"
+                    >
+                        <h3 id="stat-pause-label">{{ $t("pauseDashboardHome") }}</h3>
+                        <span id="stat-pause-value" class="num text-secondary">{{ $root.stats.pause }}</span>
                     </div>
                 </div>
             </div>
@@ -41,12 +84,15 @@
                     <button
                         class="btn btn-sm btn-outline-danger"
                         :disabled="clearingAllEvents"
+                        data-agentom-id="events.clear-all"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
                         @click="clearAllEventsDialog"
                     >
                         {{ $t("Clear All Events") }}
                     </button>
                 </div>
-                <table class="table table-borderless table-hover">
+                <table class="table table-borderless table-hover" :aria-label="$t('Events')">
                     <thead>
                         <tr>
                             <th v-if="showGroupColumn">{{ $t("Group Name") }}</th>
@@ -105,6 +151,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('clearAllEventsAria')"
+        yes-id="events.clear-all.confirm"
+        risk="destructive"
         @yes="clearAllEvents"
     >
         {{ $t("clearAllEventsMsg") }}

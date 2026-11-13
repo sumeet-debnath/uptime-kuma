@@ -5,13 +5,18 @@
         </div>
         <div v-else>
             <div class="add-btn">
-                <button class="btn btn-primary me-2" type="button" @click="$refs.apiKeyDialog.show()">
+                <button
+                    class="btn btn-primary me-2"
+                    type="button"
+                    data-agentom-id="api-keys.add"
+                    @click="$refs.apiKeyDialog.show()"
+                >
                     <font-awesome-icon icon="plus" />
                     {{ $t("Add API Key") }}
                 </button>
             </div>
 
-            <div>
+            <div role="list" :aria-label="$t('settingsListAria', [$t('API Keys')])">
                 <span
                     v-if="Object.keys(keyList).length === 0"
                     class="d-flex align-items-center justify-content-center my-3"
@@ -19,11 +24,19 @@
                     {{ $t("No API Keys") }}
                 </span>
 
-                <div v-for="(item, index) in keyList" :key="index" class="item" :class="item.status">
+                <div
+                    v-for="(item, index) in keyList"
+                    :key="index"
+                    class="item"
+                    :class="item.status"
+                    role="listitem"
+                    :aria-labelledby="`api-key-title-${item.id}`"
+                    :data-agentom-id="`api-key.${item.id}`"
+                >
                     <div class="left-part">
                         <div class="circle"></div>
                         <div class="info">
-                            <div class="title">{{ item.name }}</div>
+                            <div :id="`api-key-title-${item.id}`" class="title">{{ item.name }}</div>
                             <div class="status">
                                 {{ $t("apiKey-" + item.status) }}
                             </div>
@@ -37,17 +50,36 @@
 
                     <div class="buttons">
                         <div class="btn-group" role="group">
-                            <button v-if="item.active" class="btn btn-normal" @click="disableDialog(item.id)">
+                            <button
+                                v-if="item.active"
+                                class="btn btn-normal"
+                                :data-agentom-id="`api-key.${item.id}.toggle`"
+                                data-agentom-risk="sensitive"
+                                data-agentom-confirmation="required"
+                                @click="disableDialog(item.id)"
+                            >
                                 <font-awesome-icon icon="pause" />
                                 {{ $t("Disable") }}
                             </button>
 
-                            <button v-if="!item.active" class="btn btn-primary" @click="enableKey(item.id)">
+                            <button
+                                v-if="!item.active"
+                                class="btn btn-primary"
+                                :data-agentom-id="`api-key.${item.id}.toggle`"
+                                data-agentom-risk="sensitive"
+                                @click="enableKey(item.id)"
+                            >
                                 <font-awesome-icon icon="play" />
                                 {{ $t("Enable") }}
                             </button>
 
-                            <button class="btn btn-danger" @click="deleteDialog(item.id)">
+                            <button
+                                class="btn btn-danger"
+                                :data-agentom-id="`api-key.${item.id}.delete`"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
+                                @click="deleteDialog(item.id)"
+                            >
                                 <font-awesome-icon icon="trash" />
                                 {{ $t("Delete") }}
                             </button>
@@ -63,11 +95,28 @@
             </a>
         </div>
 
-        <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="disableKey">
+        <Confirm
+            ref="confirmPause"
+            :yes-text="$t('Yes')"
+            :no-text="$t('No')"
+            :action="$t('disableApiKeyAria', [keyList.find((key) => key.id === selectedKeyID)?.name])"
+            yes-id="api-key.disable.confirm"
+            risk="sensitive"
+            @yes="disableKey"
+        >
             {{ $t("disableAPIKeyMsg") }}
         </Confirm>
 
-        <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteKey">
+        <Confirm
+            ref="confirmDelete"
+            btn-style="btn-danger"
+            :yes-text="$t('Yes')"
+            :no-text="$t('No')"
+            :action="$t('deleteApiKeyAria', [keyList.find((key) => key.id === selectedKeyID)?.name])"
+            yes-id="api-key.delete.confirm"
+            risk="destructive"
+            @yes="deleteKey"
+        >
             {{ $t("deleteAPIKeyMsg") }}
         </Confirm>
 

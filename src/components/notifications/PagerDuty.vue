@@ -1,13 +1,17 @@
 <template>
     <div class="mb-3">
-        <label for="pagerduty-integration-key" class="form-label">{{ $t("Integration Key") }}</label>
+        <label id="pagerduty-integration-key-label" for="pagerduty-integration-key" class="form-label">
+            {{ $t("Integration Key") }}
+        </label>
         <HiddenInput
             id="pagerduty-integration-key"
             v-model="$parent.notification.pagerdutyIntegrationKey"
+            labelledby="pagerduty-integration-key-label"
+            describedby="pagerduty-integration-key-hint"
             :required="true"
             autocomplete="false"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="wayToGetPagerDutyKey" class="form-text">
+        <i18n-t id="pagerduty-integration-key-hint" tag="div" keypath="wayToGetPagerDutyKey" class="form-text">
             <a href="https://support.pagerduty.com/docs/services-and-integrations" target="_blank">{{ $t("here") }}</a>
         </i18n-t>
     </div>

@@ -8,6 +8,7 @@
             <input
                 id="keepDataPeriodDays"
                 v-model="settings.keepDataPeriodDays"
+                data-agentom-id="settings.history.keep-days"
                 type="number"
                 class="form-control"
                 required
@@ -19,13 +20,24 @@
             </div>
         </div>
         <div class="my-4">
-            <button class="btn btn-primary" type="button" @click="saveSettings()">
+            <button
+                class="btn btn-primary"
+                type="button"
+                data-agentom-id="settings.history.save"
+                data-agentom-action="save-settings"
+                @click="saveSettings()"
+            >
                 {{ $t("Save") }}
             </button>
         </div>
         <div class="my-4">
             <div v-if="$root.info.dbType === 'sqlite'" class="my-3">
-                <button class="btn btn-outline-info me-2" @click="shrinkDatabase">
+                <button
+                    class="btn btn-outline-info me-2"
+                    data-agentom-id="settings.history.shrink"
+                    data-agentom-risk="sensitive"
+                    @click="shrinkDatabase"
+                >
                     {{ $t("Shrink Database") }} ({{ databaseSizeDisplay }})
                 </button>
                 <i18n-t tag="div" keypath="shrinkDatabaseDescriptionSqlite" class="form-text mt-2 mb-4 ms-2">
@@ -37,7 +49,14 @@
                     </template>
                 </i18n-t>
             </div>
-            <button id="clearAllStats-btn" class="btn btn-outline-danger me-2 mb-2" @click="confirmClearStatistics">
+            <button
+                id="clearAllStats-btn"
+                class="btn btn-outline-danger me-2 mb-2"
+                data-agentom-id="settings.history.clear-statistics"
+                data-agentom-risk="destructive"
+                data-agentom-confirmation="required"
+                @click="confirmClearStatistics"
+            >
                 {{ $t("Clear all statistics") }}
             </button>
         </div>
@@ -46,6 +65,9 @@
             btn-style="btn-danger"
             :yes-text="$t('Yes')"
             :no-text="$t('No')"
+            :action="$t('clearStatisticsAria')"
+            yes-id="settings.history.clear-statistics.confirm"
+            risk="destructive"
             @yes="clearStatistics"
         >
             {{ $t("confirmClearStatisticsMsg") }}

@@ -1,13 +1,17 @@
 <template>
     <div class="mb-3">
-        <label for="360messenger-auth-token" class="form-label">{{ $t("360messengerAuthToken") }}</label>
+        <label id="360messenger-auth-token-label" for="360messenger-auth-token" class="form-label">
+            {{ $t("360messengerAuthToken") }}
+        </label>
         <HiddenInput
             id="360messenger-auth-token"
             v-model="$parent.notification.Whatsapp360messengerAuthToken"
+            labelledby="360messenger-auth-token-label"
+            describedby="360messenger-auth-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="360messengerWayToGetUrlAndToken" class="form-text">
+        <i18n-t id="360messenger-auth-token-hint" tag="div" keypath="360messengerWayToGetUrlAndToken" class="form-text">
             <a href="https://360messenger.com/en/uptime-kuma" target="_blank">
                 https://360messenger.com/en/uptime-kuma
             </a>
@@ -23,8 +27,11 @@
             class="form-control"
             placeholder="447488888888, 447499999999"
             :required="!hasAnySelectedGroup"
+            aria-describedby="360messenger-recipient-hint"
         />
-        <div class="form-text">{{ $t("360messengerWayToWriteRecipient", ["447488888888"]) }}</div>
+        <div id="360messenger-recipient-hint" class="form-text">
+            {{ $t("360messengerWayToWriteRecipient", ["447488888888"]) }}
+        </div>
     </div>
 
     <!-- Checkbox to enable/disable Combobox -->
@@ -72,11 +79,15 @@
                 v-model="$parent.notification.Whatsapp360messengerUseTemplate"
                 class="form-check-input"
                 type="checkbox"
+                aria-labelledby="360messenger-use-template-label"
+                aria-describedby="360messenger-use-template-hint"
             />
-            <label class="form-check-label">{{ $t("360messengerCustomMessageTemplate") }}</label>
+            <label id="360messenger-use-template-label" class="form-check-label">
+                {{ $t("360messengerCustomMessageTemplate") }}
+            </label>
         </div>
 
-        <div class="form-text">
+        <div id="360messenger-use-template-hint" class="form-text">
             {{ $t("360messengerEnableCustomMessage") }}
         </div>
     </div>

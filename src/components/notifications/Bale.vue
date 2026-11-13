@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="bale-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
+        <label id="bale-bot-token-label" for="bale-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
         <HiddenInput
             id="bale-bot-token"
             v-model="$parent.notification.baleBotToken"
+            labelledby="bale-bot-token-label"
+            describedby="bale-bot-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="wayToGetBaleToken" class="form-text">
+        <i18n-t id="bale-bot-token-hint" tag="div" keypath="wayToGetBaleToken" class="form-text">
             <a href="https://ble.ir/BotFather" target="_blank">https://ble.ir/BotFather</a>
         </i18n-t>
     </div>
@@ -22,6 +24,7 @@
                 type="text"
                 class="form-control"
                 required
+                aria-describedby="bale-chat-id-hint"
             />
             <button
                 v-if="$parent.notification.baleBotToken"
@@ -33,7 +36,7 @@
             </button>
         </div>
 
-        <div class="form-text">
+        <div id="bale-chat-id-hint" class="form-text">
             {{ $t("supportBaleChatID") }}
 
             <p style="margin-top: 8px">

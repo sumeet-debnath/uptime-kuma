@@ -55,11 +55,17 @@
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.signalUseTemplate" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("signalUseTemplate") }}</label>
+            <input
+                v-model="$parent.notification.signalUseTemplate"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="signal-use-template-label"
+                aria-describedby="signal-use-template-hint"
+            />
+            <label id="signal-use-template-label" class="form-check-label">{{ $t("signalUseTemplate") }}</label>
         </div>
 
-        <div class="form-text">
+        <div id="signal-use-template-hint" class="form-text">
             {{ $t("signalUseTemplateDescription") }}
         </div>
     </div>

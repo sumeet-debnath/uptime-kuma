@@ -18,17 +18,19 @@
                 v-model="$parent.notification.conversationToken"
                 type="text"
                 class="form-control"
+                data-agentom-redact
             />
         </div>
 
         <div class="mb-3">
-            <label for="nextcloud-bot-secret" class="form-label">
+            <label id="nextcloud-bot-secret-label" for="nextcloud-bot-secret" class="form-label">
                 {{ $t("Bot secret") }}
                 <span style="color: red"><sup>*</sup></span>
             </label>
             <HiddenInput
                 id="nextcloud-bot-secret"
                 v-model="$parent.notification.botSecret"
+                labelledby="nextcloud-bot-secret-label"
                 :required="true"
                 autocomplete="new-password"
             ></HiddenInput>
@@ -36,15 +38,29 @@
 
         <div class="mb-3">
             <div class="form-check form-switch">
-                <input v-model="$parent.notification.sendSilentUp" class="form-check-input" type="checkbox" />
-                <label class="form-check-label">{{ $t("Send UP silently") }}</label>
+                <input
+                    v-model="$parent.notification.sendSilentUp"
+                    class="form-check-input"
+                    type="checkbox"
+                    aria-labelledby="nextcloudtalk-send-silent-up-label"
+                />
+                <label id="nextcloudtalk-send-silent-up-label" class="form-check-label">
+                    {{ $t("Send UP silently") }}
+                </label>
             </div>
         </div>
 
         <div class="mb-3">
             <div class="form-check form-switch">
-                <input v-model="$parent.notification.sendSilentDown" class="form-check-input" type="checkbox" />
-                <label class="form-check-label">{{ $t("Send DOWN silently") }}</label>
+                <input
+                    v-model="$parent.notification.sendSilentDown"
+                    class="form-check-input"
+                    type="checkbox"
+                    aria-labelledby="nextcloudtalk-send-silent-down-label"
+                />
+                <label id="nextcloudtalk-send-silent-down-label" class="form-check-label">
+                    {{ $t("Send DOWN silently") }}
+                </label>
             </div>
         </div>
 

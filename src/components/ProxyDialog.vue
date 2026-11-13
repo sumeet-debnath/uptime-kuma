@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="proxy-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 id="proxy-dialog-title" class="modal-title">
                             {{ $t("Setup Proxy") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -42,6 +48,7 @@
                                     min="1"
                                     max="65535"
                                     :placeholder="$t('Port')"
+                                    :aria-label="$t('Port')"
                                 />
                             </div>
                         </div>
@@ -130,11 +137,20 @@
                             type="button"
                             class="btn btn-danger"
                             :disabled="processing"
+                            data-agentom-id="proxy-dialog.delete"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             @click="deleteConfirm"
                         >
                             {{ $t("Delete") }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="processing">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            :disabled="processing"
+                            data-agentom-id="proxy-dialog.save"
+                            data-agentom-action="save-proxy"
+                        >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
                             {{ $t("Save") }}
                         </button>
@@ -144,7 +160,16 @@
         </div>
     </form>
 
-    <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteProxy">
+    <Confirm
+        ref="confirmDelete"
+        btn-style="btn-danger"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        :action="$t('deleteProxyAria', [proxy.host])"
+        yes-id="proxy-dialog.delete.confirm"
+        risk="destructive"
+        @yes="deleteProxy"
+    >
         {{ $t("deleteProxyMsg") }}
     </Confirm>
 </template>

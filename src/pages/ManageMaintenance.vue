@@ -12,7 +12,7 @@
                 </router-link>
             </div>
 
-            <div class="shadow-box">
+            <div class="shadow-box" role="list" :aria-label="$t('Maintenance')">
                 <span
                     v-if="Object.keys(sortedMaintenanceList).length === 0"
                     class="d-flex align-items-center justify-content-center my-3"
@@ -20,11 +20,19 @@
                     {{ $t("No Maintenance") }}
                 </span>
 
-                <div v-for="(item, index) in sortedMaintenanceList" :key="index" class="item" :class="item.status">
+                <div
+                    v-for="(item, index) in sortedMaintenanceList"
+                    :key="index"
+                    class="item"
+                    :class="item.status"
+                    role="listitem"
+                    :aria-labelledby="`maintenance-title-${item.id}`"
+                    :data-agentom-id="`maintenance.${item.id}`"
+                >
                     <div class="left-part">
                         <div class="circle"></div>
                         <div class="info">
-                            <div class="title">{{ item.title }}</div>
+                            <div :id="`maintenance-title-${item.id}`" class="title">{{ item.title }}</div>
                             <div class="status">
                                 {{ $t("maintenanceStatus-" + item.status) }}
                             </div>
@@ -38,7 +46,10 @@
                             <button
                                 v-if="item.active"
                                 class="btn btn-normal"
-                                :aria-label="$t('ariaPauseMaintenance')"
+                                :aria-label="$t('pauseMaintenanceNamedAria', [item.title])"
+                                :data-agentom-id="`maintenance.${item.id}.toggle`"
+                                data-agentom-risk="sensitive"
+                                data-agentom-confirmation="required"
                                 @click="pauseDialog(item.id)"
                             >
                                 <font-awesome-icon icon="pause" />
@@ -48,7 +59,9 @@
                             <button
                                 v-if="!item.active"
                                 class="btn btn-primary"
-                                :aria-label="$t('ariaResumeMaintenance')"
+                                :aria-label="$t('resumeMaintenanceNamedAria', [item.title])"
+                                :data-agentom-id="`maintenance.${item.id}.toggle`"
+                                data-agentom-risk="sensitive"
                                 @click="resumeMaintenance(item.id)"
                             >
                                 <font-awesome-icon icon="play" />
@@ -58,7 +71,8 @@
                             <router-link
                                 :to="'/maintenance/clone/' + item.id"
                                 class="btn btn-normal"
-                                :aria-label="$t('ariaCloneMaintenance')"
+                                :aria-label="$t('cloneMaintenanceNamedAria', [item.title])"
+                                :data-agentom-id="`maintenance.${item.id}.clone`"
                             >
                                 <font-awesome-icon icon="clone" />
                                 {{ $t("Clone") }}
@@ -67,7 +81,8 @@
                             <router-link
                                 :to="'/maintenance/edit/' + item.id"
                                 class="btn btn-normal"
-                                :aria-label="$t('ariaEditMaintenance')"
+                                :aria-label="$t('editMaintenanceNamedAria', [item.title])"
+                                :data-agentom-id="`maintenance.${item.id}.edit`"
                             >
                                 <font-awesome-icon icon="edit" />
                                 {{ $t("Edit") }}
@@ -75,7 +90,10 @@
 
                             <button
                                 class="btn btn-normal text-danger"
-                                :aria-label="$t('ariaDeleteMaintenance')"
+                                :aria-label="$t('deleteMaintenanceNamedAria', [item.title])"
+                                :data-agentom-id="`maintenance.${item.id}.delete`"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
                                 @click="deleteDialog(item.id)"
                             >
                                 <font-awesome-icon icon="trash" />
@@ -92,7 +110,15 @@
                 </a>
             </div>
 
-            <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseMaintenance">
+            <Confirm
+                ref="confirmPause"
+                :yes-text="$t('Yes')"
+                :no-text="$t('No')"
+                :action="$t('pauseMaintenanceAria', [$root.maintenanceList[selectedMaintenanceID]?.title])"
+                yes-id="maintenance.pause.confirm"
+                risk="sensitive"
+                @yes="pauseMaintenance"
+            >
                 {{ $t("pauseMaintenanceMsg") }}
             </Confirm>
 
@@ -101,6 +127,9 @@
                 btn-style="btn-danger"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
+                :action="$t('deleteMaintenanceAria', [$root.maintenanceList[selectedMaintenanceID]?.title])"
+                yes-id="maintenance.delete.confirm"
+                risk="destructive"
                 @yes="deleteMaintenance"
             >
                 {{ $t("deleteMaintenanceMsg") }}

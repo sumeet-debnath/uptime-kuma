@@ -1,7 +1,15 @@
 <template>
     <div v-if="loadedTheme" class="container mt-3">
         <!-- Sidebar for edit mode -->
-        <div v-if="enableEditMode" class="sidebar" data-testid="edit-sidebar">
+        <div
+            v-if="enableEditMode"
+            class="sidebar"
+            data-testid="edit-sidebar"
+            role="region"
+            :aria-label="$t('Edit Status Page')"
+            data-agentom-id="status-page.settings"
+            data-agentom-kind="section"
+        >
             <div class="sidebar-body">
                 <div class="my-3">
                     <label for="slug" class="form-label">{{ $t("Slug") }}</label>
@@ -215,7 +223,14 @@
                 </div>
 
                 <div class="danger-zone">
-                    <button class="btn btn-danger me-2" @click="deleteDialog">
+                    <button
+                        class="btn btn-danger me-2"
+                        :aria-label="$t('deleteStatusPageNamedAria', [config.title])"
+                        data-agentom-id="status-page.delete"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
+                        @click="deleteDialog"
+                    >
                         <font-awesome-icon icon="trash" />
                         {{ $t("Delete") }}
                     </button>
@@ -224,12 +239,28 @@
 
             <!-- Sidebar Footer -->
             <div class="sidebar-footer">
-                <button class="btn btn-success me-2" :disabled="loading" data-testid="save-button" @click="save">
+                <button
+                    class="btn btn-success me-2"
+                    :disabled="loading"
+                    data-testid="save-button"
+                    aria-describedby="status-page-save-hint"
+                    data-agentom-id="status-page.save"
+                    data-agentom-risk="sensitive"
+                    data-agentom-action="save-status-page"
+                    @click="save"
+                >
                     <font-awesome-icon icon="save" />
                     {{ $t("Save") }}
                 </button>
+                <span id="status-page-save-hint" hidden>{{ $t("statusPageSaveAria") }}</span>
 
-                <button class="btn btn-danger me-2" @click="discard">
+                <button
+                    class="btn btn-danger me-2"
+                    data-agentom-id="status-page.discard"
+                    data-agentom-risk="destructive"
+                    data-agentom-confirmation="required"
+                    @click="discard"
+                >
                     <font-awesome-icon icon="undo" />
                     {{ $t("Discard") }}
                 </button>
@@ -237,21 +268,37 @@
         </div>
 
         <!-- Main Status Page -->
-        <div :class="{ edit: enableEditMode }" class="main">
+        <div
+            :class="{ edit: enableEditMode }"
+            class="main"
+            role="main"
+            data-agentom-id="status-page.content"
+            data-agentom-kind="section"
+        >
             <!-- Logo & Title -->
-            <h1 class="mb-4 title-flex">
+            <h1 class="mb-4 title-flex" :aria-label="config.title">
                 <!-- Logo -->
                 <span class="logo-wrapper" @click="showImageCropUploadMethod">
                     <button
                         v-if="editMode"
                         type="button"
                         class="p-0 bg-transparent border-0 small-reset-btn reset-top-left"
+                        :aria-label="$t('resetLogoAria')"
+                        data-agentom-id="status-page.logo.reset"
                         @click.stop="resetToDefaultImage"
                     >
                         <font-awesome-icon icon="times" class="text-danger" />
                     </button>
                     <img :src="logoURL" alt class="logo me-2" :class="logoClass" />
-                    <font-awesome-icon v-if="enableEditMode" class="icon-upload" icon="upload" />
+                    <font-awesome-icon
+                        v-if="enableEditMode"
+                        class="icon-upload"
+                        icon="upload"
+                        role="button"
+                        aria-hidden="false"
+                        :aria-label="$t('uploadLogoAria')"
+                        data-agentom-id="status-page.logo.upload"
+                    />
                 </span>
 
                 <!-- Uploader -->
@@ -265,11 +312,23 @@
                     img-format="png"
                     :noCircle="true"
                     :noSquare="false"
+                    role="dialog"
+                    aria-modal="true"
+                    :aria-label="$t('uploadLogoAria')"
+                    data-agentom-id="status-page.logo-dialog"
                     @crop-success="cropSuccess"
                 />
 
                 <!-- Title -->
-                <Editable v-model="config.title" tag="span" :contenteditable="editMode" :noNL="true" />
+                <Editable
+                    v-model="config.title"
+                    tag="span"
+                    :contenteditable="editMode"
+                    :noNL="true"
+                    :role="editMode ? 'textbox' : undefined"
+                    :aria-label="editMode ? $t('Title') : undefined"
+                    data-agentom-id="status-page.title-inline"
+                />
             </h1>
 
             <!-- Admin functions -->
@@ -328,6 +387,7 @@
                     :class="'bg-' + activeIncident.style"
                     data-testid="incident"
                 >
+                    <span class="visually-hidden">{{ $t("incidentStyleAria", [$t(activeIncident.style)]) }}:</span>
                     <h4 class="alert-heading" data-testid="incident-title">{{ activeIncident.title }}</h4>
                     <!-- eslint-disable vue/no-v-html -->
                     <div
@@ -357,16 +417,31 @@
                     </div>
 
                     <div v-if="editMode" class="mt-3">
-                        <button class="btn btn-light me-2" @click="resolveIncident(activeIncident)">
+                        <button
+                            class="btn btn-light me-2"
+                            :aria-label="$t('resolveIncidentNamedAria', [activeIncident.title])"
+                            :data-agentom-id="`incident.${activeIncident.id}.resolve`"
+                            data-agentom-risk="sensitive"
+                            @click="resolveIncident(activeIncident)"
+                        >
                             <font-awesome-icon icon="check" />
                             {{ $t("Resolve") }}
                         </button>
-                        <button class="btn btn-light me-2" @click="editIncident(activeIncident)">
+                        <button
+                            class="btn btn-light me-2"
+                            :aria-label="$t('editIncidentNamedAria', [activeIncident.title])"
+                            :data-agentom-id="`incident.${activeIncident.id}.edit`"
+                            @click="editIncident(activeIncident)"
+                        >
                             <font-awesome-icon icon="edit" />
                             {{ $t("Edit") }}
                         </button>
                         <button
                             class="btn btn-light me-2"
+                            :aria-label="$t('deleteIncidentNamedAria', [activeIncident.title])"
+                            :data-agentom-id="`incident.${activeIncident.id}.delete`"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             @click="$refs.incidentManageModal.showDelete(activeIncident)"
                         >
                             <font-awesome-icon icon="unlink" />
@@ -377,7 +452,12 @@
             </template>
 
             <!-- Overall Status -->
-            <div class="shadow-box list p-4 overall-status mb-4">
+            <div
+                class="shadow-box list p-4 overall-status mb-4"
+                role="group"
+                :aria-label="$t('overallStatusAria')"
+                data-agentom-id="status-page.overall-status"
+            >
                 <div v-if="Object.keys($root.publicMonitorList).length === 0 && loadedData">
                     <font-awesome-icon icon="question-circle" class="ok" />
                     {{ $t("No Services") }}
@@ -406,6 +486,7 @@
 
                     <div v-else>
                         <font-awesome-icon icon="question-circle" style="color: #efefef" />
+                        <span class="visually-hidden">{{ $t("Unknown") }}</span>
                     </div>
                 </template>
             </div>
@@ -426,7 +507,7 @@
             </template>
 
             <!-- Description -->
-            <strong v-if="editMode">{{ $t("Description") }}:</strong>
+            <strong v-if="editMode" id="status-page-description-label">{{ $t("Description") }}:</strong>
             <Editable
                 v-if="enableEditMode"
                 v-model="config.description"
@@ -434,6 +515,9 @@
                 tag="div"
                 class="mb-4 description"
                 data-testid="description-editable"
+                :role="editMode ? 'textbox' : undefined"
+                aria-multiline="true"
+                aria-labelledby="status-page-description-label"
             />
             <!-- eslint-disable vue/no-v-html-->
             <div
@@ -498,8 +582,13 @@
             </div>
 
             <!-- Past Incidents -->
-            <div v-if="pastIncidentCount > 0" class="past-incidents-section mb-4">
-                <h2 class="past-incidents-title mb-3">
+            <div
+                v-if="pastIncidentCount > 0"
+                class="past-incidents-section mb-4"
+                role="region"
+                aria-labelledby="past-incidents-title"
+            >
+                <h2 id="past-incidents-title" class="past-incidents-title mb-3">
                     {{ $t("Past Incidents") }}
                 </h2>
 
@@ -549,7 +638,7 @@
 
             <footer class="mt-5 mb-4">
                 <div class="custom-footer-text text-start">
-                    <strong v-if="enableEditMode">{{ $t("Custom Footer") }}:</strong>
+                    <strong v-if="enableEditMode" id="status-page-footer-label">{{ $t("Custom Footer") }}:</strong>
                 </div>
                 <Editable
                     v-if="enableEditMode"
@@ -559,6 +648,9 @@
                     :noNL="false"
                     class="alert-heading p-2"
                     data-testid="custom-footer-editable"
+                    :role="enableEditMode ? 'textbox' : undefined"
+                    aria-multiline="true"
+                    aria-labelledby="status-page-footer-label"
                 />
                 <!-- eslint-disable vue/no-v-html-->
                 <div
@@ -590,6 +682,9 @@
             btn-style="btn-danger"
             :yes-text="$t('Yes')"
             :no-text="$t('No')"
+            :action="$t('deleteStatusPageAria', [config.title])"
+            yes-id="status-page.delete.confirm"
+            risk="destructive"
             @yes="deleteStatusPage"
         >
             {{ $t("deleteStatusPageMsg") }}

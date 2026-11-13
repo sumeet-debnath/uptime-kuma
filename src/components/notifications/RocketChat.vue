@@ -7,6 +7,7 @@
         <input
             id="rocket-webhook-url"
             v-model="$parent.notification.rocketwebhookURL"
+            data-agentom-redact
             type="text"
             class="form-control"
             required
@@ -15,8 +16,14 @@
         <input id="rocket-username" v-model="$parent.notification.rocketusername" type="text" class="form-control" />
         <label for="rocket-iconemo" class="form-label">{{ $t("Icon Emoji") }}</label>
         <input id="rocket-iconemo" v-model="$parent.notification.rocketiconemo" type="text" class="form-control" />
-        <label for="rocket-channel" class="form-label">{{ $t("Channel Name") }}</label>
-        <input id="rocket-channel-name" v-model="$parent.notification.rocketchannel" type="text" class="form-control" />
+        <label id="rocketchat-channel-label" class="form-label">{{ $t("Channel Name") }}</label>
+        <input
+            id="rocket-channel-name"
+            v-model="$parent.notification.rocketchannel"
+            type="text"
+            class="form-control"
+            aria-labelledby="rocketchat-channel-label"
+        />
         <div class="form-text">
             <span style="color: red"><sup>*</sup></span>
             {{ $t("Required") }}

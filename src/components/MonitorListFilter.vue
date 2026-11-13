@@ -1,5 +1,8 @@
 <template>
-    <MonitorListFilterDropdown :filterActive="filterState.status?.length > 0 || filterState.active?.length > 0">
+    <MonitorListFilterDropdown
+        filter-name="status"
+        :filterActive="filterState.status?.length > 0 || filterState.active?.length > 0"
+    >
         <template #status>
             <Status
                 v-if="filterState.status?.length === 1 && !filterState.active?.length"
@@ -19,7 +22,17 @@
         </template>
         <template #dropdown>
             <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(1)">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="checkbox"
+                    :aria-checked="filterState.status?.includes(1) ? 'true' : 'false'"
+                    :aria-label="$t('Up')"
+                    aria-describedby="monitor-filter-status-up-count"
+                    data-agentom-id="monitors.filter.status.up"
+                    @click.stop="toggleStatusFilter(1)"
+                >
+                    <span id="monitor-filter-status-up-count" hidden>{{ $t("Monitors", $root.stats.up) }}</span>
                     <div class="d-flex align-items-center justify-content-between">
                         <Status :status="1" />
                         <span class="ps-3">
@@ -32,7 +45,17 @@
                 </div>
             </li>
             <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(0)">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="checkbox"
+                    :aria-checked="filterState.status?.includes(0) ? 'true' : 'false'"
+                    :aria-label="$t('Down')"
+                    aria-describedby="monitor-filter-status-down-count"
+                    data-agentom-id="monitors.filter.status.down"
+                    @click.stop="toggleStatusFilter(0)"
+                >
+                    <span id="monitor-filter-status-down-count" hidden>{{ $t("Monitors", $root.stats.down) }}</span>
                     <div class="d-flex align-items-center justify-content-between">
                         <Status :status="0" />
                         <span class="ps-3">
@@ -45,7 +68,19 @@
                 </div>
             </li>
             <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(2)">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="checkbox"
+                    :aria-checked="filterState.status?.includes(2) ? 'true' : 'false'"
+                    :aria-label="$t('Pending')"
+                    aria-describedby="monitor-filter-status-pending-count"
+                    data-agentom-id="monitors.filter.status.pending"
+                    @click.stop="toggleStatusFilter(2)"
+                >
+                    <span id="monitor-filter-status-pending-count" hidden>
+                        {{ $t("Monitors", $root.stats.pending) }}
+                    </span>
                     <div class="d-flex align-items-center justify-content-between">
                         <Status :status="2" />
                         <span class="ps-3">
@@ -58,7 +93,19 @@
                 </div>
             </li>
             <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(3)">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="checkbox"
+                    :aria-checked="filterState.status?.includes(3) ? 'true' : 'false'"
+                    :aria-label="$t('statusMaintenance')"
+                    aria-describedby="monitor-filter-status-maintenance-count"
+                    data-agentom-id="monitors.filter.status.maintenance"
+                    @click.stop="toggleStatusFilter(3)"
+                >
+                    <span id="monitor-filter-status-maintenance-count" hidden>
+                        {{ $t("Monitors", $root.stats.maintenance) }}
+                    </span>
                     <div class="d-flex align-items-center justify-content-between">
                         <Status :status="3" />
                         <span class="ps-3">
@@ -74,7 +121,19 @@
                 <hr class="dropdown-divider" />
             </li>
             <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(true)">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="checkbox"
+                    :aria-checked="filterState.active?.includes(true) ? 'true' : 'false'"
+                    :aria-label="$t('Running')"
+                    aria-describedby="monitor-filter-status-running-count"
+                    data-agentom-id="monitors.filter.status.running"
+                    @click.stop="toggleActiveFilter(true)"
+                >
+                    <span id="monitor-filter-status-running-count" hidden>
+                        {{ $t("Monitors", $root.stats.active) }}
+                    </span>
                     <div class="d-flex align-items-center justify-content-between">
                         <span class="badge status-pill running">
                             <font-awesome-icon icon="play" class="icon-small" />
@@ -90,7 +149,17 @@
                 </div>
             </li>
             <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(false)">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="checkbox"
+                    :aria-checked="filterState.active?.includes(false) ? 'true' : 'false'"
+                    :aria-label="$t('filterActivePaused')"
+                    aria-describedby="monitor-filter-status-paused-count"
+                    data-agentom-id="monitors.filter.status.paused"
+                    @click.stop="toggleActiveFilter(false)"
+                >
+                    <span id="monitor-filter-status-paused-count" hidden>{{ $t("Monitors", $root.stats.pause) }}</span>
                     <div class="d-flex align-items-center justify-content-between">
                         <span class="badge status-pill paused">
                             <font-awesome-icon icon="pause" class="icon-small" />
@@ -107,7 +176,11 @@
             </li>
         </template>
     </MonitorListFilterDropdown>
-    <MonitorListFilterDropdown :filterActive="filterState.tags?.length > 0" @open-menu="getExistingTags">
+    <MonitorListFilterDropdown
+        filter-name="tags"
+        :filterActive="filterState.tags?.length > 0"
+        @open-menu="getExistingTags"
+    >
         <template #status>
             <span
                 v-if="filterState.tags?.length === 1"
@@ -125,7 +198,19 @@
                 <div class="tags-dropdown-scroll">
                     <ul class="list-unstyled m-0 p-0">
                         <li v-for="tag in tagsList" :key="tag.id">
-                            <div class="dropdown-item" tabindex="0" @click.stop="toggleTagFilter(tag)">
+                            <div
+                                class="dropdown-item"
+                                tabindex="0"
+                                role="checkbox"
+                                :aria-checked="filterState.tags?.includes(tag.id) ? 'true' : 'false'"
+                                :aria-label="tag.name"
+                                :aria-describedby="`monitor-filter-tag-${tag.id}-count`"
+                                :data-agentom-id="`monitors.filter.tag.${tag.id}`"
+                                @click.stop="toggleTagFilter(tag)"
+                            >
+                                <span :id="`monitor-filter-tag-${tag.id}-count`" hidden>
+                                    {{ $t("Monitors", getTaggedMonitorCount(tag)) }}
+                                </span>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="tag-name-wrapper" :title="tag.name">
                                         <Tag :item="tag" :size="'sm'" :scrollable="true" :constrained="true" />
@@ -153,11 +238,31 @@
         v-if="hasGroups"
         type="button"
         class="btn btn-outline-normal btn-collapse-all"
+        data-agentom-id="monitors.groups.toggle-all"
         :title="allCollapsed ? $t('Expand All Groups') : $t('Collapse All Groups')"
         @click="$emit('toggle-collapse-all')"
     >
         <font-awesome-icon :icon="allCollapsed ? 'folder' : 'folder-open'" fixed-width />
     </button>
+    <span id="monitor-filter-status-choices" hidden>
+        {{ $t("statusFilterAria") }}.
+        {{
+            $t("choicesAria", [
+                [
+                    $t("Up"),
+                    $t("Down"),
+                    $t("Pending"),
+                    $t("statusMaintenance"),
+                    $t("Running"),
+                    $t("filterActivePaused"),
+                ].join(", "),
+            ])
+        }}
+    </span>
+    <span id="monitor-filter-tags-choices" hidden>
+        {{ $t("tagsFilterAria") }}.
+        {{ tagsList.length ? $t("choicesAria", [tagsList.map((t) => t.name).join(", ")]) : $t("No tags found.") }}
+    </span>
 </template>
 
 <script>

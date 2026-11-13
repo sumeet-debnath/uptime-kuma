@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="kook-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
+        <label id="kook-bot-token-label" for="kook-bot-token" class="form-label">{{ $t("Bot Token") }}</label>
         <HiddenInput
             id="kook-bot-token"
             v-model="$parent.notification.kookBotToken"
+            labelledby="kook-bot-token-label"
+            describedby="kook-bot-token-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="wayToGetKookBotToken" class="form-text">
+        <i18n-t id="kook-bot-token-hint" tag="div" keypath="wayToGetKookBotToken" class="form-text">
             <a href="https://developer.kookapp.cn/bot" target="_blank">https://developer.kookapp.cn/bot</a>
         </i18n-t>
     </div>
@@ -19,10 +21,11 @@
             v-model="$parent.notification.kookGuildID"
             type="text"
             class="form-control"
+            aria-describedby="kook-guild-id-hint"
             required
         />
 
-        <div class="form-text">
+        <div id="kook-guild-id-hint" class="form-text">
             <p style="margin-top: 8px">
                 {{ $t("wayToGetKookGuildID") }}
             </p>

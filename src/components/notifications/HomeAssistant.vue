@@ -23,10 +23,12 @@
             v-model="$parent.notification.longLivedAccessToken"
             type="text"
             class="form-control"
+            aria-describedby="homeassistant-token-hint"
+            data-agentom-redact
             required
         />
 
-        <div class="form-text">
+        <div id="homeassistant-token-hint" class="form-text">
             <p>
                 {{
                     $t(
@@ -45,9 +47,10 @@
             type="text"
             :placeholder="$t('default: notify all devices')"
             class="form-control"
+            aria-describedby="homeassistant-notification-service-hint"
         />
 
-        <div class="form-text">
+        <div id="homeassistant-notification-service-hint" class="form-text">
             <p>{{ $t("homeAssistantNotificationActionHelptext") }}</p>
             <p>{{ $t("Automations can optionally be triggered in Home Assistant:") }}</p>
             <p>

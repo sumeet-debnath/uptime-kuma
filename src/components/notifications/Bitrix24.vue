@@ -1,13 +1,17 @@
 <template>
     <div class="mb-3">
-        <label for="bitrix24-webhook-url" class="form-label">{{ $t("Bitrix24 Webhook URL") }}</label>
+        <label id="bitrix24-webhook-url-label" for="bitrix24-webhook-url" class="form-label">
+            {{ $t("Bitrix24 Webhook URL") }}
+        </label>
         <HiddenInput
             id="bitrix24-webhook-url"
             v-model="$parent.notification.bitrix24WebhookURL"
+            labelledby="bitrix24-webhook-url-label"
+            describedby="bitrix24-webhook-url-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <i18n-t tag="div" keypath="wayToGetBitrix24Webhook" class="form-text">
+        <i18n-t id="bitrix24-webhook-url-hint" tag="div" keypath="wayToGetBitrix24Webhook" class="form-text">
             <a href="https://helpdesk.bitrix24.com/open/12357038/" target="_blank">
                 https://helpdesk.bitrix24.com/open/12357038/
             </a>
@@ -22,8 +26,9 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="bitrix24-user-id-hint"
         />
-        <div class="form-text">{{ $t("bitrix24SupportUserID") }}</div>
+        <div id="bitrix24-user-id-hint" class="form-text">{{ $t("bitrix24SupportUserID") }}</div>
     </div>
 </template>
 <script>

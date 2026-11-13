@@ -1,6 +1,9 @@
 <template>
-    <span v-if="isNum" ref="output">{{ outputFixed }}</span>
-    <span v-if="isNum">{{ unit }}</span>
+    <span v-if="isNum" ref="output" aria-hidden="true">{{ outputFixed }}</span>
+    <span v-if="isNum" aria-hidden="true">{{ unit }}</span>
+    <span v-if="isNum" class="visually-hidden">
+        {{ value < 1 ? "<1" : Number.isInteger(value) ? value : value.toFixed(2) }}{{ unit }}
+    </span>
     <span v-else>{{ value }}</span>
 </template>
 

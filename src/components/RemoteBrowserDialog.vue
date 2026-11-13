@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="remote-browser-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 id="remote-browser-dialog-title" class="modal-title">
                             {{ $t("Add a Remote Browser") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -29,6 +35,7 @@
                                 type="text"
                                 class="form-control"
                                 required
+                                data-agentom-redact
                             />
 
                             <i18n-t tag="div" keypath="Example:" class="form-text mt-3">
@@ -43,14 +50,31 @@
                             type="button"
                             class="btn btn-danger"
                             :disabled="processing"
+                            data-agentom-id="remote-browser-dialog.delete"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             @click="deleteConfirm"
                         >
                             {{ $t("Delete") }}
                         </button>
-                        <button type="button" class="btn btn-warning" :disabled="processing" @click="test">
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            :disabled="processing"
+                            data-agentom-id="remote-browser-dialog.test"
+                            data-agentom-risk="sensitive"
+                            data-agentom-action="test-connection"
+                            @click="test"
+                        >
                             {{ $t("Test") }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="processing">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            :disabled="processing"
+                            data-agentom-id="remote-browser-dialog.save"
+                            data-agentom-action="save-remote-browser"
+                        >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
                             {{ $t("Save") }}
                         </button>
@@ -65,6 +89,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('deleteRemoteBrowserAria', [remoteBrowser.name])"
+        yes-id="remote-browser-dialog.delete.confirm"
+        risk="destructive"
         @yes="deleteDockerHost"
     >
         {{ $t("deleteRemoteBrowserMessage") }}

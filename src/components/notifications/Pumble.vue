@@ -5,6 +5,7 @@
         <input
             id="pumble-webhook-url"
             v-model="$parent.notification.webhookURL"
+            data-agentom-redact
             type="url"
             class="form-control"
             required

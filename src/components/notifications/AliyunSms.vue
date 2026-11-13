@@ -1,34 +1,37 @@
 <template>
     <div class="mb-3">
-        <label for="accessKeyId" class="form-label">
+        <label id="accessKeyId-label" for="accessKeyId" class="form-label">
             {{ $t("AccessKeyId") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="accessKeyId"
             v-model="$parent.notification.accessKeyId"
+            labelledby="accessKeyId-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
 
-        <label for="secretAccessKey" class="form-label">
+        <label id="secretAccessKey-label" for="secretAccessKey" class="form-label">
             {{ $t("SecretAccessKey") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="secretAccessKey"
             v-model="$parent.notification.secretAccessKey"
+            labelledby="secretAccessKey-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
 
-        <label for="phonenumber" class="form-label">
+        <label id="phonenumber-label" for="phonenumber" class="form-label">
             {{ $t("PhoneNumbers") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="phonenumber"
             v-model="$parent.notification.phonenumber"
+            labelledby="phonenumber-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -51,14 +54,20 @@
         </label>
         <input id="signName" v-model="$parent.notification.signName" type="text" class="form-control" required />
         <div class="form-check form-switch">
-            <label class="form-check-label">{{ $t("OptionalParameters") }}</label>
+            <label id="aliyunsms-optional-parameters-label" class="form-check-label">
+                {{ $t("OptionalParameters") }}
+            </label>
             <input
                 id="optionalParameters"
                 v-model="$parent.notification.optionalParameters"
                 class="form-check-input"
                 type="checkbox"
+                aria-labelledby="aliyunsms-optional-parameters-label"
+                aria-describedby="aliyunsms-optional-parameters-hint"
             />
-            <div class="form-text">{{ $t("aliyun_enable_optional_variables_at_the_risk_of_non_delivery") }}</div>
+            <div id="aliyunsms-optional-parameters-hint" class="form-text">
+                {{ $t("aliyun_enable_optional_variables_at_the_risk_of_non_delivery") }}
+            </div>
         </div>
         <br />
         <div class="form-text">

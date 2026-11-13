@@ -5,6 +5,7 @@
         <input
             id="gorush-device-token"
             v-model="$parent.notification.gorushDeviceToken"
+            data-agentom-redact
             type="text"
             class="form-control"
             required

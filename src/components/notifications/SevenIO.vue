@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="sevenio-api-key" class="form-label">{{ $t("apiKeySevenIO") }}</label>
+        <label id="sevenio-api-key-label" for="sevenio-api-key" class="form-label">{{ $t("apiKeySevenIO") }}</label>
         <HiddenInput
             id="sevenio-api-key"
             v-model="$parent.notification.sevenioApiKey"
+            labelledby="sevenio-api-key-label"
+            describedby="sevenio-api-key-hint"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <div class="form-text">
+        <div id="sevenio-api-key-hint" class="form-text">
             {{ $t("wayToGetSevenIOApiKey") }}
         </div>
     </div>
@@ -34,8 +36,9 @@
             required
             autocomplete="false"
             placeholder="0123456789"
+            aria-describedby="sevenio-receiver-hint"
         />
-        <div class="form-text">
+        <div id="sevenio-receiver-hint" class="form-text">
             {{ $t("receiverInfoSevenIO") }}
         </div>
     </div>

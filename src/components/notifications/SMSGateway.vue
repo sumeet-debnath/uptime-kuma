@@ -4,18 +4,20 @@
         <input
             id="smsgateway-url"
             v-model="$parent.notification.smsgatewayUrl"
+            aria-describedby="smsgateway-url-hint"
             type="url"
             class="form-control"
             placeholder="http://localhost:8080"
             required
         />
-        <div class="form-text">{{ $t("smsgatewayUrlHelptext") }}</div>
+        <div id="smsgateway-url-hint" class="form-text">{{ $t("smsgatewayUrlHelptext") }}</div>
     </div>
     <div class="mb-3">
-        <label for="smsgateway-api-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="smsgateway-api-key-label" for="smsgateway-api-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="smsgateway-api-key"
             v-model="$parent.notification.smsgatewayApiKey"
+            labelledby="smsgateway-api-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -25,12 +27,13 @@
         <input
             id="smsgateway-to"
             v-model="$parent.notification.smsgatewayTo"
+            aria-describedby="smsgateway-to-hint"
             type="text"
             class="form-control"
             placeholder="+15551234567, +15559876543"
             required
         />
-        <div class="form-text">{{ $t("smsgatewayToHelptext") }}</div>
+        <div id="smsgateway-to-hint" class="form-text">{{ $t("smsgatewayToHelptext") }}</div>
     </div>
     <i18n-t tag="div" keypath="Read more:" class="form-text">
         <a href="https://github.com/mattboston/sms-gateway" target="_blank">

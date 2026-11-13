@@ -1,11 +1,17 @@
 <template>
-    <div class="condition-group mb-3" data-testid="condition-group">
+    <div
+        class="condition-group mb-3"
+        role="group"
+        :aria-label="$t('conditionGroupAria', [groupIndex + 1])"
+        data-testid="condition-group"
+    >
         <div class="d-flex">
             <select
                 v-if="!isFirst"
                 v-model="model.andOr"
                 class="form-select"
                 style="width: auto"
+                :aria-label="$t('conditionAndOrAria')"
                 data-testid="condition-group-and-or"
             >
                 <option value="and">{{ $t("and") }}</option>
@@ -20,6 +26,7 @@
                         v-if="child.type === 'group'"
                         v-model="model.children[childIndex]"
                         :is-first="childIndex === 0"
+                        :group-index="model.children.slice(0, childIndex).filter((c) => c.type === 'group').length"
                         :get-new-group="getNewGroup"
                         :get-new-condition="getNewCondition"
                         :condition-variables="conditionVariables"
@@ -93,6 +100,14 @@ export default {
         isFirst: {
             type: Boolean,
             required: true,
+        },
+
+        /**
+         * Position of this group among its sibling groups (0-based), used only in its accessible name
+         */
+        groupIndex: {
+            type: Number,
+            default: 0,
         },
 
         /**

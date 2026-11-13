@@ -7,15 +7,22 @@
             </button>
         </div>
 
-        <div class="tags-list my-3">
+        <div class="tags-list my-3" role="list" :aria-label="$t('settingsListAria', [$t('Tags')])">
             <div
                 v-for="(tag, index) in tagsList"
                 :key="tag.id"
                 class="d-flex align-items-center mx-0 mx-lg-4 py-1 tags-list-row"
                 :disabled="processing"
+                role="listitem"
+                :data-agentom-id="`tag.${tag.id}`"
                 @click="editTag(index)"
             >
-                <div class="flex-grow-1 overflow-hidden pe-3">
+                <div
+                    class="flex-grow-1 overflow-hidden pe-3"
+                    role="button"
+                    :aria-label="$t('editTagNamedAria', [tag.name])"
+                    :data-agentom-id="`tag.${tag.id}.edit`"
+                >
                     <Tag :item="tag" :title="tag.name" :scrollable="true" :constrained="true" />
                 </div>
 
@@ -29,6 +36,10 @@
                         type="button"
                         class="btn-rm-tag btn btn-outline-danger ms-2 py-1"
                         :disabled="processing"
+                        :aria-label="$t('deleteTagNamedAria', [tag.name])"
+                        :data-agentom-id="`tag.${tag.id}.delete`"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
                         @click.stop="deleteConfirm(index)"
                     >
                         <font-awesome-icon class="" icon="trash" />
@@ -38,7 +49,16 @@
         </div>
 
         <TagEditDialog ref="tagEditDialog" :updated="tagsUpdated" :existing-tags="tagsList" />
-        <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteTag">
+        <Confirm
+            ref="confirmDelete"
+            btn-style="btn-danger"
+            :yes-text="$t('Yes')"
+            :no-text="$t('No')"
+            :action="$t('deleteTagAria', [deletingTag?.name])"
+            yes-id="tags.delete.confirm"
+            risk="destructive"
+            @yes="deleteTag"
+        >
             {{ $t("confirmDeleteTagMsg") }}
         </Confirm>
     </div>

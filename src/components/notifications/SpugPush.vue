@@ -1,9 +1,12 @@
 <template>
     <div class="mb-3">
-        <label for="spugpush-templateKey" class="form-label">{{ $t("SpugPush Template Code") }}</label>
+        <label id="spugpush-templateKey-label" for="spugpush-templateKey" class="form-label">
+            {{ $t("SpugPush Template Code") }}
+        </label>
         <HiddenInput
             id="spugpush-templateKey"
             v-model="$parent.notification.templateKey"
+            labelledby="spugpush-templateKey-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

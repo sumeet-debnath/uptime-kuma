@@ -77,8 +77,11 @@
                                         v-model="showOnAllPages"
                                         class="form-check-input"
                                         type="checkbox"
+                                        aria-labelledby="show-on-all-pages-label"
+                                        data-agentom-id="maintenance-form.all-status-pages"
+                                        data-agentom-risk="sensitive"
                                     />
-                                    <label class="form-check-label" for="show-powered-by">
+                                    <label id="show-on-all-pages-label" class="form-check-label">
                                         {{ $t("All Status Pages") }}
                                     </label>
                                 </div>
@@ -186,12 +189,12 @@
                             <!-- Recurring - Weekday -->
                             <template v-if="maintenance.strategy === 'recurring-weekday'">
                                 <div class="my-3">
-                                    <label for="interval-day" class="form-label">
+                                    <label id="weekday-label" class="form-label">
                                         {{ $t("dayOfWeek") }}
                                     </label>
 
                                     <!-- Weekday Picker -->
-                                    <div class="weekday-picker">
+                                    <div class="weekday-picker" role="group" aria-labelledby="weekday-label">
                                         <div v-for="(weekday, index) in weekdays" :key="index">
                                             <label class="form-check-label" :for="weekday.id">
                                                 {{ $t(weekday.langKey) }}
@@ -213,12 +216,12 @@
                             <!-- Recurring - Day of month -->
                             <template v-if="maintenance.strategy === 'recurring-day-of-month'">
                                 <div class="my-3">
-                                    <label for="interval-day" class="form-label">
+                                    <label id="day-of-month-label" class="form-label">
                                         {{ $t("dayOfMonth") }}
                                     </label>
 
                                     <!-- Day Picker -->
-                                    <div class="day-picker">
+                                    <div class="day-picker" role="group" aria-labelledby="day-of-month-label">
                                         <div v-for="index in 31" :key="index">
                                             <label class="form-check-label" :for="'day' + index">{{ index }}</label>
                                             <div class="form-check-inline">
@@ -262,6 +265,11 @@
                                     <label class="form-label">{{ $t("Maintenance Time Window of a Day") }}</label>
                                     <Datepicker
                                         v-model="maintenance.timeRange"
+                                        uid="maintenance-time-window"
+                                        :aria-labels="{
+                                            input: $t('Maintenance Time Window of a Day'),
+                                            menu: $t('Maintenance Time Window of a Day'),
+                                        }"
                                         :dark="$root.isDark"
                                         timePicker
                                         disableTimeRangeValidation
@@ -305,9 +313,12 @@
 
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-2">{{ $t("startDateTime") }}</div>
+                                            <div id="maintenance-start-label" class="mb-2">
+                                                {{ $t("startDateTime") }}
+                                            </div>
                                             <input
                                                 v-model="maintenance.dateRange[0]"
+                                                aria-labelledby="maintenance-start-label"
                                                 type="datetime-local"
                                                 max="9999-12-31T23:59"
                                                 class="form-control"
@@ -316,9 +327,10 @@
                                         </div>
 
                                         <div class="col">
-                                            <div class="mb-2">{{ $t("endDateTime") }}</div>
+                                            <div id="maintenance-end-label" class="mb-2">{{ $t("endDateTime") }}</div>
                                             <input
                                                 v-model="maintenance.dateRange[1]"
+                                                aria-labelledby="maintenance-end-label"
                                                 type="datetime-local"
                                                 max="9999-12-31T23:59"
                                                 class="form-control"
@@ -331,7 +343,12 @@
 
                             <template v-if="maintenance.strategy === 'single'">
                                 <div class="my-3">
-                                    <div class="d-flex gap-2 flex-wrap">
+                                    <div
+                                        class="d-flex gap-2 flex-wrap"
+                                        role="group"
+                                        :aria-label="$t('durationAria')"
+                                        aria-describedby="quick-duration-hint"
+                                    >
                                         <button
                                             type="button"
                                             class="btn btn-sm"
@@ -339,6 +356,7 @@
                                                 currentDurationMinutes === 15 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 15"
+                                            :aria-pressed="currentDurationMinutes === 15 ? 'true' : 'false'"
                                             @click="setQuickDuration(15)"
                                         >
                                             {{ $t("minuteShort", 15) }}
@@ -350,6 +368,7 @@
                                                 currentDurationMinutes === 30 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 30"
+                                            :aria-pressed="currentDurationMinutes === 30 ? 'true' : 'false'"
                                             @click="setQuickDuration(30)"
                                         >
                                             {{ $t("minuteShort", 30) }}
@@ -361,6 +380,7 @@
                                                 currentDurationMinutes === 60 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 60"
+                                            :aria-pressed="currentDurationMinutes === 60 ? 'true' : 'false'"
                                             @click="setQuickDuration(60)"
                                         >
                                             {{ $t("hours", 1) }}
@@ -372,6 +392,7 @@
                                                 currentDurationMinutes === 120 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 120"
+                                            :aria-pressed="currentDurationMinutes === 120 ? 'true' : 'false'"
                                             @click="setQuickDuration(120)"
                                         >
                                             {{ $t("hours", 2) }}
@@ -383,6 +404,7 @@
                                                 currentDurationMinutes === 240 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 240"
+                                            :aria-pressed="currentDurationMinutes === 240 ? 'true' : 'false'"
                                             @click="setQuickDuration(240)"
                                         >
                                             {{ $t("hours", 4) }}
@@ -394,6 +416,7 @@
                                                 currentDurationMinutes === 480 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 480"
+                                            :aria-pressed="currentDurationMinutes === 480 ? 'true' : 'false'"
                                             @click="setQuickDuration(480)"
                                         >
                                             {{ $t("hours", 8) }}
@@ -405,6 +428,7 @@
                                                 currentDurationMinutes === 720 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 720"
+                                            :aria-pressed="currentDurationMinutes === 720 ? 'true' : 'false'"
                                             @click="setQuickDuration(720)"
                                         >
                                             {{ $t("hours", 12) }}
@@ -416,26 +440,42 @@
                                                 currentDurationMinutes === 1440 ? 'btn-primary' : 'btn-outline-primary'
                                             "
                                             :disabled="currentDurationMinutes === 1440"
+                                            :aria-pressed="currentDurationMinutes === 1440 ? 'true' : 'false'"
                                             @click="setQuickDuration(1440)"
                                         >
                                             {{ $t("hours", 24) }}
                                         </button>
                                     </div>
-                                    <div class="form-text">{{ $t("Sets end time based on start time") }}</div>
+                                    <div id="quick-duration-hint" class="form-text">
+                                        {{ $t("Sets end time based on start time") }}
+                                    </div>
                                 </div>
                             </template>
                         </div>
                     </div>
 
                     <div class="fixed-bottom-bar p-3">
-                        <button id="monitor-submit-btn" class="btn btn-primary" type="submit" :disabled="processing">
+                        <button
+                            id="monitor-submit-btn"
+                            class="btn btn-primary"
+                            type="submit"
+                            :disabled="processing"
+                            data-agentom-id="maintenance-form.save"
+                            data-agentom-action="save-maintenance"
+                        >
                             {{ $t("Save") }}
                         </button>
                     </div>
                 </div>
             </form>
 
-            <Confirm ref="confirmNoMonitors" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="doSubmit">
+            <Confirm
+                ref="confirmNoMonitors"
+                :yes-text="$t('Yes')"
+                :no-text="$t('No')"
+                :action="$t('saveMaintenanceNoMonitorsAria')"
+                @yes="doSubmit"
+            >
                 {{ $t("noMonitorsSelectedWarning") }}
             </Confirm>
         </div>

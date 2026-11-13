@@ -22,11 +22,12 @@
         />
     </div>
     <div class="mb-3">
-        <label for="access-token" class="form-label">{{ $t("Access Token") }}</label>
+        <label id="access-token-label" for="access-token" class="form-label">{{ $t("Access Token") }}</label>
         <span style="color: red"><sup>*</sup></span>
         <HiddenInput
             id="access-token"
             v-model="$parent.notification.accessToken"
+            labelledby="access-token-label"
             :required="true"
             autocomplete="new-password"
             :maxlength="500"
@@ -50,11 +51,17 @@
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.matrixUseTemplate" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("matrixUseTemplate") }}</label>
+            <input
+                v-model="$parent.notification.matrixUseTemplate"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="matrix-use-template-label"
+                aria-describedby="matrix-use-template-hint"
+            />
+            <label id="matrix-use-template-label" class="form-check-label">{{ $t("matrixUseTemplate") }}</label>
         </div>
 
-        <div class="form-text">
+        <div id="matrix-use-template-hint" class="form-text">
             {{ $t("matrixUseTemplateDescription") }}
         </div>
     </div>

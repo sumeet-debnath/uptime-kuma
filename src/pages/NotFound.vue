@@ -20,7 +20,7 @@
         </header>
 
         <div class="content">
-            <div>
+            <div role="heading" aria-level="1">
                 <strong>🐻 {{ $t("Page Not Found") }}</strong>
             </div>
 
@@ -36,7 +36,9 @@
                 <ul>
                     <li>{{ $t("Retype the address.") }}</li>
                     <li>
-                        <a href="#" class="go-back" @click="goBack()">{{ $t("Go back to the previous page.") }}</a>
+                        <a href="#" class="go-back" role="button" @click="goBack()">
+                            {{ $t("Go back to the previous page.") }}
+                        </a>
                     </li>
                     <li>
                         <a href="/" class="go-back">{{ $t("Go back to home page.") }}</a>

@@ -25,7 +25,7 @@
         "start-server": "node server/server.js",
         "start-server-dev": "cross-env NODE_ENV=development node server/server.js",
         "start-server-dev:watch": "cross-env NODE_ENV=development node --watch server/server.js",
-        "build": "vite build --config ./config/vite.config.js",
+        "build": "node extra/build-semantic-sitemap.mjs && vite build --config ./config/vite.config.js",
         "test": "npm run test-backend && npm run test-e2e",
         "test-with-build": "npm run build && npm test",
         "test-backend": "node test/test-backend.mjs",
@@ -160,6 +160,7 @@
     },
     "devDependencies": {
         "@actions/github": "~6.0.1",
+        "@agent-om/core": "file:vendor/agent-om-core-0.0.0.tgz",
         "@fortawesome/fontawesome-svg-core": "~1.2.36",
         "@fortawesome/free-regular-svg-icons": "~5.15.4",
         "@fortawesome/free-solid-svg-icons": "~5.15.4",

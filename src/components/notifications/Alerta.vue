@@ -23,6 +23,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <label for="alerta-alert-state" class="form-label">{{ $t("alertaAlertState") }}</label>
         <input

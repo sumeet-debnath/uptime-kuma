@@ -2,10 +2,18 @@
     <div>
         <div class="mb-3">
             <label for="hostname" class="form-label">{{ $t("Hostname") }}</label>
-            <input id="hostname" v-model="$parent.notification.smtpHost" type="text" class="form-control" required />
+            <input
+                id="hostname"
+                v-model="$parent.notification.smtpHost"
+                type="text"
+                class="form-control"
+                aria-describedby="smtp-hostname-hint"
+                required
+            />
         </div>
 
         <i18n-t
+            id="smtp-hostname-hint"
             tag="div"
             keypath="Either enter the hostname of the server you want to connect to or localhost if you intend to use a locally configured mail transfer agent"
             class="form-text"
@@ -61,6 +69,7 @@
                 <input
                     id="ignore-starttls"
                     v-model="$parent.notification.smtpIgnoreSTARTTLS"
+                    aria-describedby="smtp-ignore-starttls-hint"
                     class="form-check-input"
                     type="checkbox"
                     value=""
@@ -69,7 +78,7 @@
                     {{ $t("Disable STARTTLS") }}
                 </label>
             </div>
-            <div class="form-text">
+            <div id="smtp-ignore-starttls-hint" class="form-text">
                 {{ $t("disableSTARTTLSDescription") }}
             </div>
         </div>
@@ -86,10 +95,11 @@
         </div>
 
         <div class="mb-3">
-            <label for="password" class="form-label">{{ $t("Password") }}</label>
+            <label id="password-label" for="password" class="form-label">{{ $t("Password") }}</label>
             <HiddenInput
                 id="password"
                 v-model="$parent.notification.smtpPassword"
+                labelledby="password-label"
                 :required="false"
                 autocomplete="new-password"
             ></HiddenInput>
@@ -185,11 +195,19 @@
 
         <div class="mb-3">
             <div class="form-check form-switch">
-                <input v-model="showAdditionalHeadersField" class="form-check-input" type="checkbox" />
-                <label class="form-check-label">{{ $t("smtpAdditionalHeadersTitle") }}</label>
+                <input
+                    v-model="showAdditionalHeadersField"
+                    class="form-check-input"
+                    type="checkbox"
+                    aria-labelledby="smtp-additional-headers-label"
+                />
+                <label id="smtp-additional-headers-label" class="form-check-label">
+                    {{ $t("smtpAdditionalHeadersTitle") }}
+                </label>
             </div>
             <i18n-t
                 v-if="showAdditionalHeadersField"
+                id="smtp-additional-headers-hint"
                 tag="div"
                 keypath="smtpAdditionalHeadersDesc"
                 class="form-text mb-3"
@@ -201,6 +219,7 @@
                 v-if="showAdditionalHeadersField"
                 id="additional-headers"
                 v-model="$parent.notification.smtpAdditionalHeaders"
+                aria-describedby="smtp-additional-headers-hint"
                 class="form-control"
                 rows="5"
                 :placeholder="headersPlaceholder"

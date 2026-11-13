@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="tag-edit-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 id="tag-edit-dialog-title" class="modal-title">
                             {{ $t("Edit Tag") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -26,10 +32,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="tag-color" class="form-label">{{ $t("color") }}</label>
+                            <label id="tag-color-label" class="form-label">{{ $t("color") }}</label>
                             <div class="d-flex">
                                 <div class="col-8 pe-1">
                                     <vue-multiselect
+                                        id="tag-edit-color"
                                         v-model="selectedColor"
                                         :options="colorOptions"
                                         :multiple="false"
@@ -61,16 +68,22 @@
                                     </vue-multiselect>
                                 </div>
                                 <div class="col-4 ps-1">
-                                    <input id="tag-color-hex" v-model="tag.color" type="text" class="form-control" />
+                                    <input
+                                        id="tag-color-hex"
+                                        v-model="tag.color"
+                                        type="text"
+                                        class="form-control"
+                                        :aria-label="$t('colorCodeAria')"
+                                    />
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="tag-monitors" class="form-label">
+                            <label id="tag-monitors-label" class="form-label">
                                 {{ $t("Monitors", selectedMonitors.length) }}
                             </label>
-                            <div class="tag-monitors-list">
+                            <div class="tag-monitors-list" role="group" aria-labelledby="tag-monitors-label">
                                 <router-link
                                     v-for="monitor in selectedMonitors"
                                     :key="monitor.id"
@@ -91,6 +104,7 @@
                             <div v-if="allMonitorList.length > 0" class="pt-3">
                                 <label class="form-label">{{ $t("Add a monitor") }}:</label>
                                 <VueMultiselect
+                                    id="tag-edit-monitors"
                                     v-model="selectedAddMonitor"
                                     :options="allMonitorList"
                                     :multiple="false"
@@ -124,11 +138,20 @@
                             type="button"
                             class="btn btn-danger"
                             :disabled="processing"
+                            data-agentom-id="tag-dialog.delete"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             @click="deleteConfirm"
                         >
                             {{ $t("Delete") }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="processing">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            :disabled="processing"
+                            data-agentom-id="tag-dialog.save"
+                            data-agentom-action="save-tag"
+                        >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
                             {{ $t("Save") }}
                         </button>
@@ -138,7 +161,16 @@
         </div>
     </form>
 
-    <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteTag">
+    <Confirm
+        ref="confirmDelete"
+        btn-style="btn-danger"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        :action="$t('deleteTagAria', [tag.name])"
+        yes-id="tag-dialog.delete.confirm"
+        risk="destructive"
+        @yes="deleteTag"
+    >
         {{ $t("confirmDeleteTagMsg") }}
     </Confirm>
 </template>

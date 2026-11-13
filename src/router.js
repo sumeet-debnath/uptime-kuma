@@ -36,6 +36,7 @@ const routes = [
     {
         path: "/",
         component: Entry,
+        meta: { screen: "entry", sitemap: false },
     },
     {
         // If it is "/dashboard", the active link is not working
@@ -52,6 +53,7 @@ const routes = [
                         name: "DashboardHome",
                         path: "/dashboard",
                         component: DashboardHome,
+                        meta: { screen: "dashboard" },
                         children: [
                             {
                                 path: "/dashboard/:id",
@@ -60,10 +62,18 @@ const routes = [
                                     {
                                         path: "",
                                         component: Details,
+                                        meta: {
+                                            screen: "monitor.details",
+                                            sitemap: { name: "Monitor", params: { id: "monitorId" } },
+                                        },
                                     },
                                     {
                                         path: "/edit/:id",
                                         component: EditMonitor,
+                                        meta: {
+                                            screen: "monitor.edit",
+                                            sitemap: { name: "Edit Monitor", params: { id: "monitorId" } },
+                                        },
                                     },
                                 ],
                             },
@@ -72,94 +82,125 @@ const routes = [
                     {
                         path: "/add",
                         component: EditMonitor,
+                        meta: { screen: "monitor.add", sitemap: { name: "Add New Monitor" } },
                         children: [
                             {
                                 path: "/clone/:id",
                                 component: EditMonitor,
+                                meta: {
+                                    screen: "monitor.clone",
+                                    sitemap: { name: "Clone Monitor", params: { id: "monitorId" } },
+                                },
                             },
                         ],
                     },
                     {
                         path: "/list",
                         component: List,
+                        meta: { screen: "monitor.list", sitemap: false },
                     },
                     {
                         path: "/settings",
                         component: Settings,
+                        meta: { screen: "settings", sitemap: false },
                         children: [
                             {
                                 path: "general",
                                 component: General,
+                                meta: { screen: "settings.general" },
                             },
                             {
                                 path: "appearance",
                                 component: Appearance,
+                                meta: { screen: "settings.appearance" },
                             },
                             {
                                 path: "notifications",
                                 component: Notifications,
+                                meta: { screen: "settings.notifications" },
                             },
                             {
                                 path: "reverse-proxy",
                                 component: ReverseProxy,
+                                meta: { screen: "settings.reverse-proxy" },
                             },
                             {
                                 path: "tags",
                                 component: Tags,
+                                meta: { screen: "settings.tags" },
                             },
                             {
                                 path: "monitor-history",
                                 component: MonitorHistory,
+                                meta: { screen: "settings.monitor-history" },
                             },
                             {
                                 path: "docker-hosts",
                                 component: DockerHosts,
+                                meta: { screen: "settings.docker-hosts" },
                             },
                             {
                                 path: "remote-browsers",
                                 component: RemoteBrowsers,
+                                meta: { screen: "settings.remote-browsers" },
                             },
                             {
                                 path: "security",
                                 component: Security,
+                                meta: { screen: "settings.security" },
                             },
                             {
                                 path: "api-keys",
                                 component: APIKeys,
+                                meta: { screen: "settings.api-keys" },
                             },
                             {
                                 path: "proxies",
                                 component: Proxies,
+                                meta: { screen: "settings.proxies" },
                             },
                             {
                                 path: "about",
                                 component: About,
+                                meta: { screen: "settings.about" },
                             },
                         ],
                     },
                     {
                         path: "/manage-status-page",
                         component: ManageStatusPage,
+                        meta: { screen: "status-page.list", sitemap: { name: "Status Pages" } },
                     },
                     {
                         path: "/add-status-page",
                         component: AddStatusPage,
+                        meta: { screen: "status-page.add", sitemap: { name: "Add New Status Page" } },
                     },
                     {
                         path: "/maintenance",
                         component: ManageMaintenance,
+                        meta: { screen: "maintenance.list" },
                     },
                     {
                         path: "/add-maintenance",
                         component: EditMaintenance,
+                        meta: { screen: "maintenance.add", sitemap: { name: "Add Maintenance" } },
                     },
                     {
                         path: "/maintenance/edit/:id",
                         component: EditMaintenance,
+                        meta: {
+                            screen: "maintenance.edit",
+                            sitemap: { name: "Edit Maintenance", params: { id: "maintenanceId" } },
+                        },
                     },
                     {
                         path: "/maintenance/clone/:id",
                         component: EditMaintenance,
+                        meta: {
+                            screen: "maintenance.clone",
+                            sitemap: { name: "Clone Maintenance", params: { id: "maintenanceId" } },
+                        },
                     },
                 ],
             },
@@ -168,26 +209,32 @@ const routes = [
     {
         path: "/setup",
         component: Setup,
+        meta: { screen: "setup", sitemap: false },
     },
     {
         path: "/setup-database",
         component: SetupDatabase,
+        meta: { screen: "setup-database", sitemap: false },
     },
     {
         path: "/status-page",
         component: StatusPage,
+        meta: { screen: "status-page.view", sitemap: false },
     },
     {
         path: "/status",
         component: StatusPage,
+        meta: { screen: "status-page.view", sitemap: false },
     },
     {
         path: "/status/:slug",
         component: StatusPage,
+        meta: { screen: "status-page.view", sitemap: { name: "Status Page" } },
     },
     {
         path: "/:pathMatch(.*)*",
         component: NotFound,
+        meta: { screen: "not-found", sitemap: false },
     },
 ];
 

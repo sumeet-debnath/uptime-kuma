@@ -37,10 +37,22 @@
                     </a>
                 </div>
                 <div class="settings-content col-lg-9 col-md-7">
-                    <div v-if="currentPage" class="settings-content-header">
+                    <div
+                        v-if="currentPage"
+                        id="settings-tab-title"
+                        class="settings-content-header"
+                        role="heading"
+                        aria-level="2"
+                    >
                         {{ subMenus[currentPage].title }}
                     </div>
-                    <div class="mx-3">
+                    <div
+                        class="mx-3"
+                        :role="currentPage ? 'region' : null"
+                        :aria-labelledby="currentPage ? 'settings-tab-title' : null"
+                        :data-agentom-id="currentPage ? `settings.${currentPage}` : null"
+                        :data-agentom-kind="currentPage ? 'section' : null"
+                    >
                         <router-view v-slot="{ Component }">
                             <transition name="slide-fade" appear>
                                 <component :is="Component" />

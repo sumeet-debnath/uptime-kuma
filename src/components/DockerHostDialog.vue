@@ -1,10 +1,16 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            aria-labelledby="docker-host-dialog-title"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 id="docker-host-dialog-title" class="modal-title">
                             {{ $t("Setup Docker Host") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -56,14 +62,31 @@
                             type="button"
                             class="btn btn-danger"
                             :disabled="processing"
+                            data-agentom-id="docker-host-dialog.delete"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             @click="deleteConfirm"
                         >
                             {{ $t("Delete") }}
                         </button>
-                        <button type="button" class="btn btn-warning" :disabled="processing" @click="test">
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            :disabled="processing"
+                            data-agentom-id="docker-host-dialog.test"
+                            data-agentom-risk="sensitive"
+                            data-agentom-action="test-connection"
+                            @click="test"
+                        >
                             {{ $t("Test") }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="processing">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            :disabled="processing"
+                            data-agentom-id="docker-host-dialog.save"
+                            data-agentom-action="save-docker-host"
+                        >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
                             {{ $t("Save") }}
                         </button>
@@ -78,6 +101,9 @@
         btn-style="btn-danger"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
+        :action="$t('deleteDockerHostAria', [dockerHost.name])"
+        yes-id="docker-host-dialog.delete.confirm"
+        risk="destructive"
         @yes="deleteDockerHost"
     >
         {{ $t("deleteDockerHostMsg") }}

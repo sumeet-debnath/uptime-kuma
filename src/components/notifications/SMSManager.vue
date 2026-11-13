@@ -5,11 +5,22 @@
             {{ $t("SMSManager API Docs") }}
             <a href="https://smsmanager.cz/api/http#send" target="_blank">{{ $t("here") }}</a>
         </div>
-        <input id="smsmanager-key" v-model="$parent.notification.smsmanagerApiKey" type="text" class="form-control" />
+        <input
+            id="smsmanager-key"
+            v-model="$parent.notification.smsmanagerApiKey"
+            type="text"
+            class="form-control"
+            data-agentom-redact
+        />
     </div>
     <div class="mb-3">
         <label for="smsmanager-numbers" class="form-label">{{ $t("Recipients") }}</label>
-        <i18n-t tag="div" keypath="You can divide numbers with commas or semicolons" class="form-text">
+        <i18n-t
+            id="smsmanager-numbers-hint"
+            tag="div"
+            keypath="You can divide numbers with commas or semicolons"
+            class="form-text"
+        >
             <template #comma>
                 <code>,</code>
             </template>
@@ -17,7 +28,13 @@
                 <code>;</code>
             </template>
         </i18n-t>
-        <input id="smsmanager-numbers" v-model="$parent.notification.numbers" type="text" class="form-control" />
+        <input
+            id="smsmanager-numbers"
+            v-model="$parent.notification.numbers"
+            type="text"
+            class="form-control"
+            aria-describedby="smsmanager-numbers-hint"
+        />
     </div>
     <div class="mb-3">
         <label for="smsmanager-messageType" class="form-label">{{ $t("Gateway Type") }}</label>

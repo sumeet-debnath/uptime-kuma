@@ -1,5 +1,14 @@
 <template>
-    <span :class="className" :title="title">{{ uptime }}</span>
+    <span
+        :class="className"
+        :title="title"
+        :data-agentom-id="
+            monitor && monitor.id != null ? `monitor.${monitor.id}.uptime-${type}${pill ? '.list' : ''}` : undefined
+        "
+        :data-agentom-value="typeof rawUptime === 'number' ? rawUptime : undefined"
+    >
+        {{ uptime }}
+    </span>
 </template>
 
 <script>
@@ -25,6 +34,17 @@ export default {
     },
 
     computed: {
+        /**
+         * The uptime as a number (a percentage), as the text shows it before formatting
+         * @returns {number|undefined} The uptime, or undefined while it isn't known
+         */
+        rawUptime() {
+            if (!this.monitor || this.type === "maintenance") {
+                return undefined;
+            }
+            const value = this.$root.uptimeList[this.monitor.id + "_" + this.type];
+            return value === undefined ? undefined : Math.round(value * 10000) / 100;
+        },
         uptime() {
             if (this.type === "maintenance") {
                 return this.$t("statusMaintenance");

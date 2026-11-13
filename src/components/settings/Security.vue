@@ -8,6 +8,8 @@
                         v-if="!settings.disableAuth"
                         id="logout-btn"
                         class="btn btn-danger ms-4 me-2 mb-2"
+                        data-agentom-id="settings.security.logout"
+                        data-agentom-risk="sensitive"
                         @click="$root.logout"
                     >
                         {{ $t("logoutCurrentUser", { username: $root.username }) }}
@@ -17,12 +19,13 @@
                 <h5 class="my-4 settings-subheading">{{ $t("Change Password") }}</h5>
                 <form class="mb-3" @submit.prevent="savePassword">
                     <div class="mb-3">
-                        <label for="current-password" class="form-label">
+                        <label id="current-password-label" for="current-password" class="form-label">
                             {{ $t("Current Password") }}
                         </label>
                         <input
                             id="current-password"
                             v-model="password.currentPassword"
+                            aria-labelledby="current-password-label"
                             type="password"
                             class="form-control"
                             autocomplete="current-password"
@@ -54,16 +57,23 @@
                             type="password"
                             class="form-control"
                             :class="{ 'is-invalid': invalidPassword }"
+                            :aria-invalid="invalidPassword ? 'true' : null"
+                            :aria-describedby="invalidPassword ? 'repeat-password-error' : null"
                             autocomplete="new-password"
                             required
                         />
-                        <div class="invalid-feedback">
+                        <div id="repeat-password-error" class="invalid-feedback">
                             {{ $t("passwordNotMatchMsg") }}
                         </div>
                     </div>
 
                     <div>
-                        <button class="btn btn-primary" type="submit">
+                        <button
+                            class="btn btn-primary"
+                            type="submit"
+                            data-agentom-id="settings.security.update-password"
+                            data-agentom-risk="sensitive"
+                        >
                             {{ $t("Update Password") }}
                         </button>
                     </div>
@@ -75,7 +85,13 @@
                     {{ $t("Two Factor Authentication") }}
                 </h5>
                 <div class="mb-4">
-                    <button class="btn btn-primary me-2" type="button" @click="$refs.TwoFADialog.show()">
+                    <button
+                        class="btn btn-primary me-2"
+                        type="button"
+                        data-agentom-id="settings.security.2fa-settings"
+                        data-agentom-risk="sensitive"
+                        @click="$refs.TwoFADialog.show()"
+                    >
                         {{ $t("2FA Settings") }}
                     </button>
                 </div>
@@ -90,6 +106,8 @@
                         v-if="settings.disableAuth"
                         id="enableAuth-btn"
                         class="btn btn-outline-primary me-2 mb-2"
+                        data-agentom-id="settings.security.enable-auth"
+                        data-agentom-risk="sensitive"
                         @click="enableAuth"
                     >
                         {{ $t("Enable Auth") }}
@@ -98,6 +116,9 @@
                         v-if="!settings.disableAuth"
                         id="disableAuth-btn"
                         class="btn btn-primary me-2 mb-2"
+                        data-agentom-id="settings.security.disable-auth"
+                        data-agentom-risk="sensitive"
+                        data-agentom-confirmation="required"
                         @click="confirmDisableAuth"
                     >
                         {{ $t("Disable Auth") }}
@@ -113,6 +134,9 @@
             btn-style="btn-danger"
             :yes-text="$t('I understand, please disable')"
             :no-text="$t('Leave')"
+            :action="$t('disableAuthAria')"
+            yes-id="settings.security.disable-auth.confirm"
+            risk="sensitive"
             @yes="disableAuth"
         >
             <i18n-t tag="p" keypath="disableauth.message1">

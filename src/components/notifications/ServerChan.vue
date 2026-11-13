@@ -1,9 +1,10 @@
 <template>
     <div class="mb-3">
-        <label for="serverchan-sendkey" class="form-label">{{ $t("SendKey") }}</label>
+        <label id="serverchan-sendkey-label" for="serverchan-sendkey" class="form-label">{{ $t("SendKey") }}</label>
         <HiddenInput
             id="serverchan-sendkey"
             v-model="$parent.notification.serverChanSendKey"
+            labelledby="serverchan-sendkey-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

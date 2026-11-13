@@ -7,6 +7,7 @@
             type="url"
             pattern="https?://.+"
             class="form-control"
+            data-agentom-redact
             required
         />
         <div class="form-text">
@@ -19,8 +20,13 @@
     </div>
 
     <div class="mb-3">
-        <label for="webhook-apikey" class="form-label">{{ $t("API Key") }}</label>
-        <HiddenInput id="webhook-apikey" v-model="$parent.notification.webhookAPIKey" :required="true"></HiddenInput>
+        <label id="webhook-apikey-label" for="webhook-apikey" class="form-label">{{ $t("API Key") }}</label>
+        <HiddenInput
+            id="webhook-apikey"
+            v-model="$parent.notification.webhookAPIKey"
+            labelledby="webhook-apikey-label"
+            :required="true"
+        ></HiddenInput>
     </div>
 </template>
 

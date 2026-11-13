@@ -1,9 +1,12 @@
 <template>
     <div class="mb-3">
-        <label for="signalgrid-client-key" class="form-label">{{ $t("Client Key") }}</label>
+        <label id="signalgrid-client-key-label" for="signalgrid-client-key" class="form-label">
+            {{ $t("Client Key") }}
+        </label>
         <HiddenInput
             id="signalgrid-client-key"
             v-model="$parent.notification.signalgridClientKey"
+            labelledby="signalgrid-client-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

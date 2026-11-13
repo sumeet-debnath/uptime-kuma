@@ -1,9 +1,10 @@
 <template>
     <div class="mb-3">
-        <label for="notifery-api-key" class="form-label">{{ $t("API Key") }}</label>
+        <label id="notifery-api-key-label" for="notifery-api-key" class="form-label">{{ $t("API Key") }}</label>
         <HiddenInput
             id="notifery-api-key"
             v-model="$parent.notification.notiferyApiKey"
+            labelledby="notifery-api-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

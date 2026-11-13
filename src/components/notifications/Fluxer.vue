@@ -1,14 +1,18 @@
 <template>
     <div class="mb-3">
-        <label for="fluxer-webhook-url" class="form-label">{{ $t("Fluxer Webhook URL") }}</label>
+        <label id="fluxer-webhook-url-label" for="fluxer-webhook-url" class="form-label">
+            {{ $t("Fluxer Webhook URL") }}
+        </label>
         <HiddenInput
             id="fluxer-webhook-url"
             v-model="$parent.notification.fluxerWebhookUrl"
+            labelledby="fluxer-webhook-url-label"
+            describedby="fluxer-webhook-url-hint"
             type="url"
             required
             autocomplete="false"
         />
-        <div class="form-text">
+        <div id="fluxer-webhook-url-hint" class="form-text">
             {{ $t("wayToGetFluxerURL") }}
         </div>
     </div>

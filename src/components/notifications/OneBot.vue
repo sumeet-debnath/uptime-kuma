@@ -1,19 +1,35 @@
 <template>
     <div class="mb-3">
         <div class="mb-3">
-            <label for="onebot-http-addr" class="form-label">
+            <label id="onebot-http-addr-label" class="form-label">
                 {{ $t("onebotHttpAddress") }}
                 <span style="color: red"><sup>*</sup></span>
             </label>
-            <input id="HttpUrl" v-model="$parent.notification.httpAddr" type="text" class="form-control" required />
+            <input
+                id="HttpUrl"
+                v-model="$parent.notification.httpAddr"
+                type="text"
+                class="form-control"
+                aria-labelledby="onebot-http-addr-label"
+                required
+            />
         </div>
         <div class="mb-3">
-            <label for="onebot-access-token" class="form-label">
+            <label id="onebot-access-token-label" class="form-label">
                 AccessToken
                 <span style="color: red"><sup>*</sup></span>
             </label>
-            <input id="HttpUrl" v-model="$parent.notification.accessToken" type="text" class="form-control" required />
-            <div class="form-text">
+            <input
+                id="HttpUrl"
+                v-model="$parent.notification.accessToken"
+                type="text"
+                class="form-control"
+                aria-labelledby="onebot-access-token-label"
+                aria-describedby="onebot-access-token-hint"
+                data-agentom-redact
+                required
+            />
+            <div id="onebot-access-token-hint" class="form-text">
                 <p>{{ $t("onebotSafetyTips") }}</p>
             </div>
         </div>
@@ -27,11 +43,18 @@
         </div>
 
         <div class="mb-3">
-            <label for="onebot-reciever-id" class="form-label">
+            <label id="onebot-reciever-id-label" class="form-label">
                 {{ $t("onebotUserOrGroupId") }}
                 <span style="color: red"><sup>*</sup></span>
             </label>
-            <input id="secretKey" v-model="$parent.notification.recieverId" type="text" class="form-control" required />
+            <input
+                id="secretKey"
+                v-model="$parent.notification.recieverId"
+                type="text"
+                class="form-control"
+                aria-labelledby="onebot-reciever-id-label"
+                required
+            />
         </div>
 
         <div class="form-text">

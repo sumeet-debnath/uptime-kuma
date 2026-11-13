@@ -1,18 +1,33 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div
+        ref="modal"
+        class="modal fade"
+        tabindex="-1"
+        :aria-labelledby="`confirm-title-${$.uid}`"
+        :aria-describedby="`confirm-body-${$.uid}`"
+    >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 id="exampleModalLabel" class="modal-title">
+                    <h5 :id="`confirm-title-${$.uid}`" class="modal-title">
                         {{ title || $t("Confirm") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
                 </div>
-                <div class="modal-body">
+                <div :id="`confirm-body-${$.uid}`" class="modal-body">
                     <slot />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" :class="btnStyle" data-bs-dismiss="modal" @click="yes">
+                    <button
+                        type="button"
+                        class="btn"
+                        :class="btnStyle"
+                        data-bs-dismiss="modal"
+                        :aria-label="action ? `${yesText || $t('Yes')}: ${action}` : undefined"
+                        :data-agentom-id="yesId || undefined"
+                        :data-agentom-risk="yesId && risk ? risk : undefined"
+                        @click="yes"
+                    >
                         {{ yesText || $t("Yes") }}
                     </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="no">
@@ -46,6 +61,21 @@ export default {
         },
         /** Title to show on modal. Defaults to translated version of "Config" */
         title: {
+            type: String,
+            default: null,
+        },
+        /** What "Yes" does, as a phrase ("delete monitor Kuma backend"): read by assistive technology only */
+        action: {
+            type: String,
+            default: null,
+        },
+        /** data-agentom-id of the "Yes" button */
+        yesId: {
+            type: String,
+            default: null,
+        },
+        /** data-agentom-risk of the "Yes" button: "destructive" or "sensitive" */
+        risk: {
             type: String,
             default: null,
         },

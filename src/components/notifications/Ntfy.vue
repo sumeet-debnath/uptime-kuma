@@ -10,9 +10,10 @@
             v-model="$parent.notification.ntfyserverurl"
             type="text"
             class="form-control"
+            aria-describedby="ntfy-server-url-hint"
             required
         />
-        <div class="form-text">
+        <div id="ntfy-server-url-hint" class="form-text">
             {{ $t("Server URL should not contain the nfty topic") }}
         </div>
     </div>
@@ -74,16 +75,21 @@
         <input id="ntfy-username" v-model="$parent.notification.ntfyusername" type="text" class="form-control" />
     </div>
     <div v-if="$parent.notification.ntfyAuthenticationMethod === 'usernamePassword'" class="mb-3">
-        <label for="ntfy-password" class="form-label">{{ $t("Password") }}</label>
+        <label id="ntfy-password-label" for="ntfy-password" class="form-label">{{ $t("Password") }}</label>
         <HiddenInput
             id="ntfy-password"
             v-model="$parent.notification.ntfypassword"
+            labelledby="ntfy-password-label"
             autocomplete="new-password"
         ></HiddenInput>
     </div>
     <div v-if="$parent.notification.ntfyAuthenticationMethod === 'accessToken'" class="mb-3">
-        <label for="ntfy-access-token" class="form-label">{{ $t("Access Token") }}</label>
-        <HiddenInput id="ntfy-access-token" v-model="$parent.notification.ntfyaccesstoken"></HiddenInput>
+        <label id="ntfy-access-token-label" for="ntfy-access-token" class="form-label">{{ $t("Access Token") }}</label>
+        <HiddenInput
+            id="ntfy-access-token"
+            v-model="$parent.notification.ntfyaccesstoken"
+            labelledby="ntfy-access-token-label"
+        ></HiddenInput>
     </div>
     <div class="mb-3">
         <label for="ntfy-icon" class="form-label">{{ $t("IconUrl") }}</label>
@@ -96,9 +102,10 @@
             v-model="$parent.notification.ntfyCall"
             type="text"
             class="form-control"
+            aria-describedby="ntfy-call-hint"
             placeholder="yes or +12223334444"
         />
-        <div class="form-text">
+        <div id="ntfy-call-hint" class="form-text">
             {{ $t("ntfyCallHelptext") }}
         </div>
     </div>
@@ -110,12 +117,13 @@
                 v-model="$parent.notification.ntfyUseTemplate"
                 class="form-check-input"
                 type="checkbox"
+                aria-describedby="ntfy-use-template-hint"
             />
             <label class="form-check-label" for="ntfy-use-template">
                 {{ $t("ntfyUseTemplate") }}
             </label>
         </div>
-        <div class="form-text">
+        <div id="ntfy-use-template-hint" class="form-text">
             {{ $t("ntfyUseTemplateDescription") }}
         </div>
     </div>

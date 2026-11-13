@@ -8,6 +8,7 @@
             pattern="https?://.+"
             class="form-control"
             required
+            data-agentom-redact
         />
     </div>
 </template>

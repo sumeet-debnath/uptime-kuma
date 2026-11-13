@@ -10,10 +10,11 @@
         />
     </div>
     <div class="mb-3">
-        <label for="serwersms-key" class="form-label">{{ $t("serwersmsAPIPassword") }}</label>
+        <label id="serwersms-key-label" for="serwersms-key" class="form-label">{{ $t("serwersmsAPIPassword") }}</label>
         <HiddenInput
             id="serwersms-key"
             v-model="$parent.notification.serwersmsPassword"
+            labelledby="serwersms-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -40,11 +41,12 @@
         <input
             id="serwersms-group-id"
             v-model="$parent.notification.serwersmsGroupId"
+            aria-describedby="serwersms-group-id-hint"
             type="text"
             class="form-control"
             required
         />
-        <div class="form-text">{{ $t("serwersmsGroupIdHelptext") }}</div>
+        <div id="serwersms-group-id-hint" class="form-text">{{ $t("serwersmsGroupIdHelptext") }}</div>
     </div>
     <div class="mb-3">
         <label for="serwersms-sender-name" class="form-label">{{ $t("serwersmsSenderName") }}</label>

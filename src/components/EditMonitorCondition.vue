@@ -11,18 +11,34 @@
             <font-awesome-icon icon="trash" />
         </button>
 
-        <select v-if="!isFirst" v-model="model.andOr" class="form-select and-or-select" data-testid="condition-and-or">
+        <select
+            v-if="!isFirst"
+            v-model="model.andOr"
+            class="form-select and-or-select"
+            :aria-label="$t('conditionAndOrAria')"
+            data-testid="condition-and-or"
+        >
             <option value="and">{{ $t("and") }}</option>
             <option value="or">{{ $t("or") }}</option>
         </select>
 
-        <select v-model="model.variable" class="form-select" data-testid="condition-variable">
+        <select
+            v-model="model.variable"
+            class="form-select"
+            :aria-label="$t('conditionVariableAria')"
+            data-testid="condition-variable"
+        >
             <option v-for="variable in conditionVariables" :key="variable.id" :value="variable.id">
                 {{ $t(variable.id) }}
             </option>
         </select>
 
-        <select v-model="model.operator" class="form-select" data-testid="condition-operator">
+        <select
+            v-model="model.operator"
+            class="form-select"
+            :aria-label="$t('conditionOperatorAria')"
+            data-testid="condition-operator"
+        >
             <option v-for="operator in getVariableOperators(model.variable)" :key="operator.id" :value="operator.id">
                 {{ $t(operator.caption) }}
             </option>

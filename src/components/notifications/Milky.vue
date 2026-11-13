@@ -1,14 +1,21 @@
 <template>
     <div class="mb-3">
         <div class="mb-3">
-            <label for="milky-http-addr" class="form-label">
+            <label id="milky-http-addr-label" class="form-label">
                 {{ $t("milkyHttpAddress") }}
                 <span style="color: red"><sup>*</sup></span>
             </label>
-            <input id="HttpUrl" v-model="$parent.notification.httpAddr" type="text" class="form-control" required />
+            <input
+                id="HttpUrl"
+                v-model="$parent.notification.httpAddr"
+                type="text"
+                class="form-control"
+                aria-labelledby="milky-http-addr-label"
+                required
+            />
         </div>
         <div class="mb-3">
-            <label for="milky-access-token" class="form-label">
+            <label id="milky-access-token-label" class="form-label">
                 AccessToken
                 <span style="color: red"><sup>*</sup></span>
             </label>
@@ -17,9 +24,11 @@
                 v-model="$parent.notification.accessToken"
                 type="password"
                 class="form-control"
+                aria-labelledby="milky-access-token-label"
+                aria-describedby="milky-access-token-hint"
                 required
             />
-            <div class="form-text">
+            <div id="milky-access-token-hint" class="form-text">
                 <p>{{ $t("milkySafetyTips") }}</p>
             </div>
         </div>
@@ -33,11 +42,18 @@
         </div>
 
         <div class="mb-3">
-            <label for="milky-reciever-id" class="form-label">
+            <label id="milky-reciever-id-label" class="form-label">
                 {{ $t("milkyUserOrGroupId") }}
                 <span style="color: red"><sup>*</sup></span>
             </label>
-            <input id="secretKey" v-model="$parent.notification.recieverId" type="text" class="form-control" required />
+            <input
+                id="secretKey"
+                v-model="$parent.notification.recieverId"
+                type="text"
+                class="form-control"
+                aria-labelledby="milky-reciever-id-label"
+                required
+            />
         </div>
 
         <div class="form-text">

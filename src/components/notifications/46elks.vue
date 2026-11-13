@@ -8,12 +8,13 @@
             class="form-control"
             required
         />
-        <label for="ElksPassword" class="form-label">{{ $t("Password") }}</label>
+        <label id="ElksPassword-label" for="ElksPassword" class="form-label">{{ $t("Password") }}</label>
     </div>
     <div class="form-text">
         <HiddenInput
             id="ElksPassword"
             v-model="$parent.notification.elksAuthToken"
+            labelledby="ElksPassword-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -29,8 +30,9 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="46elks-from-number-hint"
         />
-        <div class="form-text">
+        <div id="46elks-from-number-hint" class="form-text">
             {{
                 $t(
                     "Either a text sender ID or a phone number in E.164 format if you want to be able to receive replies."
@@ -50,8 +52,9 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="46elks-to-number-hint"
         />
-        <div class="form-text">
+        <div id="46elks-to-number-hint" class="form-text">
             {{ $t("The phone number of the recipient in E.164 format.") }}
             <i18n-t tag="p" keypath="More info on:">
                 <a href="https://46elks.se/kb/e164" target="_blank">https://46elks.se/kb/e164</a>

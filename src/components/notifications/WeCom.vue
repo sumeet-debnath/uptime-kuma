@@ -10,8 +10,10 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="wecom-bot-key-hint"
+            data-agentom-redact
         />
-        <div class="form-text">
+        <div id="wecom-bot-key-hint" class="form-text">
             <p>
                 <span style="color: red"><sup>*</sup></span>
                 {{ $t("Required") }}
@@ -32,7 +34,10 @@
             type="text"
             class="form-control"
             placeholder="13800001111,13900002222,@all"
+            aria-describedby="wecom-mentioned-mobile-list-hint"
         />
-        <p class="form-text">{{ $t("WeCom Mentioned Mobile List Description") }}</p>
+        <p id="wecom-mentioned-mobile-list-hint" class="form-text">
+            {{ $t("WeCom Mentioned Mobile List Description") }}
+        </p>
     </div>
 </template>

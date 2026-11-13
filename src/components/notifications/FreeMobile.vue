@@ -24,6 +24,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
     </div>
 </template>

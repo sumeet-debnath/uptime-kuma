@@ -26,6 +26,9 @@
                                 v-if="incident.active"
                                 class="btn btn-success btn-sm me-1"
                                 :title="$t('Resolve')"
+                                :aria-label="$t('resolveIncidentNamedAria', [incident.title])"
+                                :data-agentom-id="`incident.${incident.id}.resolve`"
+                                data-agentom-risk="sensitive"
                                 @click="$emit('resolve-incident', incident)"
                             >
                                 <font-awesome-icon icon="check" />
@@ -33,6 +36,8 @@
                             <button
                                 class="btn btn-outline-secondary btn-sm me-1"
                                 :title="$t('Edit')"
+                                :aria-label="$t('editIncidentNamedAria', [incident.title])"
+                                :data-agentom-id="`incident.${incident.id}.edit`"
                                 @click="$emit('edit-incident', incident)"
                             >
                                 <font-awesome-icon icon="edit" />
@@ -40,6 +45,10 @@
                             <button
                                 class="btn btn-outline-danger btn-sm"
                                 :title="$t('Delete')"
+                                :aria-label="$t('deleteIncidentNamedAria', [incident.title])"
+                                :data-agentom-id="`incident.${incident.id}.delete`"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
                                 @click="$emit('delete-incident', incident)"
                             >
                                 <font-awesome-icon icon="trash" />

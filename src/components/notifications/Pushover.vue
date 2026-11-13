@@ -1,22 +1,24 @@
 <template>
     <div class="mb-3">
-        <label for="pushover-user" class="form-label">
+        <label id="pushover-user-label" for="pushover-user" class="form-label">
             {{ $t("User Key") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="pushover-user"
             v-model="$parent.notification.pushoveruserkey"
+            labelledby="pushover-user-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
-        <label for="pushover-app-token" class="form-label">
+        <label id="pushover-app-token-label" for="pushover-app-token" class="form-label">
             {{ $t("Application Token") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
         <HiddenInput
             id="pushover-app-token"
             v-model="$parent.notification.pushoverapptoken"
+            labelledby="pushover-app-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

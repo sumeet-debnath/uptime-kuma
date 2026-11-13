@@ -7,17 +7,19 @@
             type="text"
             class="form-control"
             required
+            aria-describedby="notifyapp-device-id-hint"
             placeholder="ABC12345"
         />
-        <div class="form-text">
+        <div id="notifyapp-device-id-hint" class="form-text">
             {{ $t("notifyAppDeviceIdDescription") }}
         </div>
     </div>
     <div class="mb-3">
-        <label for="notifyapp-token" class="form-label">{{ $t("Token") }}</label>
+        <label id="notifyapp-token-label" for="notifyapp-token" class="form-label">{{ $t("Token") }}</label>
         <HiddenInput
             id="notifyapp-token"
             v-model="$parent.notification.notifyAppToken"
+            labelledby="notifyapp-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>

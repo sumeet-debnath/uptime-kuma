@@ -1,8 +1,19 @@
 <template>
     <transition name="slide-fade" appear>
         <div>
-            <h1 class="mb-3">{{ pageName }}</h1>
-            <form @submit.prevent="submit">
+            <h1
+                id="monitor-form-title"
+                class="mb-3"
+                :aria-label="isEdit && monitor.name ? `${pageName}: ${monitor.name}` : undefined"
+            >
+                {{ pageName }}
+            </h1>
+            <form
+                aria-labelledby="monitor-form-title"
+                data-agentom-id="monitor-form"
+                data-agentom-kind="section"
+                @submit.prevent="submit"
+            >
                 <div class="shadow-box shadow-box-with-fixed-bottom-bar">
                     <div class="row">
                         <div class="col-md-6">
@@ -33,6 +44,7 @@
                                     id="type"
                                     v-model="monitor.type"
                                     class="form-select"
+                                    :aria-describedby="monitor.type === 'rabbitmq' ? 'type-hint' : undefined"
                                     data-testid="monitor-type-select"
                                 >
                                     <!-- Unsorted, since HTTP is commonly used -->
@@ -120,6 +132,7 @@
                                 </select>
                                 <i18n-t
                                     v-if="monitor.type === 'rabbitmq'"
+                                    id="type-hint"
                                     keypath="rabbitmqHelpText"
                                     tag="div"
                                     class="form-text"
@@ -204,8 +217,12 @@
                                     class="form-control"
                                     :pattern="monitor.type !== 'websocket-upgrade' ? 'https?://.+' : 'wss?://.+'"
                                     required
+                                    aria-describedby="url-hint"
                                     data-testid="url-input"
                                 />
+                                <span id="url-hint" class="visually-hidden">
+                                    {{ $t("Example:", ["https://example.com"]) }}
+                                </span>
                             </div>
 
                             <template v-if="monitor.type === 'websocket-upgrade'">
@@ -220,8 +237,14 @@
                                         type="text"
                                         class="form-control"
                                         placeholder="mielecloudconnect,soap"
+                                        aria-describedby="ws_subprotocol-hint"
                                     />
-                                    <i18n-t tag="div" class="form-text" keypath="wsSubprotocolDescription">
+                                    <i18n-t
+                                        id="ws_subprotocol-hint"
+                                        tag="div"
+                                        class="form-text"
+                                        keypath="wsSubprotocolDescription"
+                                    >
                                         <template #documentation>
                                             <a
                                                 href="https://www.iana.org/assignments/websocket/websocket.xml#subprotocol-name"
@@ -241,6 +264,7 @@
                                         id="ws-headers"
                                         v-model="monitor.headers"
                                         class="form-control"
+                                        data-agentom-redact
                                         :placeholder="headersPlaceholder"
                                     ></textarea>
                                 </div>
@@ -261,7 +285,13 @@
                             <!-- Push URL -->
                             <div v-if="monitor.type === 'push'" class="my-3">
                                 <label for="push-url" class="form-label">{{ $t("PushUrl") }}</label>
-                                <CopyableInput id="push-url" v-model="pushURL" type="url" disabled="disabled" />
+                                <CopyableInput
+                                    id="push-url"
+                                    v-model="pushURL"
+                                    type="url"
+                                    disabled="disabled"
+                                    data-agentom-redact
+                                />
                                 <div class="form-text">
                                     {{ $t("needPushEvery", [monitor.interval]) }}
                                     <br />
@@ -281,8 +311,9 @@
                                     type="text"
                                     class="form-control"
                                     required
+                                    aria-describedby="keyword-hint"
                                 />
-                                <div class="form-text">
+                                <div id="keyword-hint" class="form-text">
                                     {{ $t("keywordDescription") }}
                                 </div>
                             </div>
@@ -297,11 +328,12 @@
                                     v-model="monitor.invertKeyword"
                                     class="form-check-input"
                                     type="checkbox"
+                                    aria-describedby="invert-keyword-hint"
                                 />
                                 <label class="form-check-label" for="invert-keyword">
                                     {{ $t("Invert Keyword") }}
                                 </label>
-                                <div class="form-text">
+                                <div id="invert-keyword-hint" class="form-text">
                                     {{ $t("invertKeywordDescription") }}
                                 </div>
                             </div>
@@ -315,19 +347,24 @@
                                         v-model="remoteBrowsersToggle"
                                         class="form-check-input"
                                         type="checkbox"
+                                        aria-describedby="toggle-hint"
                                     />
                                     <label class="form-check-label" for="toggle">
                                         {{ $t("useRemoteBrowser") }}
                                     </label>
-                                    <div class="form-text">
+                                    <div id="toggle-hint" class="form-text">
                                         {{ $t("remoteBrowserToggle") }}
                                     </div>
                                 </div>
 
                                 <div v-if="remoteBrowsersToggle">
-                                    <label for="remote-browser" class="form-label">{{ $t("Remote Browser") }}</label>
+                                    <label id="remote-browser-label" for="remote-browser" class="form-label">
+                                        {{ $t("Remote Browser") }}
+                                    </label>
                                     <ActionSelect
                                         v-model="monitor.remote_browser"
+                                        select-labelledby="remote-browser-label"
+                                        :action-aria-label="$t('Add a Remote Browser')"
                                         :options="remoteBrowsersOptions"
                                         icon="plus"
                                         :action="() => $refs.remoteBrowserDialog.show()"
@@ -465,12 +502,13 @@
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="rabbitmqPassword" class="form-label">
+                                    <label id="rabbitmqPassword-label" for="rabbitmqPassword" class="form-label">
                                         {{ $t("RabbitMQ Password") }}
                                     </label>
                                     <HiddenInput
                                         id="rabbitmqPassword"
                                         v-model="monitor.rabbitmqPassword"
+                                        labelledby="rabbitmqPassword-label"
                                         autocomplete="false"
                                         required="true"
                                     ></HiddenInput>
@@ -504,9 +542,10 @@
                                     type="text"
                                     class="form-control"
                                     required
+                                    :aria-describedby="monitor.type === 'mqtt' ? 'hostname-hint' : undefined"
                                     data-testid="hostname-input"
                                 />
-                                <div v-if="monitor.type === 'mqtt'" class="form-text">
+                                <div v-if="monitor.type === 'mqtt'" id="hostname-hint" class="form-text">
                                     <i18n-t tag="p" keypath="mqttHostnameTip">
                                         <template #hostnameFormat>
                                             <code>[mqtt,mqtts,ws,wss]://hostname</code>
@@ -527,9 +566,10 @@
                                         class="form-control"
                                         :pattern="ipOrHostnameRegexPattern"
                                         required
+                                        aria-describedby="hostname-hint"
                                         data-testid="hostname-input"
                                     />
-                                    <div class="form-text">
+                                    <div id="hostname-hint" class="form-text">
                                         {{ $t("GlobalpingHostname") }}
                                     </div>
                                 </div>
@@ -543,9 +583,10 @@
                                         class="form-control"
                                         pattern="https?://.+"
                                         required
+                                        aria-describedby="url-hint"
                                         data-testid="url-input"
                                     />
-                                    <div class="form-text">
+                                    <div id="url-hint" class="form-text">
                                         {{ $t("GlobalpingHostname") }}
                                     </div>
                                 </div>
@@ -559,8 +600,14 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        aria-describedby="location-hint"
                                     />
-                                    <i18n-t keypath="GlobalpingLocationDescription" tag="div" class="form-text">
+                                    <i18n-t
+                                        id="location-hint"
+                                        keypath="GlobalpingLocationDescription"
+                                        tag="div"
+                                        class="form-text"
+                                    >
                                         <template #plus>
                                             <code>+</code>
                                         </template>
@@ -587,12 +634,17 @@
                                 <!-- IP Family -->
                                 <div class="my-3">
                                     <label for="ipFamily" class="form-label">{{ $t("Ip Family") }}</label>
-                                    <select id="ipFamily" v-model="monitor.ipFamily" class="form-select">
+                                    <select
+                                        id="ipFamily"
+                                        v-model="monitor.ipFamily"
+                                        class="form-select"
+                                        aria-describedby="ipFamily-hint"
+                                    >
                                         <option :value="null">{{ $t("auto-select") }}</option>
                                         <option value="ipv4">IPv4</option>
                                         <option value="ipv6">IPv6</option>
                                     </select>
-                                    <div class="form-text">
+                                    <div id="ipFamily-hint" class="form-text">
                                         {{ $t("GlobalpingIpFamilyInfo") }}
                                     </div>
                                 </div>
@@ -606,8 +658,9 @@
                                         v-model="monitor.dns_resolve_server"
                                         type="text"
                                         class="form-control"
+                                        aria-describedby="dns_resolve_server-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="dns_resolve_server-hint" class="form-text">
                                         {{ $t("GlobalpingResolverInfo") }}
                                     </div>
                                 </div>
@@ -627,8 +680,9 @@
                                             max="65535"
                                             step="1"
                                             value="53"
+                                            aria-describedby="port-hint"
                                         />
-                                        <div class="form-text">
+                                        <div id="port-hint" class="form-text">
                                             {{ $t("dnsPortDescription") }}
                                         </div>
                                     </div>
@@ -666,8 +720,9 @@
                                             v-model="monitor.keyword"
                                             type="text"
                                             class="form-control"
+                                            aria-describedby="keyword-hint"
                                         />
-                                        <div class="form-text">
+                                        <div id="keyword-hint" class="form-text">
                                             {{ $t("RegexMatch") }}
                                         </div>
                                     </div>
@@ -735,27 +790,32 @@
                                     type="password"
                                     class="form-control"
                                     :placeholder="$t('gamedigToken')"
+                                    aria-describedby="gamedig-token-hint"
                                 />
-                                <div class="form-text">
+                                <div id="gamedig-token-hint" class="form-text">
                                     {{ $t("gamedigTokenDescription") }}
                                 </div>
                             </div>
 
                             <!-- SNMP Monitor Type -->
                             <div v-if="monitor.type === 'snmp'" class="my-3">
-                                <label for="snmp_community_string" class="form-label">
+                                <label id="snmp_community_string-label" for="snmp_community_string" class="form-label">
                                     {{ $t("Community String") }}
                                 </label>
                                 <!-- TODO: Rename monitor.radiusPassword to monitor.password for general use -->
                                 <HiddenInput
                                     id="snmp_community_string"
                                     v-model="monitor.radiusPassword"
+                                    labelledby="snmp_community_string-label"
                                     autocomplete="false"
                                     required="true"
                                     placeholder="public"
+                                    describedby="snmp_community_string-hint"
                                 ></HiddenInput>
 
-                                <div class="form-text">{{ $t("snmpCommunityStringHelptext") }}</div>
+                                <div id="snmp_community_string-hint" class="form-text">
+                                    {{ $t("snmpCommunityStringHelptext") }}
+                                </div>
                             </div>
 
                             <div v-if="monitor.type === 'snmp'" class="my-3">
@@ -773,8 +833,9 @@
                                     pattern="^([0-2])((\.0)|(\.[1-9][0-9]*))*$"
                                     placeholder="1.3.6.1.4.1.9.6.1.101"
                                     required
+                                    aria-describedby="snmp_oid-hint"
                                 />
-                                <div class="form-text">{{ $t("snmpOIDHelptext") }}</div>
+                                <div id="snmp_oid-hint" class="form-text">{{ $t("snmpOIDHelptext") }}</div>
                             </div>
 
                             <div v-if="monitor.type === 'snmp'" class="my-3">
@@ -802,12 +863,17 @@
 
                             <div v-if="monitor.type === 'smtp'" class="my-3">
                                 <label for="smtp_security" class="form-label">{{ $t("SMTP Security") }}</label>
-                                <select id="smtp_security" v-model="monitor.smtpSecurity" class="form-select">
+                                <select
+                                    id="smtp_security"
+                                    v-model="monitor.smtpSecurity"
+                                    class="form-select"
+                                    aria-describedby="smtp_security-hint"
+                                >
                                     <option value="secure">SMTPS</option>
                                     <option value="nostarttls">{{ $t("Ignore STARTTLS") }}</option>
                                     <option value="starttls">{{ $t("Use STARTTLS") }}</option>
                                 </select>
-                                <div class="form-text">
+                                <div id="smtp_security-hint" class="form-text">
                                     {{ $t("smtpHelpText") }}
                                 </div>
                             </div>
@@ -839,10 +905,13 @@
 
                                 <!-- Password auth -->
                                 <div v-if="monitor.sshAuthMethod !== 'privateKey'" class="my-3">
-                                    <label for="ssh_password" class="form-label">{{ $t("Password") }}</label>
+                                    <label id="ssh_password-label" for="ssh_password" class="form-label">
+                                        {{ $t("Password") }}
+                                    </label>
                                     <HiddenInput
                                         id="ssh_password"
                                         v-model="monitor.sshPassword"
+                                        labelledby="ssh_password-label"
                                         autocomplete="current-password"
                                         required="true"
                                     ></HiddenInput>
@@ -862,20 +931,28 @@
                                             :placeholder="$t('sshPrivateKeyPlaceholder')"
                                             required
                                             autocomplete="off"
+                                            aria-describedby="ssh_private_key-hint"
+                                            data-agentom-redact
                                         ></textarea>
-                                        <div class="form-text">{{ $t("sshPrivateKeyHelpText") }}</div>
+                                        <div id="ssh_private_key-hint" class="form-text">
+                                            {{ $t("sshPrivateKeyHelpText") }}
+                                        </div>
                                     </div>
                                     <div class="my-3">
-                                        <label for="ssh_passphrase" class="form-label">
+                                        <label id="ssh_passphrase-label" for="ssh_passphrase" class="form-label">
                                             {{ $t("Passphrase") }}
                                             <span class="text-muted small">({{ $t("optional") }})</span>
                                         </label>
                                         <HiddenInput
                                             id="ssh_passphrase"
                                             v-model="monitor.sshPassphrase"
+                                            labelledby="ssh_passphrase-label"
+                                            describedby="ssh_passphrase-hint"
                                             autocomplete="off"
                                         ></HiddenInput>
-                                        <div class="form-text">{{ $t("sshPassphraseHelpText") }}</div>
+                                        <div id="ssh_passphrase-hint" class="form-text">
+                                            {{ $t("sshPassphraseHelpText") }}
+                                        </div>
                                     </div>
                                 </template>
 
@@ -887,8 +964,9 @@
                                         type="text"
                                         class="form-control"
                                         placeholder="/path/to/check (optional)"
+                                        aria-describedby="sftp_path-hint"
                                     />
-                                    <div class="form-text">{{ $t("sftpPathHelpText") }}</div>
+                                    <div id="sftp_path-hint" class="form-text">{{ $t("sftpPathHelpText") }}</div>
                                 </div>
                             </template>
 
@@ -908,8 +986,9 @@
                                         min="1"
                                         max="15"
                                         placeholder="5"
+                                        aria-describedby="ntp-stratum-threshold-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="ntp-stratum-threshold-hint" class="form-text">
                                         {{ $t("ntpStratumThresholdHelp") }}
                                     </div>
                                 </div>
@@ -925,8 +1004,9 @@
                                         class="form-control"
                                         min="1"
                                         placeholder="1000"
+                                        aria-describedby="ntp-offset-threshold-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="ntp-offset-threshold-hint" class="form-text">
                                         {{ $t("ntpOffsetThresholdHelp") }}
                                     </div>
                                 </div>
@@ -942,8 +1022,9 @@
                                         class="form-control"
                                         min="1"
                                         placeholder="500"
+                                        aria-describedby="ntp-dispersion-threshold-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="ntp-dispersion-threshold-hint" class="form-text">
                                         {{ $t("ntpDispersionThresholdHelp") }}
                                     </div>
                                 </div>
@@ -956,7 +1037,12 @@
                                     <label for="jsonPath" class="form-label mb-0">
                                         {{ $t("Json Query Expression") }}
                                     </label>
-                                    <i18n-t tag="div" class="form-text mb-2" keypath="jsonQueryDescription">
+                                    <i18n-t
+                                        id="jsonPath-hint"
+                                        tag="div"
+                                        class="form-text mb-2"
+                                        keypath="jsonQueryDescription"
+                                    >
                                         <a href="https://jsonata.org/" target="_blank" rel="noopener noreferrer">
                                             jsonata.org
                                         </a>
@@ -971,6 +1057,7 @@
                                         class="form-control"
                                         placeholder="$"
                                         required
+                                        aria-describedby="jsonPath-hint"
                                     />
                                 </div>
 
@@ -1032,8 +1119,9 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        aria-describedby="dns_resolve_server-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="dns_resolve_server-hint" class="form-text">
                                         {{ $t("resolverserverDescription") }}
                                     </div>
                                 </div>
@@ -1050,8 +1138,9 @@
                                         min="0"
                                         max="65535"
                                         step="1"
+                                        aria-describedby="port-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="port-hint" class="form-text">
                                         {{ $t("dnsPortDescription") }}
                                     </div>
                                 </div>
@@ -1104,7 +1193,7 @@
                                     <ActionSelect
                                         id="docker-host"
                                         v-model="monitor.docker_host"
-                                        :action-aria-label="$t('openModalTo', $t('Setup Docker Host'))"
+                                        :action-aria-label="$t('openModalTo', [$t('Setup Docker Host')])"
                                         :options="dockerHostOptionsList"
                                         :disabled="$root.dockerHostList == null || $root.dockerHostList.length === 0"
                                         :icon="'plus'"
@@ -1128,10 +1217,13 @@
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="mqttPassword" class="form-label">MQTT {{ $t("Password") }}</label>
+                                    <label id="mqttPassword-label" for="mqttPassword" class="form-label">
+                                        MQTT {{ $t("Password") }}
+                                    </label>
                                     <HiddenInput
                                         id="mqttPassword"
                                         v-model="monitor.mqttPassword"
+                                        labelledby="mqttPassword-label"
                                         autocomplete="new-password"
                                     />
                                 </div>
@@ -1144,8 +1236,9 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        aria-describedby="mqttTopic-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="mqttTopic-hint" class="form-text">
                                         {{ $t("topicExplanation") }}
                                     </div>
                                 </div>
@@ -1160,9 +1253,17 @@
                                         v-model="monitor.mqttWebsocketPath"
                                         type="text"
                                         class="form-control"
+                                        aria-describedby="mqttWebsocketPath-hint"
                                     />
-                                    <input v-else type="text" class="form-control" disabled />
-                                    <div class="form-text">
+                                    <input
+                                        v-else
+                                        id="mqttWebsocketPath"
+                                        type="text"
+                                        class="form-control"
+                                        aria-describedby="mqttWebsocketPath-hint"
+                                        disabled
+                                    />
+                                    <div id="mqttWebsocketPath-hint" class="form-text">
                                         {{ $t("mqttWebsocketPathExplanation") }}
                                     </div>
                                 </div>
@@ -1189,8 +1290,9 @@
                                         v-model="monitor.mqttSuccessMessage"
                                         type="text"
                                         class="form-control"
+                                        aria-describedby="mqttSuccessKeyword-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="mqttSuccessKeyword-hint" class="form-text">
                                         {{ $t("successKeywordExplanation") }}
                                     </div>
                                 </div>
@@ -1204,9 +1306,15 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        aria-describedby="jsonPath-hint"
                                     />
 
-                                    <i18n-t tag="div" class="form-text" keypath="jsonQueryDescription">
+                                    <i18n-t
+                                        id="jsonPath-hint"
+                                        tag="div"
+                                        class="form-text"
+                                        keypath="jsonQueryDescription"
+                                    >
                                         <a href="https://jsonata.org/" target="_blank" rel="noopener noreferrer">
                                             jsonata.org
                                         </a>
@@ -1240,24 +1348,33 @@
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="radius_password" class="form-label">Radius {{ $t("Password") }}</label>
+                                    <label id="radius_password-label" for="radius_password" class="form-label">
+                                        Radius {{ $t("Password") }}
+                                    </label>
                                     <HiddenInput
                                         id="radius_password"
                                         v-model="monitor.radiusPassword"
+                                        labelledby="radius_password-label"
                                         autocomplete="new-password"
                                         :required="true"
                                     />
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="radius_secret" class="form-label">{{ $t("RadiusSecret") }}</label>
+                                    <label id="radius_secret-label" for="radius_secret" class="form-label">
+                                        {{ $t("RadiusSecret") }}
+                                    </label>
                                     <HiddenInput
                                         id="radius_secret"
                                         v-model="monitor.radiusSecret"
+                                        labelledby="radius_secret-label"
+                                        describedby="radius_secret-hint"
                                         autocomplete="new-password"
                                         :required="true"
                                     />
-                                    <div class="form-text">{{ $t("RadiusSecretDescription") }}</div>
+                                    <div id="radius_secret-hint" class="form-text">
+                                        {{ $t("RadiusSecretDescription") }}
+                                    </div>
                                 </div>
 
                                 <div class="my-3">
@@ -1270,8 +1387,11 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        aria-describedby="radius_called_station_id-hint"
                                     />
-                                    <div class="form-text">{{ $t("RadiusCalledStationIdDescription") }}</div>
+                                    <div id="radius_called_station_id-hint" class="form-text">
+                                        {{ $t("RadiusCalledStationIdDescription") }}
+                                    </div>
                                 </div>
 
                                 <div class="my-3">
@@ -1284,8 +1404,11 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        aria-describedby="radius_calling_station_id-hint"
                                     />
-                                    <div class="form-text">{{ $t("RadiusCallingStationIdDescription") }}</div>
+                                    <div id="radius_calling_station_id-hint" class="form-text">
+                                        {{ $t("RadiusCallingStationIdDescription") }}
+                                    </div>
                                 </div>
                             </template>
 
@@ -1310,6 +1433,7 @@
                                         type="text"
                                         class="form-control"
                                         required
+                                        data-agentom-redact
                                     />
                                 </div>
                             </template>
@@ -1327,10 +1451,13 @@
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="oracledb-pass" class="form-label">{{ $t("Password") }}</label>
+                                    <label id="oracledb-pass-label" for="oracledb-pass" class="form-label">
+                                        {{ $t("Password") }}
+                                    </label>
                                     <HiddenInput
                                         id="oracledb-pass"
                                         v-model="monitor.basic_auth_pass"
+                                        labelledby="oracledb-pass-label"
                                         autocomplete="new-password"
                                         :required="true"
                                     />
@@ -1349,9 +1476,10 @@
                                         class="form-control"
                                         required
                                         :placeholder="$root.info.runtime.platform === 'win32' ? 'Dnscache' : 'nginx'"
+                                        aria-describedby="system-service-name-hint"
                                     />
 
-                                    <div class="form-text">
+                                    <div id="system-service-name-hint" class="form-text">
                                         <template v-if="$root.info.runtime.platform === 'linux'">
                                             {{
                                                 $t("systemServiceDescriptionLinux", {
@@ -1419,7 +1547,7 @@
                             </template>
 
                             <template v-if="monitor.type === 'pm2'">
-                                <div class="my-3">
+                                <div class="my-3" :aria-busy="pm2ProcessLoading ? 'true' : null">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <label for="pm2-process-name" class="form-label mb-0">
                                             {{ $t("PM2 Process") }}
@@ -1432,6 +1560,13 @@
                                         >
                                             {{ pm2ProcessLoading ? $t("Loading...") : $t("Refresh") }}
                                         </button>
+                                        <span role="status" class="visually-hidden">
+                                            {{
+                                                !pm2ProcessLoading && pm2ProcessOptions.length === 0
+                                                    ? $t("pm2NoProcessesAria")
+                                                    : ""
+                                            }}
+                                        </span>
                                     </div>
                                     <select
                                         v-if="pm2ProcessOptions.length > 0"
@@ -1439,6 +1574,7 @@
                                         v-model="monitor.system_service_name"
                                         class="form-select mt-2"
                                         required
+                                        aria-describedby="pm2-process-name-hint"
                                     >
                                         <option disabled value="">{{ $t("Select PM2 process") }}</option>
                                         <!-- Save the PM2 name because PM2 can reassign numeric IDs after delete/recreate. -->
@@ -1458,12 +1594,13 @@
                                         class="form-control mt-2"
                                         placeholder="api"
                                         required
+                                        aria-describedby="pm2-process-name-hint"
                                     />
-                                    <div v-if="pm2ProcessError" class="text-danger small mt-2">
+                                    <div v-if="pm2ProcessError" class="text-danger small mt-2" role="alert">
                                         {{ pm2ProcessError }}
                                     </div>
 
-                                    <div class="form-text">
+                                    <div id="pm2-process-name-hint" class="form-text">
                                         {{
                                             $t("pm2Description", {
                                                 service_name: monitor.system_service_name || "api",
@@ -1485,11 +1622,14 @@
 
                             <template v-if="monitor.type === 'mysql'">
                                 <div class="my-3">
-                                    <label for="mysql-password" class="form-label">{{ $t("Password") }}</label>
+                                    <label id="mysql-password-label" for="mysql-password" class="form-label">
+                                        {{ $t("Password") }}
+                                    </label>
                                     <!-- TODO: Rename monitor.radiusPassword to monitor.password for general use -->
                                     <HiddenInput
                                         id="mysql-password"
                                         v-model="monitor.radiusPassword"
+                                        labelledby="mysql-password-label"
                                         autocomplete="false"
                                     ></HiddenInput>
                                 </div>
@@ -1528,8 +1668,14 @@
                                         v-model="monitor.databaseQuery"
                                         class="form-control"
                                         :placeholder="$t('Example:', ['{ &quot;ping&quot;: 1 }'])"
+                                        aria-describedby="mongodbCommand-hint"
                                     ></textarea>
-                                    <i18n-t tag="div" class="form-text" keypath="mongodbCommandDescription">
+                                    <i18n-t
+                                        id="mongodbCommand-hint"
+                                        tag="div"
+                                        class="form-text"
+                                        keypath="mongodbCommandDescription"
+                                    >
                                         <template #documentation>
                                             <a
                                                 href="https://www.mongodb.com/docs/manual/reference/command/"
@@ -1543,9 +1689,20 @@
                                 </div>
                                 <div class="my-3">
                                     <label for="jsonPath" class="form-label">{{ $t("Json Query") }}</label>
-                                    <input id="jsonPath" v-model="monitor.jsonPath" type="text" class="form-control" />
+                                    <input
+                                        id="jsonPath"
+                                        v-model="monitor.jsonPath"
+                                        type="text"
+                                        class="form-control"
+                                        aria-describedby="jsonPath-hint"
+                                    />
 
-                                    <i18n-t tag="div" class="form-text" keypath="jsonQueryDescription">
+                                    <i18n-t
+                                        id="jsonPath-hint"
+                                        tag="div"
+                                        class="form-text"
+                                        keypath="jsonQueryDescription"
+                                    >
                                         <a href="https://jsonata.org/" target="_blank" rel="noopener noreferrer">
                                             jsonata.org
                                         </a>
@@ -1578,6 +1735,8 @@
                                 <label for="interval" class="form-label">
                                     {{ $t("Heartbeat Interval") }} ({{ $t("checkEverySecond", [monitor.interval]) }})
                                 </label>
+                                <span id="interval-label" hidden>{{ $t("Heartbeat Interval") }}</span>
+                                <span id="interval-every" hidden>{{ $t("checkEverySecond", [monitor.interval]) }}</span>
                                 <input
                                     id="interval"
                                     v-model="monitor.interval"
@@ -1586,15 +1745,21 @@
                                     required
                                     :min="minInterval"
                                     step="1"
+                                    aria-labelledby="interval-label"
+                                    :aria-describedby="
+                                        monitor.interval < 20
+                                            ? 'interval-every interval-hint interval-warning-hint'
+                                            : 'interval-every interval-hint'
+                                    "
                                     @focus="lowIntervalConfirmation.editedValue = true"
                                     @blur="finishUpdateInterval"
                                 />
 
-                                <div class="form-text">
+                                <div id="interval-hint" class="form-text">
                                     {{ monitor.humanReadableInterval }}
                                 </div>
 
-                                <div v-if="monitor.interval < 20" class="form-text">
+                                <div v-if="monitor.interval < 20" id="interval-warning-hint" class="form-text">
                                     {{ $t("minimumIntervalWarning") }}
                                 </div>
                             </div>
@@ -1609,8 +1774,9 @@
                                     required
                                     min="0"
                                     step="1"
+                                    aria-describedby="maxRetries-hint"
                                 />
-                                <div class="form-text">
+                                <div id="maxRetries-hint" class="form-text">
                                     {{ $t("retriesDescription") }}
                                 </div>
                             </div>
@@ -1620,6 +1786,10 @@
                                     {{ $t("Heartbeat Retry Interval") }}
                                     <span>({{ $t("retryCheckEverySecond", [monitor.retryInterval]) }})</span>
                                 </label>
+                                <span id="retry-interval-label" hidden>{{ $t("Heartbeat Retry Interval") }}</span>
+                                <span id="retry-interval-every" hidden>
+                                    {{ $t("retryCheckEverySecond", [monitor.retryInterval]) }}
+                                </span>
                                 <input
                                     id="retry-interval"
                                     v-model="monitor.retryInterval"
@@ -1628,9 +1798,15 @@
                                     required
                                     :min="minInterval"
                                     step="1"
+                                    aria-labelledby="retry-interval-label"
+                                    :aria-describedby="
+                                        monitor.retryInterval < 20
+                                            ? 'retry-interval-every retry-interval-hint'
+                                            : 'retry-interval-every'
+                                    "
                                     @focus="lowIntervalConfirmation.editedValue = true"
                                 />
-                                <div v-if="monitor.retryInterval < 20" class="form-text">
+                                <div v-if="monitor.retryInterval < 20" id="retry-interval-hint" class="form-text">
                                     {{ $t("minimumIntervalWarning") }}
                                 </div>
                             </div>
@@ -1643,12 +1819,13 @@
                                         v-model="monitor.retryOnlyOnStatusCodeFailure"
                                         type="checkbox"
                                         class="form-check-input"
+                                        aria-describedby="retry-only-on-status-code-failure-hint"
                                     />
                                     <label for="retry-only-on-status-code-failure" class="form-check-label">
                                         {{ $t("Only retry if status code check fails") }}
                                     </label>
                                 </div>
-                                <div class="form-text">
+                                <div id="retry-only-on-status-code-failure-hint" class="form-text">
                                     {{ $t("retryOnlyOnStatusCodeFailureDescription") }}
                                 </div>
                             </div>
@@ -1679,6 +1856,18 @@
                                         ({{ $t("timeoutAfter", [monitor.timeout || clampTimeout(monitor.interval)]) }})
                                     </span>
                                 </label>
+                                <span id="timeout-label" hidden>
+                                    {{
+                                        monitor.type === "ping"
+                                            ? $t("pingGlobalTimeoutLabel")
+                                            : monitor.type === "kafka-producer"
+                                              ? $t("Connection Timeout")
+                                              : $t("Request Timeout")
+                                    }}
+                                </span>
+                                <span v-if="monitor.type !== 'ping'" id="timeout-every" hidden>
+                                    {{ $t("timeoutAfter", [monitor.timeout || clampTimeout(monitor.interval)]) }}
+                                </span>
                                 <input
                                     id="timeout"
                                     v-model="monitor.timeout"
@@ -1688,8 +1877,10 @@
                                     :max="timeoutMax"
                                     :step="timeoutStep"
                                     required
+                                    aria-labelledby="timeout-label"
+                                    :aria-describedby="monitor.type === 'ping' ? 'timeout-hint' : 'timeout-every'"
                                 />
-                                <div v-if="monitor.type === 'ping'" class="form-text">
+                                <div v-if="monitor.type === 'ping'" id="timeout-hint" class="form-text">
                                     {{ $t("pingGlobalTimeoutDescription") }}
                                 </div>
                             </div>
@@ -1702,6 +1893,16 @@
                                     </span>
                                     <span v-else>({{ $t("resendDisabled") }})</span>
                                 </label>
+                                <span id="resend-interval-label" hidden>
+                                    {{ $t("Resend Notification if Down X times consecutively") }}
+                                </span>
+                                <span id="resend-interval-every" hidden>
+                                    {{
+                                        monitor.resendInterval > 0
+                                            ? $t("resendEveryXTimes", [monitor.resendInterval])
+                                            : $t("resendDisabled")
+                                    }}
+                                </span>
                                 <input
                                     id="resend-interval"
                                     v-model="monitor.resendInterval"
@@ -1710,6 +1911,8 @@
                                     required
                                     min="0"
                                     step="1"
+                                    aria-labelledby="resend-interval-label"
+                                    aria-describedby="resend-interval-every"
                                 />
                             </div>
 
@@ -1731,11 +1934,12 @@
                                     class="form-check-input"
                                     type="checkbox"
                                     :disabled="monitor.ignoreTls"
+                                    aria-describedby="expiry-notification-hint"
                                 />
                                 <label class="form-check-label" for="expiry-notification">
                                     {{ $t("Certificate Expiry Notification") }}
                                 </label>
-                                <div class="form-text">
+                                <div id="expiry-notification-hint" class="form-text">
                                     {{ $t("certificateExpiryNotificationHelp") }}
                                 </div>
                             </div>
@@ -1757,15 +1961,24 @@
                                     min="0"
                                     :max="Math.floor(monitor.interval * 1000 * 0.5)"
                                     step="100"
+                                    :aria-describedby="
+                                        monitor.screenshot_delay
+                                            ? 'screenshot-delay-hint screenshot-delay-warning-hint'
+                                            : 'screenshot-delay-hint'
+                                    "
                                 />
-                                <div class="form-text">
+                                <div id="screenshot-delay-hint" class="form-text">
                                     {{
                                         $t("screenshotDelayDescription", {
                                             maxValueMs: Math.floor(monitor.interval * 1000 * 0.5),
                                         })
                                     }}
                                 </div>
-                                <div v-if="monitor.screenshot_delay" class="form-text text-warning">
+                                <div
+                                    v-if="monitor.screenshot_delay"
+                                    id="screenshot-delay-warning-hint"
+                                    class="form-text text-warning"
+                                >
                                     {{ $t("screenshotDelayWarning") }}
                                 </div>
                             </div>
@@ -1776,15 +1989,21 @@
                                     v-model="monitor.domainExpiryNotification"
                                     class="form-check-input"
                                     type="checkbox"
+                                    :aria-describedby="
+                                        monitor.domainExpiryNotification && domainExpiryUnsupportedReason
+                                            ? 'domain-expiry-notification-hint domain-expiry-notification-reason-hint'
+                                            : 'domain-expiry-notification-hint'
+                                    "
                                 />
                                 <label class="form-check-label" for="domain-expiry-notification">
                                     {{ $t("labelDomainNameExpiryNotification") }}
                                 </label>
-                                <div class="form-text">
+                                <div id="domain-expiry-notification-hint" class="form-text">
                                     {{ $t("domainExpiryNotificationHelp") }}
                                 </div>
                                 <div
                                     v-if="monitor.domainExpiryNotification && domainExpiryUnsupportedReason"
+                                    id="domain-expiry-notification-reason-hint"
                                     class="form-text"
                                 >
                                     {{ domainExpiryUnsupportedReason }}
@@ -1796,6 +2015,7 @@
                                     v-model="monitor.wsIgnoreSecWebsocketAcceptHeader"
                                     class="form-check-input"
                                     type="checkbox"
+                                    aria-describedby="wsIgnoreSecWebsocketAcceptHeader-hint"
                                 />
                                 <i18n-t
                                     tag="label"
@@ -1805,7 +2025,7 @@
                                 >
                                     <code>Sec-Websocket-Accept</code>
                                 </i18n-t>
-                                <div class="form-text">
+                                <div id="wsIgnoreSecWebsocketAcceptHeader-hint" class="form-text">
                                     {{ $t("ignoreSecWebsocketAcceptHeaderDescription") }}
                                 </div>
                             </div>
@@ -1847,6 +2067,7 @@
                                     class="form-check-input"
                                     type="checkbox"
                                     value=""
+                                    aria-describedby="cache-bust-hint"
                                 />
                                 <label class="form-check-label" for="cache-bust">
                                     <i18n-t
@@ -1858,7 +2079,7 @@
                                         <code>uptime_kuma_cachebuster</code>
                                     </i18n-t>
                                 </label>
-                                <div class="form-text">
+                                <div id="cache-bust-hint" class="form-text">
                                     {{ $t("cacheBusterParamDescription") }}
                                 </div>
                             </div>
@@ -1869,11 +2090,12 @@
                                     v-model="monitor.upsideDown"
                                     class="form-check-input"
                                     type="checkbox"
+                                    aria-describedby="upside-down-hint"
                                 />
                                 <label class="form-check-label" for="upside-down">
                                     {{ $t("Upside Down Mode") }}
                                 </label>
-                                <div class="form-text">
+                                <div id="upside-down-hint" class="form-text">
                                     {{ $t("upsideDownModeDescription") }}
                                 </div>
                             </div>
@@ -1886,11 +2108,12 @@
                                     :false-value="true"
                                     class="form-check-input"
                                     type="checkbox"
+                                    aria-describedby="gamedig-guess-port-hint"
                                 />
                                 <label class="form-check-label" for="gamedig-guess-port">
                                     {{ $t("gamedigGuessPort") }}
                                 </label>
-                                <div class="form-text">
+                                <div id="gamedig-guess-port-hint" class="form-text">
                                     {{ $t("gamedigGuessPortDescription") }}
                                 </div>
                             </div>
@@ -1913,8 +2136,9 @@
                                     min="1"
                                     max="100"
                                     step="1"
+                                    aria-describedby="ping-count-hint"
                                 />
-                                <div class="form-text">
+                                <div id="ping-count-hint" class="form-text">
                                     {{ $t("pingCountDescription") }}
                                 </div>
                             </div>
@@ -1927,11 +2151,12 @@
                                     type="checkbox"
                                     class="form-check-input"
                                     :checked="monitor.ping_numeric"
+                                    aria-describedby="ping_numeric-hint"
                                 />
                                 <label class="form-check-label" for="ping_numeric">
                                     {{ $t("pingNumericLabel") }}
                                 </label>
-                                <div class="form-text">
+                                <div id="ping_numeric-hint" class="form-text">
                                     {{ $t("pingNumericDescription") }}
                                 </div>
                             </div>
@@ -1948,9 +2173,15 @@
                                     min="1"
                                     :max="65500"
                                     step="1"
+                                    :aria-describedby="
+                                        $root.info.runtime.platform === 'linux' && monitor.packetSize < 16
+                                            ? 'packet-size-hint'
+                                            : undefined
+                                    "
                                 />
                                 <div
                                     v-if="$root.info.runtime.platform === 'linux' && monitor.packetSize < 16"
+                                    id="packet-size-hint"
                                     class="form-text text-warning"
                                 >
                                     {{ $t("pingPacketSizeWarning") }}
@@ -1971,8 +2202,9 @@
                                     min="0"
                                     :max="pingPerRequestTimeoutMax"
                                     step="1"
+                                    aria-describedby="ping_per_request_timeout-hint"
                                 />
-                                <div class="form-text">
+                                <div id="ping_per_request_timeout-hint" class="form-text">
                                     {{ $t("pingPerRequestTimeoutDescription") }}
                                 </div>
                             </div>
@@ -2035,8 +2267,9 @@
                                         required
                                         min="0"
                                         step="1"
+                                        aria-describedby="maxRedirects-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="maxRedirects-hint" class="form-text">
                                         {{ $t("maxRedirectDescription") }}
                                     </div>
                                 </div>
@@ -2055,12 +2288,13 @@
                                             v-model="monitor.saveErrorResponse"
                                             class="form-check-input"
                                             type="checkbox"
+                                            aria-describedby="saveErrorResponse-hint"
                                         />
                                         <label class="form-check-label" for="saveErrorResponse">
                                             {{ $t("saveErrorResponseForNotifications") }}
                                         </label>
                                     </div>
-                                    <div class="form-text">
+                                    <div id="saveErrorResponse-hint" class="form-text">
                                         <i18n-t keypath="saveResponseDescription" tag="div" class="form-text">
                                             <template #templateVariable>
                                                 <code>heartbeatJSON.response</code>
@@ -2084,12 +2318,13 @@
                                             v-model="monitor.saveResponse"
                                             class="form-check-input"
                                             type="checkbox"
+                                            aria-describedby="saveResponse-hint"
                                         />
                                         <label class="form-check-label" for="saveResponse">
                                             {{ $t("saveResponseForNotifications") }}
                                         </label>
                                     </div>
-                                    <div class="form-text">
+                                    <div id="saveResponse-hint" class="form-text">
                                         <i18n-t keypath="saveResponseDescription" tag="div" class="form-text">
                                             <template #templateVariable>
                                                 <code>heartbeatJSON.response</code>
@@ -2118,8 +2353,9 @@
                                         required
                                         min="0"
                                         step="1"
+                                        aria-describedby="responseMaxLength-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="responseMaxLength-hint" class="form-text">
                                         {{ $t("responseMaxLengthDescription") }}
                                     </div>
                                 </div>
@@ -2151,13 +2387,19 @@
 
                                 <div class="my-3">
                                     <label for="ipFamily" class="form-label">{{ $t("Ip Family") }}</label>
-                                    <select id="ipFamily" v-model="monitor.ipFamily" class="form-select">
+                                    <select
+                                        id="ipFamily"
+                                        v-model="monitor.ipFamily"
+                                        class="form-select"
+                                        :aria-describedby="monitor.ipFamily == null ? 'ipFamily-hint' : undefined"
+                                    >
                                         <option :value="null">{{ $t("auto-select") }}</option>
                                         <option value="ipv4">IPv4</option>
                                         <option value="ipv6">IPv6</option>
                                     </select>
                                     <i18n-t
                                         v-if="monitor.ipFamily == null"
+                                        id="ipFamily-hint"
                                         keypath="ipFamilyDescriptionAutoSelect"
                                         tag="div"
                                         class="form-text"
@@ -2203,7 +2445,7 @@
                                 <ActionSelect
                                     id="monitorGroupSelector"
                                     v-model="monitor.parent"
-                                    :action-aria-label="$t('openModalTo', 'setup a new monitor group')"
+                                    :action-aria-label="$t('openModalTo', [$t('setup a new monitor group')])"
                                     :options="parentMonitorOptionsList"
                                     :disabled="sortedGroupMonitorList.length === 0 && draftGroupName == null"
                                     :icon="'plus'"
@@ -2219,8 +2461,9 @@
                                     v-model="monitor.description"
                                     type="text"
                                     class="form-control"
+                                    aria-describedby="description-hint"
                                 />
-                                <div class="form-text">{{ $t("descriptionHelpText") }}</div>
+                                <div id="description-hint" class="form-text">{{ $t("descriptionHelpText") }}</div>
                             </div>
 
                             <div class="my-3">
@@ -2301,10 +2544,13 @@
                                         />
                                     </div>
                                     <div class="my-3">
-                                        <label for="ws-basicauth-pass" class="form-label">{{ $t("Password") }}</label>
+                                        <label id="ws-basicauth-pass-label" for="ws-basicauth-pass" class="form-label">
+                                            {{ $t("Password") }}
+                                        </label>
                                         <HiddenInput
                                             id="ws-basicauth-pass"
                                             v-model="monitor.basic_auth_pass"
+                                            labelledby="ws-basicauth-pass-label"
                                             autocomplete="new-password"
                                             :placeholder="$t('Password')"
                                         />
@@ -2313,10 +2559,13 @@
 
                                 <template v-else-if="monitor.authMethod === 'bearer'">
                                     <div class="my-3">
-                                        <label for="ws-bearer-token" class="form-label">{{ $t("Token") }}</label>
+                                        <label id="ws-bearer-token-label" for="ws-bearer-token" class="form-label">
+                                            {{ $t("Token") }}
+                                        </label>
                                         <HiddenInput
                                             id="ws-bearer-token"
                                             v-model="monitor.bearer_token"
+                                            labelledby="ws-bearer-token-label"
                                             autocomplete="new-password"
                                             :placeholder="$t('Token')"
                                         />
@@ -2374,12 +2623,17 @@
                                         "
                                     >
                                         <div class="my-3">
-                                            <label for="ws-oauth-client-secret" class="form-label">
+                                            <label
+                                                id="ws-oauth-client-secret-label"
+                                                for="ws-oauth-client-secret"
+                                                class="form-label"
+                                            >
                                                 {{ $t("Client Secret") }}
                                             </label>
                                             <HiddenInput
                                                 id="ws-oauth-client-secret"
                                                 v-model="monitor.oauth_client_secret"
+                                                labelledby="ws-oauth-client-secret-label"
                                                 :placeholder="$t('Client Secret')"
                                                 :required="true"
                                             />
@@ -2432,6 +2686,7 @@
                                             id="ws-tls-key"
                                             v-model="monitor.tlsKey"
                                             class="form-control"
+                                            data-agentom-redact
                                             :placeholder="$t('mtls-auth-server-key-placeholder')"
                                             required
                                         ></textarea>
@@ -2536,12 +2791,17 @@
                                         />
                                     </div>
                                     <div v-if="monitor.kafkaProducerSaslOptions.mechanism !== 'aws'" class="my-3">
-                                        <label for="kafkaProducerSaslPassword" class="form-label">
+                                        <label
+                                            id="kafkaProducerSaslPassword-label"
+                                            for="kafkaProducerSaslPassword"
+                                            class="form-label"
+                                        >
                                             {{ $t("Password") }}
                                         </label>
                                         <HiddenInput
                                             id="kafkaProducerSaslPassword"
                                             v-model="monitor.kafkaProducerSaslOptions.password"
+                                            labelledby="kafkaProducerSaslPassword-label"
                                             autocomplete="kafkaProducerSaslPassword"
                                         />
                                     </div>
@@ -2572,23 +2832,33 @@
                                         />
                                     </div>
                                     <div v-if="monitor.kafkaProducerSaslOptions.mechanism === 'aws'" class="my-3">
-                                        <label for="kafkaProducerSaslSecretAccessKey" class="form-label">
+                                        <label
+                                            id="kafkaProducerSaslSecretAccessKey-label"
+                                            for="kafkaProducerSaslSecretAccessKey"
+                                            class="form-label"
+                                        >
                                             {{ $t("Secret AccessKey") }}
                                         </label>
                                         <HiddenInput
                                             id="kafkaProducerSaslSecretAccessKey"
                                             v-model="monitor.kafkaProducerSaslOptions.secretAccessKey"
+                                            labelledby="kafkaProducerSaslSecretAccessKey-label"
                                             autocomplete="kafkaProducerSaslSecretAccessKey"
                                             :required="true"
                                         />
                                     </div>
                                     <div v-if="monitor.kafkaProducerSaslOptions.mechanism === 'aws'" class="my-3">
-                                        <label for="kafkaProducerSaslSessionToken" class="form-label">
+                                        <label
+                                            id="kafkaProducerSaslSessionToken-label"
+                                            for="kafkaProducerSaslSessionToken"
+                                            class="form-label"
+                                        >
                                             {{ $t("Session Token") }}
                                         </label>
                                         <HiddenInput
                                             id="kafkaProducerSaslSessionToken"
                                             v-model="monitor.kafkaProducerSaslOptions.sessionToken"
+                                            labelledby="kafkaProducerSaslSessionToken-label"
                                             autocomplete="kafkaProducerSaslSessionToken"
                                         />
                                     </div>
@@ -2607,8 +2877,15 @@
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.method" class="form-select">
+                                    <label id="http-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="method"
+                                        v-model="monitor.method"
+                                        aria-labelledby="http-method-label"
+                                        class="form-select"
+                                    >
                                         <option value="GET">GET</option>
                                         <option value="POST">POST</option>
                                         <option value="PUT">PUT</option>
@@ -2640,6 +2917,7 @@
                                         id="body"
                                         v-model="monitor.body"
                                         class="form-control"
+                                        data-agentom-redact
                                         :placeholder="bodyPlaceholder"
                                     ></textarea>
                                 </div>
@@ -2652,16 +2930,24 @@
                                         v-model="monitor.headers"
                                         class="form-control"
                                         :placeholder="headersPlaceholder"
+                                        data-agentom-redact
                                     ></textarea>
                                 </div>
 
                                 <!-- HTTP Auth -->
-                                <h4 class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
+                                <h4 id="auth-heading" class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.authMethod" class="form-select">
+                                    <label id="auth-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="auth-method"
+                                        v-model="monitor.authMethod"
+                                        aria-labelledby="auth-heading auth-method-label"
+                                        class="form-select"
+                                    >
                                         <option :value="null">
                                             {{ $t("None") }}
                                         </option>
@@ -2700,6 +2986,7 @@
                                                 id="tls-key"
                                                 v-model="monitor.tlsKey"
                                                 class="form-control"
+                                                data-agentom-redact
                                                 :placeholder="$t('mtls-auth-server-key-placeholder')"
                                                 required
                                             ></textarea>
@@ -2718,10 +3005,13 @@
                                     </template>
                                     <template v-else-if="monitor.authMethod === 'bearer'">
                                         <div class="my-3">
-                                            <label for="bearer-token" class="form-label">{{ $t("Token") }}</label>
+                                            <label id="bearer-token-label" for="bearer-token" class="form-label">
+                                                {{ $t("Token") }}
+                                            </label>
                                             <HiddenInput
                                                 id="bearer-token"
                                                 v-model="monitor.bearer_token"
+                                                labelledby="bearer-token-label"
                                                 autocomplete="new-password"
                                                 :placeholder="$t('Token')"
                                             />
@@ -2778,12 +3068,17 @@
                                             "
                                         >
                                             <div class="my-3">
-                                                <label for="oauth_client_secret" class="form-label">
+                                                <label
+                                                    id="oauth_client_secret-label"
+                                                    for="oauth_client_secret"
+                                                    class="form-label"
+                                                >
                                                     {{ $t("Client Secret") }}
                                                 </label>
                                                 <HiddenInput
                                                     id="oauth_client_secret"
                                                     v-model="monitor.oauth_client_secret"
+                                                    labelledby="oauth_client_secret-label"
                                                     :placeholder="$t('Client Secret')"
                                                     :required="true"
                                                 />
@@ -2827,10 +3122,13 @@
                                         </div>
 
                                         <div class="my-3">
-                                            <label for="basicauth-pass" class="form-label">{{ $t("Password") }}</label>
+                                            <label id="basicauth-pass-label" for="basicauth-pass" class="form-label">
+                                                {{ $t("Password") }}
+                                            </label>
                                             <HiddenInput
                                                 id="basicauth-pass"
                                                 v-model="monitor.basic_auth_pass"
+                                                labelledby="basicauth-pass-label"
                                                 autocomplete="new-password"
                                                 :placeholder="$t('Password')"
                                             />
@@ -2870,8 +3168,15 @@
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.method" class="form-select">
+                                    <label id="globalping-http-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="method"
+                                        v-model="monitor.method"
+                                        aria-labelledby="globalping-http-method-label"
+                                        class="form-select"
+                                    >
                                         <option value="HEAD">HEAD</option>
                                         <option value="GET">GET</option>
                                         <option value="OPTIONS">OPTIONS</option>
@@ -2886,16 +3191,24 @@
                                         v-model="monitor.headers"
                                         class="form-control"
                                         :placeholder="headersPlaceholder"
+                                        data-agentom-redact
                                     ></textarea>
                                 </div>
 
                                 <!-- HTTP Auth -->
-                                <h4 class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
+                                <h4 id="globalping-auth-heading" class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.authMethod" class="form-select">
+                                    <label id="globalping-auth-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="globalping-auth-method"
+                                        v-model="monitor.authMethod"
+                                        aria-labelledby="globalping-auth-heading globalping-auth-method-label"
+                                        class="form-select"
+                                    >
                                         <option :value="null">
                                             {{ $t("None") }}
                                         </option>
@@ -2937,12 +3250,17 @@
                                 </template>
                                 <template v-else-if="monitor.authMethod === 'bearer'">
                                     <div class="my-3">
-                                        <label for="bearer-token-globalping" class="form-label">
+                                        <label
+                                            id="bearer-token-globalping-label"
+                                            for="bearer-token-globalping"
+                                            class="form-label"
+                                        >
                                             {{ $t("Token") }}
                                         </label>
                                         <HiddenInput
                                             id="bearer-token-globalping"
                                             v-model="monitor.bearer_token"
+                                            labelledby="bearer-token-globalping-label"
                                             autocomplete="new-password"
                                             :placeholder="$t('Token')"
                                         />
@@ -3060,8 +3378,9 @@
                                             v-model="monitor.keyword"
                                             type="text"
                                             class="form-control"
+                                            aria-describedby="keyword-hint"
                                         />
-                                        <div class="form-text">
+                                        <div id="keyword-hint" class="form-text">
                                             {{ $t("keywordDescription") }}
                                         </div>
                                     </div>
@@ -3073,11 +3392,12 @@
                                             v-model="monitor.invertKeyword"
                                             class="form-check-input"
                                             type="checkbox"
+                                            aria-describedby="invert-keyword-hint"
                                         />
                                         <label class="form-check-label" for="invert-keyword">
                                             {{ $t("Invert Keyword") }}
                                         </label>
-                                        <div class="form-text">
+                                        <div id="invert-keyword-hint" class="form-text">
                                             {{ $t("invertKeywordDescription") }}
                                         </div>
                                     </div>
@@ -3090,7 +3410,12 @@
                                             <label for="jsonPath" class="form-label mb-0">
                                                 {{ $t("Json Query Expression") }}
                                             </label>
-                                            <i18n-t tag="div" class="form-text mb-2" keypath="jsonQueryDescription">
+                                            <i18n-t
+                                                id="jsonPath-hint"
+                                                tag="div"
+                                                class="form-text mb-2"
+                                                keypath="jsonQueryDescription"
+                                            >
                                                 <a href="https://jsonata.org/">jsonata.org</a>
                                                 <a href="https://try.jsonata.org/">{{ $t("playground") }}</a>
                                             </i18n-t>
@@ -3101,6 +3426,7 @@
                                                 class="form-control"
                                                 placeholder="$"
                                                 required
+                                                aria-describedby="jsonPath-hint"
                                             />
                                         </div>
 
@@ -3166,11 +3492,12 @@
                                         class="form-check-input"
                                         type="checkbox"
                                         value=""
+                                        aria-describedby="grpc-enable-tls-hint"
                                     />
                                     <label class="form-check-label" for="grpc-enable-tls">
                                         {{ $t("Enable TLS") }}
                                     </label>
-                                    <div class="form-text">
+                                    <div id="grpc-enable-tls-hint" class="form-text">
                                         {{ $t("enableGRPCTls") }}
                                     </div>
                                 </div>
@@ -3197,8 +3524,9 @@
                                         class="form-control"
                                         :placeholder="protoMethodPlaceholder"
                                         required
+                                        aria-describedby="grpcMethod-hint"
                                     />
-                                    <div class="form-text">
+                                    <div id="grpcMethod-hint" class="form-text">
                                         {{ $t("grpcMethodDescription") }}
                                     </div>
                                 </div>
@@ -3221,6 +3549,7 @@
                                         id="body"
                                         v-model="monitor.grpcBody"
                                         class="form-control"
+                                        data-agentom-redact
                                         :placeholder="bodyPlaceholder"
                                     ></textarea>
                                 </div>
@@ -3234,10 +3563,14 @@
                             class="btn btn-primary"
                             type="submit"
                             :disabled="processing"
+                            aria-describedby="monitor-form-save-hint"
+                            data-agentom-id="monitor-form.save"
+                            :data-agentom-action="isEdit ? 'save-monitor' : 'create-monitor'"
                             data-testid="save-button"
                         >
                             {{ $t("Save") }}
                         </button>
+                        <span id="monitor-form-save-hint" hidden>{{ $t("monitorFormSaveAria") }}</span>
                     </div>
                 </div>
             </form>
@@ -3250,6 +3583,7 @@
             <Confirm
                 ref="confirmLowIntervalValue"
                 btn-style="btn-danger"
+                :action="$t('saveShortIntervalAria')"
                 :yes-text="$t('Confirm')"
                 :no-text="$t('Cancel')"
                 @yes="handleIntervalConfirm"

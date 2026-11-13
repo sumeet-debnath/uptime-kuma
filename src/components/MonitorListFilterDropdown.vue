@@ -1,6 +1,15 @@
 <template>
     <div tabindex="-1" class="dropdown" @focusin="openMenu" @focusout="handleFocusOut">
-        <button type="button" class="filter-dropdown-status" :class="{ active: filterActive }" tabindex="0">
+        <button
+            type="button"
+            class="filter-dropdown-status"
+            :class="{ active: filterActive }"
+            tabindex="0"
+            :aria-expanded="open ? 'true' : 'false'"
+            :aria-controls="`monitor-filter-${filterName}-menu`"
+            :aria-describedby="`monitor-filter-${filterName}-choices`"
+            :data-agentom-id="`monitors.filter.${filterName}`"
+        >
             <div class="px-1 d-flex align-items-center">
                 <slot name="status"></slot>
             </div>
@@ -8,7 +17,7 @@
                 <font-awesome-icon icon="angle-down" />
             </span>
         </button>
-        <ul class="filter-dropdown-menu" :class="{ open: open }">
+        <ul :id="`monitor-filter-${filterName}-menu`" class="filter-dropdown-menu" :class="{ open: open }">
             <slot name="dropdown"></slot>
         </ul>
     </div>
@@ -20,6 +29,11 @@ export default {
     props: {
         filterActive: {
             type: Boolean,
+            required: true,
+        },
+        /** Which filter this is ("status", "tags"): its ids */
+        filterName: {
+            type: String,
             required: true,
         },
     },

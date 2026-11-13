@@ -12,19 +12,22 @@
             required
             autocomplete="false"
             placeholder="https://app.flowtriq.com/api/webhooks/..."
+            data-agentom-redact
         />
     </div>
     <div class="mb-3">
-        <label for="flowtriq-api-key" class="form-label">
+        <label id="flowtriq-api-key-label" for="flowtriq-api-key" class="form-label">
             {{ $t("Flowtriq API Key") }}
         </label>
         <HiddenInput
             id="flowtriq-api-key"
             v-model="$parent.notification.flowtriqApiKey"
+            labelledby="flowtriq-api-key-label"
+            describedby="flowtriq-api-key-hint"
             autocomplete="false"
             :placeholder="$t('Optional')"
         />
-        <div class="form-text">
+        <div id="flowtriq-api-key-hint" class="form-text">
             {{ $t("flowtriqApiKeyDescription") }}
         </div>
     </div>

@@ -22,10 +22,11 @@
     </div>
 
     <div class="mb-3">
-        <label for="evolution-auth-token" class="form-label">{{ $t("Token") }}</label>
+        <label id="evolution-auth-token-label" for="evolution-auth-token" class="form-label">{{ $t("Token") }}</label>
         <HiddenInput
             id="evolution-auth-token"
             v-model="$parent.notification.evolutionAuthToken"
+            labelledby="evolution-auth-token-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -43,8 +44,9 @@
             pattern="^[\d-]{10,31}(@[\w\.]{1,})?$"
             class="form-control"
             required
+            aria-describedby="evolution-recipient-hint"
         />
-        <div class="form-text">
+        <div id="evolution-recipient-hint" class="form-text">
             {{
                 $t("wayToWriteEvolutionRecipient", [
                     "00117612345678",
@@ -57,10 +59,18 @@
 
     <div class="mb-3">
         <div class="form-check form-switch">
-            <input v-model="$parent.notification.evolutionUseCustomMessage" class="form-check-input" type="checkbox" />
-            <label class="form-check-label">{{ $t("evolutionCustomMessageTitle") }}</label>
+            <input
+                v-model="$parent.notification.evolutionUseCustomMessage"
+                class="form-check-input"
+                type="checkbox"
+                aria-labelledby="evolution-use-custom-message-label"
+                aria-describedby="evolution-use-custom-message-hint"
+            />
+            <label id="evolution-use-custom-message-label" class="form-check-label">
+                {{ $t("evolutionCustomMessageTitle") }}
+            </label>
         </div>
-        <div class="form-text">{{ $t("evolutionCustomMessageDesc") }}</div>
+        <div id="evolution-use-custom-message-hint" class="form-text">{{ $t("evolutionCustomMessageDesc") }}</div>
     </div>
 
     <template v-if="$parent.notification.evolutionUseCustomMessage">

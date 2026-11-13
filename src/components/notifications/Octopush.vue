@@ -1,19 +1,25 @@
 <template>
     <div class="mb-3">
         <label for="octopush-version" class="form-label">{{ $t("Octopush API Version") }}</label>
-        <select id="octopush-version" v-model="$parent.notification.octopushVersion" class="form-select">
+        <select
+            id="octopush-version"
+            v-model="$parent.notification.octopushVersion"
+            class="form-select"
+            aria-describedby="octopush-version-hint"
+        >
             <option value="2">{{ $t("octopushEndpoint", { url: "api.octopush.com" }) }}</option>
             <option value="1">{{ $t("legacyOctopushEndpoint", { url: "www.octopush-dm.com" }) }}</option>
         </select>
-        <div class="form-text">
+        <div id="octopush-version-hint" class="form-text">
             {{ $t("octopushLegacyHint") }}
         </div>
     </div>
     <div class="mb-3">
-        <label for="octopush-key" class="form-label">{{ $t("octopushAPIKey") }}</label>
+        <label id="octopush-key-label" for="octopush-key" class="form-label">{{ $t("octopushAPIKey") }}</label>
         <HiddenInput
             id="octopush-key"
             v-model="$parent.notification.octopushAPIKey"
+            labelledby="octopush-key-label"
             :required="true"
             autocomplete="new-password"
         ></HiddenInput>
@@ -28,11 +34,16 @@
     </div>
     <div class="mb-3">
         <label for="octopush-type-sms" class="form-label">{{ $t("SMS Type") }}</label>
-        <select id="octopush-type-sms" v-model="$parent.notification.octopushSMSType" class="form-select">
+        <select
+            id="octopush-type-sms"
+            v-model="$parent.notification.octopushSMSType"
+            class="form-select"
+            aria-describedby="octopush-type-sms-hint"
+        >
             <option value="sms_premium">{{ $t("octopushTypePremium") }}</option>
             <option value="sms_low_cost">{{ $t("octopushTypeLowCost") }}</option>
         </select>
-        <i18n-t tag="div" keypath="Check octopush prices" class="form-text">
+        <i18n-t id="octopush-type-sms-hint" tag="div" keypath="Check octopush prices" class="form-text">
             <a href="https://octopush.com/tarifs-sms-international/" target="_blank">
                 https://octopush.com/tarifs-sms-international/
             </a>

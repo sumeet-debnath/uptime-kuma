@@ -4,17 +4,19 @@
         <input
             id="pushdeer-server"
             v-model="$parent.notification.pushdeerServer"
+            aria-describedby="pushdeer-server-hint"
             type="text"
             class="form-control"
             placeholder="https://api2.pushdeer.com"
         />
-        <div class="form-text">{{ $t("pushDeerServerDescription") }}</div>
+        <div id="pushdeer-server-hint" class="form-text">{{ $t("pushDeerServerDescription") }}</div>
     </div>
     <div class="mb-3">
-        <label for="pushdeer-key" class="form-label">{{ $t("PushDeer Key") }}</label>
+        <label id="pushdeer-key-label" for="pushdeer-key" class="form-label">{{ $t("PushDeer Key") }}</label>
         <HiddenInput
             id="pushdeer-key"
             v-model="$parent.notification.pushdeerKey"
+            labelledby="pushdeer-key-label"
             :required="true"
             autocomplete="new-password"
             placeholder="PDUxxxx"

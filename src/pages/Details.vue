@@ -1,6 +1,6 @@
 <template>
     <transition name="slide-fade" appear>
-        <div v-if="monitor">
+        <div v-if="monitor" data-agentom-id="monitor-details" data-agentom-kind="section">
             <router-link v-if="group !== ''" :to="monitorURL(monitor.parent)">
                 {{ group }}
             </router-link>
@@ -103,7 +103,7 @@
                 <span v-if="monitor.type === 'postgres'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
                 <span v-if="monitor.type === 'push'">
                     Push:
-                    <a :href="pushURL" target="_blank" rel="noopener noreferrer">{{ pushURL }}</a>
+                    <a data-agentom-ignore :href="pushURL" target="_blank" rel="noopener noreferrer">{{ pushURL }}</a>
                 </span>
                 <span v-if="monitor.type === 'radius'">Radius: {{ filterPassword(monitor.hostname) }}</span>
                 <span v-if="monitor.type === 'redis'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
@@ -117,7 +117,15 @@
 
             <div class="functions">
                 <div class="btn-group" role="group">
-                    <button v-if="monitor.active" class="btn btn-normal" @click="pauseDialog">
+                    <button
+                        v-if="monitor.active"
+                        class="btn btn-normal"
+                        :data-agentom-id="`monitor.${monitor.id}.toggle`"
+                        data-agentom-risk="sensitive"
+                        data-agentom-confirmation="required"
+                        data-agentom-action="pause-monitor"
+                        @click="pauseDialog"
+                    >
                         <font-awesome-icon icon="pause" />
                         {{ $t("Pause") }}
                     </button>
@@ -125,6 +133,9 @@
                         v-if="!monitor.active"
                         class="btn btn-primary"
                         :disabled="monitor.forceInactive"
+                        :data-agentom-id="`monitor.${monitor.id}.toggle`"
+                        data-agentom-risk="sensitive"
+                        data-agentom-action="resume-monitor"
                         @click="resumeMonitor"
                     >
                         <font-awesome-icon icon="play" />
@@ -138,7 +149,14 @@
                         <font-awesome-icon icon="clone" />
                         {{ $t("Clone") }}
                     </router-link>
-                    <button class="btn btn-normal text-danger" @click="deleteDialog">
+                    <button
+                        class="btn btn-normal text-danger"
+                        :data-agentom-id="`monitor.${monitor.id}.delete`"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
+                        data-agentom-action="delete-monitor"
+                        @click="deleteDialog"
+                    >
                         <font-awesome-icon icon="trash" />
                         {{ $t("Delete") }}
                     </button>
@@ -170,13 +188,24 @@
 
             <!-- Push Examples -->
             <div v-if="monitor.type === 'push'" class="shadow-box big-padding">
-                <a href="#" @click="pushMonitor.showPushExamples = !pushMonitor.showPushExamples">
+                <a
+                    href="#"
+                    role="button"
+                    :aria-expanded="pushMonitor.showPushExamples ? 'true' : 'false'"
+                    aria-controls="push-examples"
+                    @click="pushMonitor.showPushExamples = !pushMonitor.showPushExamples"
+                >
                     {{ $t("pushViewCode") }}
                 </a>
 
                 <transition name="slide-fade" appear>
-                    <div v-if="pushMonitor.showPushExamples" class="mt-3">
-                        <select id="push-current-example" v-model="pushMonitor.currentExample" class="form-select">
+                    <div v-if="pushMonitor.showPushExamples" id="push-examples" class="mt-3">
+                        <select
+                            id="push-current-example"
+                            v-model="pushMonitor.currentExample"
+                            class="form-select"
+                            :aria-label="$t('programmingLanguages')"
+                        >
                             <optgroup :label="$t('programmingLanguages')">
                                 <option value="csharp">C#</option>
                                 <option value="go">Go</option>
@@ -195,6 +224,7 @@
 
                         <prism-editor
                             v-model="pushMonitor.code"
+                            data-agentom-ignore
                             class="css-editor mt-3"
                             :highlight="pushExampleHighlighter"
                             line-numbers
@@ -210,11 +240,22 @@
                     <div
                         v-if="monitor.type !== 'group'"
                         class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-ping-title stat-ping-period"
+                        aria-describedby="stat-ping-value"
                     >
-                        <h4 class="col-4 col-sm-12">{{ pingTitle() }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("Current") }})</p>
-                        <span class="col-4 col-sm-12 num">
-                            <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                        <h4 id="stat-ping-title" class="col-4 col-sm-12">{{ pingTitle() }}</h4>
+                        <p id="stat-ping-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("Current") }})</p>
+                        <span id="stat-ping-value" class="col-4 col-sm-12 num">
+                            <a
+                                href="#"
+                                role="button"
+                                :aria-expanded="showPingChartBox ? 'true' : 'false'"
+                                aria-controls="ping-chart-box"
+                                :data-agentom-id="`monitor.${monitor.id}.chart-toggle`"
+                                :data-agentom-value="typeof ping === 'number' ? ping : undefined"
+                                @click.prevent="showPingChartBox = !showPingChartBox"
+                            >
                                 <CountUp :value="ping" />
                             </a>
                         </span>
@@ -222,50 +263,80 @@
                     <div
                         v-if="monitor.type !== 'group'"
                         class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-avg-ping-title stat-avg-ping-period"
+                        aria-describedby="stat-avg-ping-value"
                     >
-                        <h4 class="col-4 col-sm-12">{{ pingTitle(true) }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                        <h4 id="stat-avg-ping-title" class="col-4 col-sm-12">{{ pingTitle(true) }}</h4>
+                        <p id="stat-avg-ping-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
+                        <span id="stat-avg-ping-value" class="col-4 col-sm-12 num">
                             <CountUp :value="avgPing" />
                         </span>
                     </div>
 
                     <!-- Uptime (24-hour) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                    <div
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-uptime-24h-title stat-uptime-24h-period"
+                        aria-describedby="stat-uptime-24h-value"
+                    >
+                        <h4 id="stat-uptime-24h-title" class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p id="stat-uptime-24h-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
+                        <span id="stat-uptime-24h-value" class="col-4 col-sm-12 num">
                             <Uptime :monitor="monitor" type="24" />
                         </span>
                     </div>
 
                     <!-- Uptime (30-day) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("days", 30) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                    <div
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-uptime-30d-title stat-uptime-30d-period"
+                        aria-describedby="stat-uptime-30d-value"
+                    >
+                        <h4 id="stat-uptime-30d-title" class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p id="stat-uptime-30d-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("days", 30) }})</p>
+                        <span id="stat-uptime-30d-value" class="col-4 col-sm-12 num">
                             <Uptime :monitor="monitor" type="720" />
                         </span>
                     </div>
 
                     <!-- Uptime (1-year) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("years", 1) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                    <div
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-uptime-1y-title stat-uptime-1y-period"
+                        aria-describedby="stat-uptime-1y-value"
+                    >
+                        <h4 id="stat-uptime-1y-title" class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p id="stat-uptime-1y-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("years", 1) }})</p>
+                        <span id="stat-uptime-1y-value" class="col-4 col-sm-12 num">
                             <Uptime :monitor="monitor" type="1y" />
                         </span>
                     </div>
 
-                    <div v-if="tlsInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Cert Exp.") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
+                    <div
+                        v-if="tlsInfo"
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-cert-title stat-cert-period"
+                        aria-describedby="stat-cert-value"
+                    >
+                        <h4 id="stat-cert-title" class="col-4 col-sm-12">{{ $t("Cert Exp.") }}</h4>
+                        <p id="stat-cert-period" class="col-4 col-sm-12 mb-0 mb-sm-2">
                             (
                             <Datetime :value="tlsInfo.certInfo.validTo" date-only />
                             )
                         </p>
-                        <span class="col-4 col-sm-12 num">
-                            <a href="#" @click.prevent="toggleCertInfoBox = !toggleCertInfoBox">
+                        <span id="stat-cert-value" class="col-4 col-sm-12 num">
+                            <a
+                                href="#"
+                                role="button"
+                                :aria-expanded="showCertInfoBox ? 'true' : 'false'"
+                                aria-controls="cert-info-box"
+                                @click.prevent="toggleCertInfoBox = !toggleCertInfoBox"
+                            >
                                 {{ $t("days", tlsInfo.certInfo.daysRemaining) }}
                             </a>
                             <font-awesome-icon
@@ -276,14 +347,20 @@
                             />
                         </span>
                     </div>
-                    <div v-if="domainInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("labelDomainExpiry") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
+                    <div
+                        v-if="domainInfo"
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-domain-title stat-domain-period"
+                        aria-describedby="stat-domain-value"
+                    >
+                        <h4 id="stat-domain-title" class="col-4 col-sm-12">{{ $t("labelDomainExpiry") }}</h4>
+                        <p id="stat-domain-period" class="col-4 col-sm-12 mb-0 mb-sm-2">
                             (
                             <Datetime :value="domainInfo.expiresOn" date-only />
                             )
                         </p>
-                        <span class="col-4 col-sm-12 num">
+                        <span id="stat-domain-value" class="col-4 col-sm-12 num">
                             {{ $t("days", domainInfo.daysRemaining) }}
                         </span>
                     </div>
@@ -292,7 +369,7 @@
 
             <!-- Cert Info Box -->
             <transition name="slide-fade" appear>
-                <div v-if="showCertInfoBox" class="shadow-box big-padding text-center">
+                <div v-if="showCertInfoBox" id="cert-info-box" class="shadow-box big-padding text-center">
                     <div class="row">
                         <div class="col">
                             <certificate-info :certInfo="tlsInfo.certInfo" :valid="tlsInfo.valid" />
@@ -302,7 +379,11 @@
             </transition>
 
             <!-- Ping Chart -->
-            <div v-if="showPingChartBox" class="shadow-box big-padding text-center ping-chart-wrapper">
+            <div
+                v-if="showPingChartBox"
+                id="ping-chart-box"
+                class="shadow-box big-padding text-center ping-chart-wrapper"
+            >
                 <div class="row">
                     <div class="col">
                         <PingChart :monitor-id="monitor.id" />
@@ -331,24 +412,47 @@
                         class="btn btn-sm btn-outline-danger dropdown-toggle"
                         type="button"
                         data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-controls="clear-data-menu"
+                        aria-describedby="clear-data-choices"
+                        :data-agentom-id="`monitor.${monitor.id}.clear-data`"
                     >
                         <font-awesome-icon icon="trash" />
                         {{ $t("Clear Data") }}
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    <ul id="clear-data-menu" class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <button type="button" class="dropdown-item" @click="clearEventsDialog">
+                            <button
+                                type="button"
+                                class="dropdown-item"
+                                :aria-label="$t('clearDataEventsAria')"
+                                :data-agentom-id="`monitor.${monitor.id}.clear-events`"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
+                                @click="clearEventsDialog"
+                            >
                                 {{ $t("Events") }}
                             </button>
                         </li>
                         <li>
-                            <button type="button" class="dropdown-item" @click="clearHeartbeatsDialog">
+                            <button
+                                type="button"
+                                class="dropdown-item"
+                                :aria-label="$t('clearDataHeartbeatsAria')"
+                                :data-agentom-id="`monitor.${monitor.id}.clear-heartbeats`"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
+                                @click="clearHeartbeatsDialog"
+                            >
                                 {{ $t("Heartbeats") }}
                             </button>
                         </li>
                     </ul>
+                    <span id="clear-data-choices" hidden>
+                        {{ $t("choicesAria", [[$t("Events"), $t("Heartbeats")].join(", ")]) }}
+                    </span>
                 </div>
-                <table class="table table-borderless table-hover">
+                <table class="table table-borderless table-hover" :aria-label="$t('Events')">
                     <thead>
                         <tr>
                             <th>{{ $t("Status") }}</th>
@@ -383,7 +487,15 @@
                 </div>
             </div>
 
-            <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseMonitor">
+            <Confirm
+                ref="confirmPause"
+                :yes-text="$t('Yes')"
+                :no-text="$t('No')"
+                :action="$t('pauseMonitorAria', [monitor.name])"
+                :yes-id="`monitor.${monitor.id}.pause.confirm`"
+                risk="sensitive"
+                @yes="pauseMonitor"
+            >
                 {{ $t("pauseMonitorMsg") }}
             </Confirm>
 
@@ -392,6 +504,9 @@
                 btn-style="btn-danger"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
+                :action="$t('deleteMonitorAria', [monitor.name])"
+                :yes-id="`monitor.${monitor.id}.delete.confirm`"
+                risk="destructive"
                 @yes="deleteMonitor"
             >
                 <div v-if="monitor && monitor.type === 'group'">
@@ -418,6 +533,9 @@
                 btn-style="btn-danger"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
+                :action="$t('clearEventsAria', [monitor.name])"
+                :yes-id="`monitor.${monitor.id}.clear-events.confirm`"
+                risk="destructive"
                 @yes="clearEvents"
             >
                 {{ $t("clearEventsMsg") }}
@@ -428,6 +546,9 @@
                 btn-style="btn-danger"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
+                :action="$t('clearHeartbeatsAria', [monitor.name])"
+                :yes-id="`monitor.${monitor.id}.clear-heartbeats.confirm`"
+                risk="destructive"
                 @yes="clearHeartbeats"
             >
                 {{ $t("clearHeartbeatsMsg") }}
