@@ -7,6 +7,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <i18n-t tag="div" keypath="wayToGetTeamsURL" class="form-text">
             <a

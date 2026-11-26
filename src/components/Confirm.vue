@@ -1,9 +1,9 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 id="exampleModalLabel" class="modal-title">
+                    <h5 :id="titleId" class="modal-title">
                         {{ title || $t("Confirm") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -12,7 +12,14 @@
                     <slot />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" :class="btnStyle" data-bs-dismiss="modal" @click="yes">
+                    <button
+                        type="button"
+                        class="btn"
+                        :class="btnStyle"
+                        data-bs-dismiss="modal"
+                        :data-agentom-risk="yesRisk"
+                        @click="yes"
+                    >
                         {{ yesText || $t("Yes") }}
                     </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="no">
@@ -49,11 +56,19 @@ export default {
             type: String,
             default: null,
         },
+        /** What the Yes button risks (data-agentom-risk): "destructive" or "sensitive" */
+        yesRisk: {
+            type: String,
+            default: undefined,
+        },
     },
     emits: ["yes", "no"],
-    data: () => ({
-        modal: null,
-    }),
+    data() {
+        return {
+            titleId: `modal-title-${this.$.uid}`,
+            modal: null,
+        };
+    },
     mounted() {
         this.modal = new Modal(this.$refs.modal);
     },

@@ -204,8 +204,18 @@
                                     class="form-control"
                                     :pattern="monitor.type !== 'websocket-upgrade' ? 'https?://.+' : 'wss?://.+'"
                                     required
+                                    aria-describedby="url-rule"
                                     data-testid="url-input"
                                 />
+                                <span id="url-rule" hidden>
+                                    {{
+                                        $t("urlRuleHint", [
+                                            monitor.type !== "websocket-upgrade"
+                                                ? "http:// or https://"
+                                                : "ws:// or wss://",
+                                        ])
+                                    }}
+                                </span>
                             </div>
 
                             <template v-if="monitor.type === 'websocket-upgrade'">
@@ -261,7 +271,14 @@
                             <!-- Push URL -->
                             <div v-if="monitor.type === 'push'" class="my-3">
                                 <label for="push-url" class="form-label">{{ $t("PushUrl") }}</label>
-                                <CopyableInput id="push-url" v-model="pushURL" type="url" disabled="disabled" />
+                                <CopyableInput
+                                    id="push-url"
+                                    v-model="pushURL"
+                                    type="url"
+                                    disabled="disabled"
+                                    secret
+                                    :copy-label="$t('copyPushUrl')"
+                                />
                                 <div class="form-text">
                                     {{ $t("needPushEvery", [monitor.interval]) }}
                                     <br />
@@ -355,6 +372,7 @@
                                     <VueMultiselect
                                         id="kafkaProducerBrokers"
                                         v-model="monitor.kafkaProducerBrokers"
+                                        v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                         :multiple="true"
                                         :options="[]"
                                         :placeholder="$t('Enter the list of brokers')"
@@ -432,6 +450,7 @@
                                     <VueMultiselect
                                         id="rabbitmqNodes"
                                         v-model="monitor.rabbitmqNodes"
+                                        v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                         :required="true"
                                         :multiple="true"
                                         :options="[]"
@@ -543,8 +562,10 @@
                                         class="form-control"
                                         pattern="https?://.+"
                                         required
+                                        aria-describedby="url-rule"
                                         data-testid="url-input"
                                     />
+                                    <span id="url-rule" hidden>{{ $t("urlRuleHint", ["http:// or https://"]) }}</span>
                                     <div class="form-text">
                                         {{ $t("GlobalpingHostname") }}
                                     </div>
@@ -642,6 +663,7 @@
                                         <VueMultiselect
                                             id="dns_resolve_type"
                                             v-model="monitor.dns_resolve_type"
+                                            v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                             :options="globalpingdnsresolvetypeoptions"
                                             :multiple="false"
                                             :close-on-select="true"
@@ -1065,6 +1087,7 @@
                                     <VueMultiselect
                                         id="dns_resolve_type"
                                         v-model="monitor.dns_resolve_type"
+                                        v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                         :options="dnsresolvetypeOptions"
                                         :multiple="false"
                                         :close-on-select="true"
@@ -1104,7 +1127,7 @@
                                     <ActionSelect
                                         id="docker-host"
                                         v-model="monitor.docker_host"
-                                        :action-aria-label="$t('openModalTo', $t('Setup Docker Host'))"
+                                        :action-aria-label="$t('addDockerHostAria')"
                                         :options="dockerHostOptionsList"
                                         :disabled="$root.dockerHostList == null || $root.dockerHostList.length === 0"
                                         :icon="'plus'"
@@ -1151,7 +1174,7 @@
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="mqttWebsocketPath" class="form-label">
+                                    <label id="mqtt-ws-path-label" for="mqttWebsocketPath" class="form-label">
                                         {{ $t("mqttWebSocketPath") }}
                                     </label>
                                     <input
@@ -1160,8 +1183,15 @@
                                         v-model="monitor.mqttWebsocketPath"
                                         type="text"
                                         class="form-control"
+                                        aria-labelledby="mqtt-ws-path-label"
                                     />
-                                    <input v-else type="text" class="form-control" disabled />
+                                    <input
+                                        v-else
+                                        type="text"
+                                        class="form-control"
+                                        disabled
+                                        aria-labelledby="mqtt-ws-path-label"
+                                    />
                                     <div class="form-text">
                                         {{ $t("mqttWebsocketPathExplanation") }}
                                     </div>
@@ -1309,6 +1339,7 @@
                                         v-model="monitor.databaseConnectionString"
                                         type="text"
                                         class="form-control"
+                                        data-agentom-redact
                                         required
                                     />
                                 </div>
@@ -1987,6 +2018,7 @@
                                     <VueMultiselect
                                         id="acceptedStatusCodes"
                                         v-model="monitor.accepted_statuscodes"
+                                        v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                         :options="acceptedWebsocketCodeOptions"
                                         :multiple="true"
                                         :close-on-select="false"
@@ -2132,6 +2164,7 @@
                                     <VueMultiselect
                                         id="acceptedStatusCodes"
                                         v-model="monitor.accepted_statuscodes"
+                                        v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                         :options="acceptedStatusCodeOptions"
                                         :multiple="true"
                                         :close-on-select="false"
@@ -2180,6 +2213,7 @@
                                 <VueMultiselect
                                     id="acceptedStatusCodes"
                                     v-model="monitor.accepted_statuscodes"
+                                    v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
                                     :options="acceptedStatusCodeOptions"
                                     :multiple="true"
                                     :close-on-select="false"
@@ -2203,7 +2237,7 @@
                                 <ActionSelect
                                     id="monitorGroupSelector"
                                     v-model="monitor.parent"
-                                    :action-aria-label="$t('openModalTo', 'setup a new monitor group')"
+                                    :action-aria-label="$t('createMonitorGroupAria')"
                                     :options="parentMonitorOptionsList"
                                     :disabled="sortedGroupMonitorList.length === 0 && draftGroupName == null"
                                     :icon="'plus'"
@@ -2247,11 +2281,17 @@
                                     v-model="monitor.notificationIDList[notification.id]"
                                     class="form-check-input"
                                     type="checkbox"
+                                    :aria-label="notification.name"
                                 />
 
                                 <label class="form-check-label" :for="'notification' + notification.id">
                                     {{ notification.name }}
-                                    <a href="#" @click="$refs.notificationDialog.show(notification.id)">
+                                    <a
+                                        href="#"
+                                        role="button"
+                                        :aria-label="$t('editNamed', [notification.name])"
+                                        @click="$refs.notificationDialog.show(notification.id)"
+                                    >
                                         {{ $t("Edit") }}
                                     </a>
                                 </label>
@@ -2432,6 +2472,7 @@
                                             id="ws-tls-key"
                                             v-model="monitor.tlsKey"
                                             class="form-control"
+                                            data-agentom-redact
                                             :placeholder="$t('mtls-auth-server-key-placeholder')"
                                             required
                                         ></textarea>
@@ -2487,7 +2528,14 @@
 
                                     <label class="form-check-label" :for="`proxy-${proxy.id}`">
                                         {{ proxy.host }}:{{ proxy.port }} ({{ proxy.protocol }})
-                                        <a href="#" @click="$refs.proxyDialog.show(proxy.id)">{{ $t("Edit") }}</a>
+                                        <a
+                                            href="#"
+                                            role="button"
+                                            :aria-label="$t('editNamed', [`${proxy.host}:${proxy.port}`])"
+                                            @click="$refs.proxyDialog.show(proxy.id)"
+                                        >
+                                            {{ $t("Edit") }}
+                                        </a>
                                     </label>
 
                                     <span v-if="proxy.default === true" class="badge bg-primary ms-2">
@@ -2511,6 +2559,7 @@
                                     <VueMultiselect
                                         id="kafkaProducerSaslMechanism"
                                         v-model="monitor.kafkaProducerSaslOptions.mechanism"
+                                        v-multiselect-a11y
                                         :options="kafkaSaslMechanismOptions"
                                         :multiple="false"
                                         :clear-on-select="false"
@@ -2607,8 +2656,15 @@
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.method" class="form-select">
+                                    <label id="http-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="method"
+                                        v-model="monitor.method"
+                                        class="form-select"
+                                        aria-labelledby="http-method-label"
+                                    >
                                         <option value="GET">GET</option>
                                         <option value="POST">POST</option>
                                         <option value="PUT">PUT</option>
@@ -2656,12 +2712,19 @@
                                 </div>
 
                                 <!-- HTTP Auth -->
-                                <h4 class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
+                                <h4 id="http-auth-method-heading" class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.authMethod" class="form-select">
+                                    <label id="http-auth-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="method"
+                                        v-model="monitor.authMethod"
+                                        class="form-select"
+                                        aria-labelledby="http-auth-method-heading http-auth-method-label"
+                                    >
                                         <option :value="null">
                                             {{ $t("None") }}
                                         </option>
@@ -2700,6 +2763,7 @@
                                                 id="tls-key"
                                                 v-model="monitor.tlsKey"
                                                 class="form-control"
+                                                data-agentom-redact
                                                 :placeholder="$t('mtls-auth-server-key-placeholder')"
                                                 required
                                             ></textarea>
@@ -2870,8 +2934,15 @@
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.method" class="form-select">
+                                    <label id="http-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="method"
+                                        v-model="monitor.method"
+                                        class="form-select"
+                                        aria-labelledby="http-method-label"
+                                    >
                                         <option value="HEAD">HEAD</option>
                                         <option value="GET">GET</option>
                                         <option value="OPTIONS">OPTIONS</option>
@@ -2890,12 +2961,19 @@
                                 </div>
 
                                 <!-- HTTP Auth -->
-                                <h4 class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
+                                <h4 id="http-auth-method-heading" class="mt-5 mb-2">{{ $t("Authentication") }}</h4>
 
                                 <!-- Method -->
                                 <div class="my-3">
-                                    <label for="method" class="form-label">{{ $t("Method") }}</label>
-                                    <select id="method" v-model="monitor.authMethod" class="form-select">
+                                    <label id="http-auth-method-label" for="method" class="form-label">
+                                        {{ $t("Method") }}
+                                    </label>
+                                    <select
+                                        id="method"
+                                        v-model="monitor.authMethod"
+                                        class="form-select"
+                                        aria-labelledby="http-auth-method-heading http-auth-method-label"
+                                    >
                                         <option :value="null">
                                             {{ $t("None") }}
                                         </option>
@@ -3176,10 +3254,13 @@
                                 </div>
                                 <!-- Proto service name data -->
                                 <div class="my-3">
-                                    <label for="protobuf" class="form-label">{{ $t("Proto Service Name") }}</label>
+                                    <label id="grpc-service-label" for="protobuf" class="form-label">
+                                        {{ $t("Proto Service Name") }}
+                                    </label>
                                     <input
                                         id="name"
                                         v-model="monitor.grpcServiceName"
+                                        aria-labelledby="grpc-service-label"
                                         type="text"
                                         class="form-control"
                                         :placeholder="protoServicePlaceholder"
@@ -3189,10 +3270,13 @@
 
                                 <!-- Proto method data -->
                                 <div class="my-3">
-                                    <label for="protobuf" class="form-label">{{ $t("Proto Method") }}</label>
+                                    <label id="grpc-method-label" for="protobuf" class="form-label">
+                                        {{ $t("Proto Method") }}
+                                    </label>
                                     <input
                                         id="name"
                                         v-model="monitor.grpcMethod"
+                                        aria-labelledby="grpc-method-label"
                                         type="text"
                                         class="form-control"
                                         :placeholder="protoMethodPlaceholder"
@@ -3205,10 +3289,13 @@
 
                                 <!-- Proto data -->
                                 <div class="my-3">
-                                    <label for="protobuf" class="form-label">{{ $t("Proto Content") }}</label>
+                                    <label id="grpc-content-label" for="protobuf" class="form-label">
+                                        {{ $t("Proto Content") }}
+                                    </label>
                                     <textarea
                                         id="protobuf"
                                         v-model="monitor.grpcProtobuf"
+                                        aria-labelledby="grpc-content-label"
                                         class="form-control"
                                         :placeholder="protoBufDataPlaceholder"
                                     ></textarea>
@@ -4429,14 +4516,14 @@ message HealthCheckResponse {
                         this.processing = false;
                     }
 
-                    this.$root.toastRes(res);
+                    this.$root.toastRes(res, this.$t("toastAboutMonitor", [this.monitor.name]));
                 });
             } else {
                 await this.$refs.tagsManager.submit(this.monitor.id);
 
                 this.$root.getSocket().emit("editMonitor", this.monitor, (res) => {
                     this.processing = false;
-                    this.$root.toastRes(res);
+                    this.$root.toastRes(res, this.$t("toastAboutMonitor", [this.monitor.name]));
                     this.init();
 
                     // Start the new parent monitor after edit is done

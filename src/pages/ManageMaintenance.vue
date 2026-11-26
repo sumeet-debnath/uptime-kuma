@@ -12,15 +12,22 @@
                 </router-link>
             </div>
 
-            <div class="shadow-box">
+            <div class="shadow-box" role="list">
                 <span
                     v-if="Object.keys(sortedMaintenanceList).length === 0"
                     class="d-flex align-items-center justify-content-center my-3"
+                    role="listitem"
                 >
                     {{ $t("No Maintenance") }}
                 </span>
 
-                <div v-for="(item, index) in sortedMaintenanceList" :key="index" class="item" :class="item.status">
+                <div
+                    v-for="(item, index) in sortedMaintenanceList"
+                    :key="index"
+                    class="item"
+                    :class="item.status"
+                    role="listitem"
+                >
                     <div class="left-part">
                         <div class="circle"></div>
                         <div class="info">
@@ -38,7 +45,9 @@
                             <button
                                 v-if="item.active"
                                 class="btn btn-normal"
-                                :aria-label="$t('ariaPauseMaintenance')"
+                                :aria-label="$t('pauseNamed', [item.title])"
+                                data-agentom-risk="sensitive"
+                                data-agentom-confirmation="required"
                                 @click="pauseDialog(item.id)"
                             >
                                 <font-awesome-icon icon="pause" />
@@ -48,7 +57,7 @@
                             <button
                                 v-if="!item.active"
                                 class="btn btn-primary"
-                                :aria-label="$t('ariaResumeMaintenance')"
+                                :aria-label="$t('resumeNamed', [item.title])"
                                 @click="resumeMaintenance(item.id)"
                             >
                                 <font-awesome-icon icon="play" />
@@ -58,7 +67,7 @@
                             <router-link
                                 :to="'/maintenance/clone/' + item.id"
                                 class="btn btn-normal"
-                                :aria-label="$t('ariaCloneMaintenance')"
+                                :aria-label="$t('cloneNamed', [item.title])"
                             >
                                 <font-awesome-icon icon="clone" />
                                 {{ $t("Clone") }}
@@ -67,7 +76,7 @@
                             <router-link
                                 :to="'/maintenance/edit/' + item.id"
                                 class="btn btn-normal"
-                                :aria-label="$t('ariaEditMaintenance')"
+                                :aria-label="$t('editNamed', [item.title])"
                             >
                                 <font-awesome-icon icon="edit" />
                                 {{ $t("Edit") }}
@@ -75,7 +84,9 @@
 
                             <button
                                 class="btn btn-normal text-danger"
-                                :aria-label="$t('ariaDeleteMaintenance')"
+                                :aria-label="$t('deleteNamed', [item.title])"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
                                 @click="deleteDialog(item.id)"
                             >
                                 <font-awesome-icon icon="trash" />
@@ -92,13 +103,20 @@
                 </a>
             </div>
 
-            <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseMaintenance">
+            <Confirm
+                ref="confirmPause"
+                yes-risk="sensitive"
+                :yes-text="$t('Yes')"
+                :no-text="$t('No')"
+                @yes="pauseMaintenance"
+            >
                 {{ $t("pauseMaintenanceMsg") }}
             </Confirm>
 
             <Confirm
                 ref="confirmDelete"
                 btn-style="btn-danger"
+                yes-risk="destructive"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
                 @yes="deleteMaintenance"

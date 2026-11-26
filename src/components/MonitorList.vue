@@ -4,13 +4,20 @@
             <!-- Line 1: Checkbox + Status + Tags + Search Bar -->
             <div class="filter-row">
                 <div class="search-wrapper">
-                    <a v-if="searchText != ''" class="search-icon" @click="clearSearchText">
+                    <a
+                        v-if="searchText != ''"
+                        class="search-icon"
+                        role="button"
+                        :aria-label="$t('clearSearch')"
+                        @click="clearSearchText"
+                    >
                         <font-awesome-icon icon="times" />
                     </a>
                     <form @submit.prevent>
                         <input
                             v-model="searchText"
                             class="form-control search-input"
+                            role="searchbox"
                             :placeholder="$t('Search...')"
                             :aria-label="$t('Search monitored sites')"
                             autocomplete="off"
@@ -44,6 +51,7 @@
                     />
                 </div>
             </div>
+            <div class="visually-hidden" role="status">{{ listResultText }}</div>
 
             <!-- Line 2: Cancel + Actions (shown when selection mode is active) -->
             <div v-if="selectMode && selectedMonitorCount > 0" class="selection-row">
@@ -64,13 +72,20 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="#" @click.prevent="pauseDialog">
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    role="button"
+                                    data-agentom-risk="sensitive"
+                                    data-agentom-confirmation="required"
+                                    @click.prevent="pauseDialog"
+                                >
                                     <font-awesome-icon icon="pause" class="me-2" />
                                     {{ $t("Pause") }}
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#" @click.prevent="resumeSelected">
+                                <a class="dropdown-item" href="#" role="button" @click.prevent="resumeSelected">
                                     <font-awesome-icon icon="play" class="me-2" />
                                     {{ $t("Resume") }}
                                 </a>
@@ -79,6 +94,9 @@
                                 <a
                                     class="dropdown-item text-danger"
                                     href="#"
+                                    role="button"
+                                    data-agentom-risk="destructive"
+                                    data-agentom-confirmation="required"
                                     @click.prevent="$refs.confirmDelete.show()"
                                 >
                                     <font-awesome-icon icon="trash" class="me-2" />
@@ -96,6 +114,7 @@
         <div
             ref="monitorList"
             class="monitor-list px-2"
+            role="list"
             :class="{ scrollbar: scrollbar }"
             :style="monitorListStyle"
             data-testid="monitor-list"
@@ -119,11 +138,18 @@
         </div>
     </div>
 
-    <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseSelected">
+    <Confirm ref="confirmPause" yes-risk="sensitive" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseSelected">
         {{ $t("pauseMonitorMsg") }}
     </Confirm>
 
-    <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteSelected">
+    <Confirm
+        ref="confirmDelete"
+        btn-style="btn-danger"
+        yes-risk="destructive"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        @yes="deleteSelected"
+    >
         {{ $t("deleteMonitorsMsg") }}
     </Confirm>
 </template>
@@ -221,6 +247,16 @@ export default {
             return {
                 height: `calc(100% - ${listHeaderHeight}px)`,
             };
+        },
+
+        // the result of the search and filters, which the search field and the filters say themselves;
+        // empty while nothing narrows the list
+        listResultText() {
+            if (!this.filtersActive) {
+                return "";
+            }
+            const all = Object.values(this.$root.monitorList);
+            return this.$t("monitorListResult", { shown: all.filter(this.filterFunc).length, total: all.length });
         },
 
         selectedMonitorCount() {

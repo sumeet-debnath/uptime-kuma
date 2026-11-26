@@ -28,6 +28,7 @@
                     <a
                         v-if="$root.isMobile && $root.loggedIn && $root.socket.token !== 'autoLogin'"
                         class="logout"
+                        role="button"
                         @click.prevent="$root.logout"
                     >
                         <div class="menu-item">
@@ -209,7 +210,10 @@ export default {
             let valid = this.validateSettings();
             if (valid.success) {
                 this.$root.getSocket().emit("setSettings", this.settings, currentPassword, (res) => {
-                    this.$root.toastRes(res);
+                    this.$root.toastRes(
+                        res,
+                        this.$t("toastAboutSettings", [this.subMenus[this.currentPage]?.title ?? ""])
+                    );
                     this.loadSettings();
 
                     if (callback) {

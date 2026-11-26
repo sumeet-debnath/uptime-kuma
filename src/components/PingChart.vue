@@ -6,15 +6,19 @@
                 class="btn btn-light dropdown-toggle btn-period-toggle"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                aria-haspopup="menu"
+                :aria-label="$t('chartPeriodAria', [chartPeriodOptions[chartPeriodHrs]])"
             >
                 {{ chartPeriodOptions[chartPeriodHrs] }}&nbsp;
             </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li v-for="(item, key) in chartPeriodOptions" :key="key">
+            <ul class="dropdown-menu dropdown-menu-end" role="menu" :aria-label="$t('chartPeriodMenu')">
+                <li v-for="(item, key) in chartPeriodOptions" :key="key" role="none">
                     <button
                         type="button"
                         class="dropdown-item"
                         :class="{ active: chartPeriodHrs == key }"
+                        role="menuitemradio"
+                        :aria-checked="String(chartPeriodHrs == key)"
                         @click="chartPeriodHrs = key"
                     >
                         {{ item }}
@@ -22,7 +26,8 @@
                 </li>
             </ul>
         </div>
-        <div class="chart-wrapper" :class="{ loading: loading }">
+        <p id="ping-chart-summary" class="visually-hidden">{{ chartSummary }}</p>
+        <div class="chart-wrapper" :class="{ loading: loading }" data-agentom-ignore>
             <Line :data="chartData" :options="chartOptions" />
         </div>
     </div>
@@ -89,6 +94,27 @@ export default {
         };
     },
     computed: {
+        // from the line the chart draws (its "avgPing" dataset), so the two can't disagree
+        chartSummary() {
+            const line = this.chartData.datasets.find((d) => d.label === this.$t("avgPing"));
+            const points = (line?.data ?? []).filter((p) => p.y != null);
+            const period = this.chartPeriodOptions[this.chartPeriodHrs];
+            if (points.length === 0) {
+                return this.$t("chartSummaryEmpty", [period]);
+            }
+            const max = points.reduce((a, b) => (b.y > a.y ? b : a));
+            const min = points.reduce((a, b) => (b.y < a.y ? b : a));
+            const avg = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+            // the points' x are the times the chart shows, already in the display timezone
+            return this.$t("chartSummary", {
+                period,
+                avg: Math.round(avg),
+                max: Math.round(max.y),
+                maxAt: max.x,
+                min: Math.round(min.y),
+                minAt: min.x,
+            });
+        },
         chartOptions() {
             return {
                 responsive: true,

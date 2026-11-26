@@ -11,15 +11,16 @@
                 </button>
             </div>
 
-            <div>
+            <div role="list">
                 <span
                     v-if="Object.keys(keyList).length === 0"
                     class="d-flex align-items-center justify-content-center my-3"
+                    role="listitem"
                 >
                     {{ $t("No API Keys") }}
                 </span>
 
-                <div v-for="(item, index) in keyList" :key="index" class="item" :class="item.status">
+                <div v-for="(item, index) in keyList" :key="index" class="item" :class="item.status" role="listitem">
                     <div class="left-part">
                         <div class="circle"></div>
                         <div class="info">
@@ -37,17 +38,35 @@
 
                     <div class="buttons">
                         <div class="btn-group" role="group">
-                            <button v-if="item.active" class="btn btn-normal" @click="disableDialog(item.id)">
+                            <button
+                                v-if="item.active"
+                                class="btn btn-normal"
+                                :aria-label="$t('disableNamed', [item.name])"
+                                data-agentom-risk="sensitive"
+                                data-agentom-confirmation="required"
+                                @click="disableDialog(item.id)"
+                            >
                                 <font-awesome-icon icon="pause" />
                                 {{ $t("Disable") }}
                             </button>
 
-                            <button v-if="!item.active" class="btn btn-primary" @click="enableKey(item.id)">
+                            <button
+                                v-if="!item.active"
+                                class="btn btn-primary"
+                                :aria-label="$t('enableNamed', [item.name])"
+                                @click="enableKey(item.id)"
+                            >
                                 <font-awesome-icon icon="play" />
                                 {{ $t("Enable") }}
                             </button>
 
-                            <button class="btn btn-danger" @click="deleteDialog(item.id)">
+                            <button
+                                class="btn btn-danger"
+                                :aria-label="$t('deleteNamed', [item.name])"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
+                                @click="deleteDialog(item.id)"
+                            >
                                 <font-awesome-icon icon="trash" />
                                 {{ $t("Delete") }}
                             </button>
@@ -63,11 +82,18 @@
             </a>
         </div>
 
-        <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="disableKey">
+        <Confirm ref="confirmPause" yes-risk="sensitive" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="disableKey">
             {{ $t("disableAPIKeyMsg") }}
         </Confirm>
 
-        <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteKey">
+        <Confirm
+            ref="confirmDelete"
+            btn-style="btn-danger"
+            yes-risk="destructive"
+            :yes-text="$t('Yes')"
+            :no-text="$t('No')"
+            @yes="deleteKey"
+        >
             {{ $t("deleteAPIKeyMsg") }}
         </Confirm>
 

@@ -1,10 +1,10 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 :id="titleId" class="modal-title">
                             {{ $t("Edit Tag") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -26,11 +26,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="tag-color" class="form-label">{{ $t("color") }}</label>
+                            <label id="tag-color-label" for="tag-color" class="form-label">{{ $t("color") }}</label>
                             <div class="d-flex">
                                 <div class="col-8 pe-1">
                                     <vue-multiselect
                                         v-model="selectedColor"
+                                        v-multiselect-a11y="{ labelledby: 'tag-color-label' }"
                                         :options="colorOptions"
                                         :multiple="false"
                                         :searchable="true"
@@ -76,12 +77,14 @@
                                     :key="monitor.id"
                                     class="d-flex align-items-center justify-content-between text-decoration-none tag-monitors-list-row py-2 px-3"
                                     :to="monitorURL(monitor.id)"
+                                    :aria-labelledby="`tag-monitor-${monitor.id}`"
                                     @click="modal.hide()"
                                 >
-                                    <span>{{ monitor.name }}</span>
+                                    <span :id="`tag-monitor-${monitor.id}`">{{ monitor.name }}</span>
                                     <button
                                         type="button"
                                         class="btn-rm-monitor btn btn-outline-danger ms-2 py-1"
+                                        :aria-label="$t('removeFromTagAria', [monitor.name, tag.name])"
                                         @click.stop.prevent="removeMonitor(monitor.id)"
                                     >
                                         <font-awesome-icon class="" icon="times" />
@@ -89,9 +92,10 @@
                                 </router-link>
                             </div>
                             <div v-if="allMonitorList.length > 0" class="pt-3">
-                                <label class="form-label">{{ $t("Add a monitor") }}:</label>
+                                <label id="tag-add-monitor-label" class="form-label">{{ $t("Add a monitor") }}:</label>
                                 <VueMultiselect
                                     v-model="selectedAddMonitor"
+                                    v-multiselect-a11y="{ labelledby: 'tag-add-monitor-label' }"
                                     :options="allMonitorList"
                                     :multiple="false"
                                     :searchable="true"
@@ -123,6 +127,8 @@
                             v-if="tag && tag.id !== null"
                             type="button"
                             class="btn btn-danger"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             :disabled="processing"
                             @click="deleteConfirm"
                         >
@@ -138,7 +144,14 @@
         </div>
     </form>
 
-    <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteTag">
+    <Confirm
+        ref="confirmDelete"
+        btn-style="btn-danger"
+        yes-risk="destructive"
+        :yes-text="$t('Yes')"
+        :no-text="$t('No')"
+        @yes="deleteTag"
+    >
         {{ $t("confirmDeleteTagMsg") }}
     </Confirm>
 </template>
@@ -169,6 +182,7 @@ export default {
     },
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             modal: null,
             processing: false,
             selectedColor: {

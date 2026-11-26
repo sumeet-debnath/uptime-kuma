@@ -27,15 +27,23 @@
                         :key="statusPage.slug"
                         :href="'/status/' + statusPage.slug"
                         class="item"
+                        :aria-labelledby="`status-page-title-${statusPage.slug}`"
+                        :aria-describedby="`status-page-slug-${statusPage.slug}`"
+                        data-agentom-reveals="Delete"
                     >
                         <img :src="icon(statusPage.icon)" alt class="logo me-2" />
                         <div class="info">
-                            <div class="title">{{ statusPage.title }}</div>
-                            <div class="slug">/status/{{ statusPage.slug }}</div>
+                            <div :id="`status-page-title-${statusPage.slug}`" class="title">{{ statusPage.title }}</div>
+                            <div :id="`status-page-slug-${statusPage.slug}`" class="slug">
+                                /status/{{ statusPage.slug }}
+                            </div>
                         </div>
                         <div class="actions">
                             <button
                                 class="btn btn-danger delete-status-page"
+                                :aria-label="$t('deleteNamed', [statusPage.title])"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
                                 @click.stop.prevent="deleteDialog(statusPage.slug)"
                             >
                                 <font-awesome-icon icon="trash" />
@@ -53,6 +61,7 @@
     <Confirm
         ref="confirmDelete"
         btn-style="btn-danger"
+        yes-risk="destructive"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
         @yes="deleteStatusPage"

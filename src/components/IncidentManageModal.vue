@@ -1,9 +1,9 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 :id="titleId" class="modal-title">
                         {{ $t("Edit Incident") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -105,6 +105,7 @@ export default {
     emits: ["incident-updated"],
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             modal: null,
             processing: false,
             incidentId: null,

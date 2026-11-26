@@ -10,6 +10,7 @@
             type="url"
             class="form-control"
             required
+            data-agentom-redact
         />
         <i18n-t class="form-text" keypath="wayToGetTeamsURL">
             <a href="https://www.yunzhijia.com/opendocs/docs.html#/tutorial/index/robot" target="_blank">

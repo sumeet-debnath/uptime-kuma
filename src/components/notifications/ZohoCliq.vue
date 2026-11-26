@@ -7,6 +7,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <i18n-t tag="div" keypath="wayToGetZohoCliqURL" class="form-text">
             <a href="https://www.zoho.com/cliq/help/platform/webhook-tokens.html" target="_blank">{{ $t("here") }}</a>

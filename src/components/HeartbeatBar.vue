@@ -22,9 +22,13 @@
             class="d-flex justify-content-between align-items-center word"
             :style="timeStyle"
         >
-            <div>{{ timeSinceFirstBeat }}</div>
+            <div>
+                <time :datetime="firstBeatTime">{{ timeSinceFirstBeat }}</time>
+            </div>
             <div v-if="$root.styleElapsedTime === 'with-line'" class="connecting-line"></div>
-            <div>{{ timeSinceLastBeat }}</div>
+            <div>
+                <time :datetime="lastBeatTime">{{ timeSinceLastBeat }}</time>
+            </div>
         </div>
 
         <!-- Custom Tooltip -->
@@ -236,6 +240,23 @@ export default {
             const firstValidBeat = this.shortBeatList.at(this.numPadding);
             const minutes = dayjs().diff(dayjs.utc(firstValidBeat?.time), "minutes");
             return minutes > 60 ? Math.floor(minutes / 60) + "h" : minutes + "m";
+        },
+
+        // the start of what the bar shows, and the last beat, in UTC, as precise as the labels:
+        // the date for "7d", the minute for "24h", "45m" and "5m ago"
+        firstBeatTime() {
+            if (this.normalizedHeartbeatBarDays >= 2) {
+                return dayjs.utc().subtract(this.normalizedHeartbeatBarDays, "day").format("YYYY-MM-DD");
+            }
+            if (this.normalizedHeartbeatBarDays === 1) {
+                return dayjs.utc().subtract(1, "day").format("YYYY-MM-DDTHH:mm[Z]");
+            }
+            const first = this.shortBeatList.at(this.numPadding);
+            return first?.time ? dayjs.utc(first.time).format("YYYY-MM-DDTHH:mm[Z]") : undefined;
+        },
+        lastBeatTime() {
+            const last = this.shortBeatList.at(-1);
+            return last?.time ? dayjs.utc(last.time).format("YYYY-MM-DDTHH:mm[Z]") : undefined;
         },
 
         /**

@@ -4,7 +4,14 @@
             {{ $t("WebHookUrl") }}
             <span style="color: red"><sup>*</sup></span>
         </label>
-        <input id="WebHookUrl" v-model="$parent.notification.webHookUrl" type="text" class="form-control" required />
+        <input
+            id="WebHookUrl"
+            v-model="$parent.notification.webHookUrl"
+            type="text"
+            class="form-control"
+            required
+            data-agentom-redact
+        />
     </div>
     <div class="mb-3">
         <label for="secretKey" class="form-label">
@@ -59,6 +66,7 @@
         <VueMultiselect
             id="mobileList-select"
             v-model="$parent.notification.mobileList"
+            v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
             :required="$parent.notification.mentioning === 'specify-mobiles'"
             :placeholder="$t('Enter a list of mobile')"
             :multiple="true"
@@ -82,6 +90,7 @@
         <VueMultiselect
             id="userList-select"
             v-model="$parent.notification.userList"
+            v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
             :required="$parent.notification.mentioning === 'specify-users'"
             :placeholder="$t('Enter a list of userId')"
             :multiple="true"

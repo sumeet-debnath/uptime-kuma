@@ -10,6 +10,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <label for="rocket-username" class="form-label">{{ $t("Username") }}</label>
         <input id="rocket-username" v-model="$parent.notification.rocketusername" type="text" class="form-control" />

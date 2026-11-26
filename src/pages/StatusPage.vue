@@ -1,7 +1,22 @@
 <template>
-    <div v-if="loadedTheme" class="container mt-3">
+    <div
+        v-if="loadedTheme"
+        class="container mt-3"
+        :data-agentom-screen="enableEditMode ? 'status-page.edit' : 'status-page.view'"
+        :data-agentom-state="loadedData ? 'ready' : 'loading'"
+    >
         <!-- Sidebar for edit mode -->
-        <div v-if="enableEditMode" class="sidebar" data-testid="edit-sidebar">
+        <div
+            v-if="enableEditMode"
+            class="sidebar"
+            data-testid="edit-sidebar"
+            role="region"
+            :aria-label="$t('statusPageEditor')"
+            aria-describedby="status-page-unsaved"
+        >
+            <span id="status-page-unsaved" hidden>
+                {{ hasUnsavedChanges ? $t("unsavedChanges") : $t("noUnsavedChanges") }}
+            </span>
             <div class="sidebar-body">
                 <div class="my-3">
                     <label for="slug" class="form-label">{{ $t("Slug") }}</label>
@@ -133,6 +148,7 @@
                                 v-model="config.domainNameList[index]"
                                 type="text"
                                 class="no-bg domain-input"
+                                :aria-label="$t('domainNameField')"
                                 placeholder="example.com"
                             />
                             <button
@@ -204,9 +220,10 @@
 
                 <!-- Custom CSS -->
                 <div class="my-3">
-                    <div class="mb-1">{{ $t("Custom CSS") }}</div>
+                    <div id="custom-css-label" class="mb-1">{{ $t("Custom CSS") }}</div>
                     <prism-editor
                         v-model="config.customCSS"
+                        v-prism-a11y="{ labelledby: 'custom-css-label' }"
                         class="css-editor"
                         data-testid="custom-css-input"
                         :highlight="highlighter"
@@ -215,7 +232,12 @@
                 </div>
 
                 <div class="danger-zone">
-                    <button class="btn btn-danger me-2" @click="deleteDialog">
+                    <button
+                        class="btn btn-danger me-2"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
+                        @click="deleteDialog"
+                    >
                         <font-awesome-icon icon="trash" />
                         {{ $t("Delete") }}
                     </button>
@@ -224,12 +246,24 @@
 
             <!-- Sidebar Footer -->
             <div class="sidebar-footer">
-                <button class="btn btn-success me-2" :disabled="loading" data-testid="save-button" @click="save">
+                <button
+                    class="btn btn-success me-2"
+                    :disabled="loading"
+                    data-testid="save-button"
+                    data-agentom-action="publish-status-page"
+                    data-agentom-risk="sensitive"
+                    @click="save"
+                >
                     <font-awesome-icon icon="save" />
                     {{ $t("Save") }}
                 </button>
 
-                <button class="btn btn-danger me-2" @click="discard">
+                <button
+                    class="btn btn-danger me-2"
+                    data-agentom-risk="destructive"
+                    data-agentom-confirmation="required"
+                    @click="discard"
+                >
                     <font-awesome-icon icon="undo" />
                     {{ $t("Discard") }}
                 </button>
@@ -237,7 +271,11 @@
         </div>
 
         <!-- Main Status Page -->
-        <div :class="{ edit: enableEditMode }" class="main">
+        <div
+            :class="{ edit: enableEditMode }"
+            class="main"
+            :aria-describedby="enableEditMode ? 'status-page-unsaved' : undefined"
+        >
             <!-- Logo & Title -->
             <h1 class="mb-4 title-flex">
                 <!-- Logo -->
@@ -246,6 +284,7 @@
                         v-if="editMode"
                         type="button"
                         class="p-0 bg-transparent border-0 small-reset-btn reset-top-left"
+                        :aria-label="$t('resetLogo')"
                         @click.stop="resetToDefaultImage"
                     >
                         <font-awesome-icon icon="times" class="text-danger" />
@@ -269,7 +308,14 @@
                 />
 
                 <!-- Title -->
-                <Editable v-model="config.title" tag="span" :contenteditable="editMode" :noNL="true" />
+                <Editable
+                    v-model="config.title"
+                    tag="span"
+                    :contenteditable="editMode"
+                    :noNL="true"
+                    :role="editMode ? 'textbox' : undefined"
+                    :aria-label="editMode ? $t('statusPageTitleField') : undefined"
+                />
             </h1>
 
             <!-- Admin functions -->
@@ -433,6 +479,9 @@
                 :contenteditable="editMode"
                 tag="div"
                 class="mb-4 description"
+                :role="editMode ? 'textbox' : undefined"
+                :aria-multiline="editMode ? 'true' : undefined"
+                :aria-label="editMode ? $t('statusPageDescriptionField') : undefined"
                 data-testid="description-editable"
             />
             <!-- eslint-disable vue/no-v-html-->
@@ -454,9 +503,10 @@
 
                 <div class="mt-3">
                     <div v-if="sortedMonitorList.length > 0 && loadedData">
-                        <label>{{ $t("Add a monitor") }}:</label>
+                        <label id="status-page-add-monitor-label">{{ $t("Add a monitor") }}:</label>
                         <VueMultiselect
                             v-model="selectedMonitor"
+                            v-multiselect-a11y="{ labelledby: 'status-page-add-monitor-label' }"
                             :options="sortedMonitorList"
                             :multiple="false"
                             :searchable="true"
@@ -558,6 +608,9 @@
                     :contenteditable="enableEditMode"
                     :noNL="false"
                     class="alert-heading p-2"
+                    :role="editMode ? 'textbox' : undefined"
+                    :aria-multiline="editMode ? 'true' : undefined"
+                    :aria-label="editMode ? $t('footerTextField') : undefined"
                     data-testid="custom-footer-editable"
                 />
                 <!-- eslint-disable vue/no-v-html-->
@@ -588,6 +641,7 @@
         <Confirm
             ref="confirmDelete"
             btn-style="btn-danger"
+            yes-risk="destructive"
             :yes-text="$t('Yes')"
             :no-text="$t('No')"
             @yes="deleteStatusPage"
@@ -694,6 +748,7 @@ export default {
             },
             selectedMonitor: null,
             incident: null,
+            savedSnapshot: null,
             previousIncident: null,
             showImageCropUpload: false,
             imgDataUrl: "/icon.svg",
@@ -713,6 +768,9 @@ export default {
         };
     },
     computed: {
+        hasUnsavedChanges() {
+            return this.savedSnapshot !== null && this.savedSnapshot !== this.editSnapshot();
+        },
         logoURL() {
             if (this.imgDataUrl.startsWith("data:")) {
                 return this.imgDataUrl;
@@ -907,6 +965,11 @@ export default {
                         if (!this.config.customCSS) {
                             this.config.customCSS = "body {\n" + "  \n" + "}\n";
                         }
+
+                        // the editor's settings, as last saved
+                        if (this.enableEditMode) {
+                            this.savedSnapshot = this.editSnapshot();
+                        }
                     } else {
                         this.$root.toastError(res.msg);
                     }
@@ -998,6 +1061,10 @@ export default {
 
                 this.loading = false;
 
+                if (this.enableEditMode) {
+                    this.savedSnapshot = this.editSnapshot();
+                }
+
                 // Configure auto-refresh loop
                 feedInterval = setInterval(
                     () => {
@@ -1025,6 +1092,18 @@ export default {
         }
     },
     methods: {
+        /**
+         * What the editor would save, to tell whether anything changed since it was last saved
+         * @returns {string} The status page's settings, groups and incident as JSON
+         */
+        editSnapshot() {
+            // a monitor's tags are filled in from the monitor list for display; Save doesn't keep them here
+            const groups = this.$root.publicGroupList.map((group) => ({
+                ...group,
+                monitorList: group.monitorList.map(({ tags, ...monitor }) => monitor),
+            }));
+            return JSON.stringify({ config: this.config, groups, incident: this.incident });
+        },
         /**
          * Get status page data
          * It should be preloaded in window.preloadData
@@ -1122,6 +1201,11 @@ export default {
 
                 // Try to fix #1658
                 this.loadedData = true;
+
+                // what was last saved, once the status page is loaded (or when it loads)
+                if (!this.loading) {
+                    this.savedSnapshot = this.editSnapshot();
+                }
             }
         },
 
@@ -1140,6 +1224,7 @@ export default {
                     if (res.ok) {
                         this.enableEditMode = false;
                         this.$root.publicGroupList = res.publicGroupList;
+                        this.savedSnapshot = this.editSnapshot();
 
                         // Add some delay, so that the side menu animation would be better
                         let endTime = new Date();

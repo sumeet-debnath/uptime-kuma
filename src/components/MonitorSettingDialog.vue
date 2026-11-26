@@ -1,9 +1,9 @@
 <template>
-    <div ref="MonitorSettingDialog" class="modal fade" tabindex="-1">
+    <div ref="MonitorSettingDialog" class="modal fade" tabindex="-1" :aria-labelledby="titleId">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 :id="titleId" class="modal-title">
                         {{ $t("Monitor Setting", [monitor.name]) }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -58,6 +58,7 @@
                         class="btn btn-danger"
                         data-bs-dismiss="modal"
                         data-testid="monitor-settings-close"
+                        :aria-label="$t('closeNamedSetting', [monitor.name])"
                     >
                         {{ $t("Close") }}
                     </button>
@@ -80,6 +81,7 @@ export default {
     emits: [],
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             monitor: {
                 id: null,
                 name: null,

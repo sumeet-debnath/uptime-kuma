@@ -1,6 +1,14 @@
 <template>
     <div tabindex="-1" class="dropdown" @focusin="openMenu" @focusout="handleFocusOut">
-        <button type="button" class="filter-dropdown-status" :class="{ active: filterActive }" tabindex="0">
+        <button
+            type="button"
+            class="filter-dropdown-status"
+            :class="{ active: filterActive }"
+            tabindex="0"
+            aria-haspopup="menu"
+            :aria-expanded="String(open)"
+            :aria-label="buttonLabel"
+        >
             <div class="px-1 d-flex align-items-center">
                 <slot name="status"></slot>
             </div>
@@ -8,7 +16,7 @@
                 <font-awesome-icon icon="angle-down" />
             </span>
         </button>
-        <ul class="filter-dropdown-menu" :class="{ open: open }">
+        <ul class="filter-dropdown-menu" :class="{ open: open }" role="menu" :aria-label="menuLabel">
             <slot name="dropdown"></slot>
         </ul>
     </div>
@@ -21,6 +29,16 @@ export default {
         filterActive: {
             type: Boolean,
             required: true,
+        },
+        /** The menu's name */
+        menuLabel: {
+            type: String,
+            required: true,
+        },
+        /** The button's name, when the button doesn't show its own word */
+        buttonLabel: {
+            type: String,
+            default: undefined,
         },
     },
     emits: ["openMenu"],

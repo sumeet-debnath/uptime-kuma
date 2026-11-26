@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { useToast } from "vue-toastification";
+import ToastAbout from "../components/ToastAbout.vue";
 import jwtDecode from "jwt-decode";
 import Favico from "favico.js";
 import dayjs from "dayjs";
@@ -42,6 +43,7 @@ export default {
             allowLoginDialog: false, // Allowed to show login dialog, but "loggedIn" have to be true too. This exists because prevent the login dialog show 0.1s in first before the socket server auth-ed.
             loggedIn: false,
             monitorList: {},
+            monitorListLoaded: false,
             monitorTypeList: {},
             maintenanceList: {},
             apiKeyList: {},
@@ -147,6 +149,7 @@ export default {
             socket.on("monitorList", (data) => {
                 this.assignMonitorUrlParser(data);
                 this.monitorList = data;
+                this.monitorListLoaded = true;
             });
 
             socket.on("updateMonitorIntoList", (data) => {
@@ -363,15 +366,24 @@ export default {
         /**
          * Show success or error toast dependent on response status code
          * @param {{ok:boolean, msg: string, msgi18n: false} | {ok:boolean, msg: string|{key: string, values: object}, msgi18n: true}} res Response object
+         * @param {string|undefined} about What a success was about ("(monitor Checkout API)"), read but not shown
          * @returns {void}
          */
-        toastRes(res) {
+        toastRes(res, about) {
             if (res.msgi18n) {
                 res.msg = this.applyTranslation(res.msg);
             }
 
             if (res.ok) {
-                toast.success(res.msg);
+                if (about) {
+                    // the body keeps the class a text toast has, so it's drawn as one
+                    toast.success(
+                        { component: ToastAbout, props: { msg: res.msg, about } },
+                        { bodyClassName: "Vue-Toastification__toast-body" }
+                    );
+                } else {
+                    toast.success(res.msg);
+                }
             } else {
                 toast.error(res.msg);
             }

@@ -1,10 +1,10 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 :id="titleId" class="modal-title">
                             {{ $t("Setup Proxy") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -37,6 +37,7 @@
                                     v-model="proxy.port"
                                     type="number"
                                     class="form-control ms-2"
+                                    :aria-label="$t('proxyPortField')"
                                     style="width: 100px"
                                     required
                                     min="1"
@@ -162,6 +163,7 @@ export default {
     emits: ["added"],
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             model: null,
             processing: false,
             id: null,
@@ -266,7 +268,7 @@ export default {
         submit() {
             this.processing = true;
             this.$root.getSocket().emit("addProxy", this.proxy, this.id, (res) => {
-                this.$root.toastRes(res);
+                this.$root.toastRes(res, this.$t("toastAboutProxy", [`${this.proxy.host}:${this.proxy.port}`]));
                 this.processing = false;
 
                 if (res.ok) {

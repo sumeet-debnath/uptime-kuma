@@ -10,6 +10,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <div class="form-text">
             <p>

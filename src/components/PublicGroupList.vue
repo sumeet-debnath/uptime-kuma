@@ -4,15 +4,25 @@
         <template #item="group">
             <div class="mb-5" data-testid="group">
                 <!-- Group Title -->
-                <h2 class="group-title">
+                <!-- named by the group alone: the buttons inside it have names of their own -->
+                <h2 class="group-title" :aria-label="group.element.name || undefined">
                     <font-awesome-icon v-if="editMode && showGroupDrag" icon="arrows-alt-v" class="action drag me-3" />
                     <font-awesome-icon
                         v-if="editMode"
                         icon="times"
                         class="action remove me-3"
+                        role="button"
+                        aria-hidden="false"
+                        :aria-label="$t('removeGroupNamed', [group.element.name])"
                         @click="removeGroup(group.index)"
                     />
-                    <span class="collapse-toggle" @click="toggleGroup(group.element)">
+                    <span
+                        class="collapse-toggle"
+                        role="button"
+                        :aria-label="$t('showMonitorsIn', [group.element.name])"
+                        :aria-expanded="String(!isGroupCollapsed(group.element))"
+                        @click="toggleGroup(group.element)"
+                    >
                         <font-awesome-icon
                             icon="chevron-down"
                             class="chevron me-2"
@@ -24,6 +34,8 @@
                         :contenteditable="editMode"
                         tag="span"
                         :class="{ 'collapse-toggle': !editMode }"
+                        :role="editMode ? 'textbox' : undefined"
+                        :aria-label="editMode ? $t('groupNameField', [group.element.name]) : undefined"
                         data-testid="group-name"
                         @click="!editMode && toggleGroup(group.element)"
                     />
@@ -40,13 +52,20 @@
                         <Draggable
                             v-model="group.element.monitorList"
                             class="monitor-list"
+                            role="list"
+                            :aria-label="$t('monitorsInGroup', [group.element.name])"
                             group="same-group"
                             :disabled="!editMode"
                             :animation="100"
                             item-key="id"
                         >
                             <template #item="monitor">
-                                <div class="item" data-testid="monitor">
+                                <div
+                                    class="item"
+                                    data-testid="monitor"
+                                    role="listitem"
+                                    :aria-describedby="`public-uptime-${group.element.id}-${monitor.element.id}`"
+                                >
                                     <div class="row">
                                         <div class="col-9 col-xl-6 small-padding">
                                             <div class="info">
@@ -59,6 +78,9 @@
                                                     v-if="editMode"
                                                     icon="times"
                                                     class="action remove me-3"
+                                                    role="button"
+                                                    aria-hidden="false"
+                                                    :aria-label="$t('removeMonitorFromPage', [monitor.element.name])"
                                                     @click="removeMonitor(group.index, monitor.index)"
                                                 />
 
@@ -67,14 +89,24 @@
                                                     icon="cog"
                                                     class="action me-3 ms-0"
                                                     :class="{ 'link-active': true, 'btn-link': true }"
+                                                    role="button"
+                                                    aria-hidden="false"
+                                                    :aria-label="$t('settingsForMonitor', [monitor.element.name])"
                                                     data-testid="monitor-settings"
                                                     @click="$refs.monitorSettingDialog.show(group, monitor)"
                                                 />
                                                 <Status
                                                     v-if="showOnlyLastHeartbeat"
+                                                    :id="`public-uptime-${group.element.id}-${monitor.element.id}`"
                                                     :status="statusOfLastHeartbeat(monitor.element.id)"
                                                 />
-                                                <Uptime v-else :monitor="monitor.element" type="24" :pill="true" />
+                                                <Uptime
+                                                    v-else
+                                                    :id="`public-uptime-${group.element.id}-${monitor.element.id}`"
+                                                    :monitor="monitor.element"
+                                                    type="24"
+                                                    :pill="true"
+                                                />
                                                 <a
                                                     v-if="showLink(monitor)"
                                                     :href="monitor.element.url"

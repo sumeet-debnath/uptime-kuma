@@ -5,6 +5,7 @@
             v-model="model"
             :type="visibility"
             class="form-control"
+            :aria-labelledby="labelId"
             :placeholder="placeholder"
             :maxlength="maxlength"
             :autocomplete="autocomplete"
@@ -12,11 +13,27 @@
             :readonly="readonly"
         />
 
-        <a v-if="visibility == 'password'" class="btn btn-outline-primary" @click="showInput()">
+        <a
+            v-if="visibility == 'password'"
+            class="btn btn-outline-primary"
+            role="button"
+            :aria-labelledby="labelId ? `${uid}-show ${labelId}` : undefined"
+            :aria-label="labelId ? undefined : $t('showValue')"
+            @click="showInput()"
+        >
             <font-awesome-icon icon="eye" />
+            <span :id="`${uid}-show`" hidden>{{ $t("showValue") }}</span>
         </a>
-        <a v-if="visibility == 'text'" class="btn btn-outline-primary" @click="hideInput()">
+        <a
+            v-if="visibility == 'text'"
+            class="btn btn-outline-primary"
+            role="button"
+            :aria-labelledby="labelId ? `${uid}-hide ${labelId}` : undefined"
+            :aria-label="labelId ? undefined : $t('hideValue')"
+            @click="hideInput()"
+        >
             <font-awesome-icon icon="eye-slash" />
+            <span :id="`${uid}-hide`" hidden>{{ $t("hideValue") }}</span>
         </a>
     </div>
 </template>
@@ -58,6 +75,8 @@ export default {
     data() {
         return {
             visibility: "password",
+            uid: `hidden-input-${this.$.uid}`,
+            labelId: undefined,
         };
     },
     computed: {
@@ -71,6 +90,15 @@ export default {
         },
     },
     created() {},
+    mounted() {
+        // the <label for> the caller wrote for this field; give it an id to point at, if it has none
+        const id = this.$attrs.id;
+        const label = id ? document.querySelector(`label[for="${CSS.escape(id)}"]`) : null;
+        if (label) {
+            label.id ||= `${id}-label`;
+            this.labelId = label.id;
+        }
+    },
     methods: {
         /**
          * Show users input in plain text

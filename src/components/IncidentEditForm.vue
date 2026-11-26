@@ -12,6 +12,8 @@
             :contenteditable="true"
             :noNL="true"
             class="alert-heading"
+            role="textbox"
+            :aria-label="$t('incidentTitleField')"
             data-testid="incident-title"
             @update:model-value="updateField('title', $event)"
         />
@@ -22,6 +24,9 @@
             tag="div"
             :contenteditable="true"
             class="content"
+            role="textbox"
+            aria-multiline="true"
+            :aria-label="$t('incidentContentField')"
             data-testid="incident-content-editable"
             @update:model-value="updateField('content', $event)"
         />
@@ -30,7 +35,12 @@
         </div>
 
         <div class="mt-3">
-            <button class="btn btn-light me-2" data-testid="post-incident-button" @click="$emit('post')">
+            <button
+                class="btn btn-light me-2"
+                data-testid="post-incident-button"
+                data-agentom-risk="sensitive"
+                @click="$emit('post')"
+            >
                 <font-awesome-icon icon="bullhorn" />
                 {{ $t("Post") }}
             </button>
@@ -47,37 +57,74 @@
                     type="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
+                    aria-haspopup="menu"
                 >
                     {{ $t("Style") }}: {{ $t(modelValue.style) }}
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a class="dropdown-item" href="#" @click.prevent="updateField('style', 'info')">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" role="menu">
+                    <li role="none">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            role="menuitemradio"
+                            :aria-checked="String(modelValue.style === 'info')"
+                            @click.prevent="updateField('style', 'info')"
+                        >
                             {{ $t("info") }}
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="#" @click.prevent="updateField('style', 'warning')">
+                    <li role="none">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            role="menuitemradio"
+                            :aria-checked="String(modelValue.style === 'warning')"
+                            @click.prevent="updateField('style', 'warning')"
+                        >
                             {{ $t("warning") }}
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="#" @click.prevent="updateField('style', 'danger')">
+                    <li role="none">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            role="menuitemradio"
+                            :aria-checked="String(modelValue.style === 'danger')"
+                            @click.prevent="updateField('style', 'danger')"
+                        >
                             {{ $t("danger") }}
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="#" @click.prevent="updateField('style', 'primary')">
+                    <li role="none">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            role="menuitemradio"
+                            :aria-checked="String(modelValue.style === 'primary')"
+                            @click.prevent="updateField('style', 'primary')"
+                        >
                             {{ $t("primary") }}
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="#" @click.prevent="updateField('style', 'light')">
+                    <li role="none">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            role="menuitemradio"
+                            :aria-checked="String(modelValue.style === 'light')"
+                            @click.prevent="updateField('style', 'light')"
+                        >
                             {{ $t("light") }}
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="#" @click.prevent="updateField('style', 'dark')">
+                    <li role="none">
+                        <a
+                            class="dropdown-item"
+                            href="#"
+                            role="menuitemradio"
+                            :aria-checked="String(modelValue.style === 'dark')"
+                            @click.prevent="updateField('style', 'dark')"
+                        >
                             {{ $t("dark") }}
                         </a>
                     </li>

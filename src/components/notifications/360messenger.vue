@@ -43,6 +43,7 @@
         <VueMultiselect
             id="360messenger-group-list"
             v-model="$parent.notification.Whatsapp360messengerGroupIds"
+            v-multiselect-a11y="{ removeLabel: (v) => $t('removeChoice', [v]) }"
             :options="groupOptions"
             :multiple="true"
             :close-on-select="false"

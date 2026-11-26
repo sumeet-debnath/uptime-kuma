@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div data-agentom-screen="not-found" data-agentom-state="ready">
         <!-- Desktop header -->
         <header v-if="!$root.isMobile" class="d-flex flex-wrap justify-content-center py-3 mb-3 border-bottom">
             <router-link
@@ -36,7 +36,9 @@
                 <ul>
                     <li>{{ $t("Retype the address.") }}</li>
                     <li>
-                        <a href="#" class="go-back" @click="goBack()">{{ $t("Go back to the previous page.") }}</a>
+                        <a href="#" class="go-back" role="button" @click="goBack()">
+                            {{ $t("Go back to the previous page.") }}
+                        </a>
                     </li>
                     <li>
                         <a href="/" class="go-back">{{ $t("Go back to home page.") }}</a>

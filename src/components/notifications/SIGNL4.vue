@@ -8,6 +8,7 @@
             pattern="https?://.+"
             class="form-control"
             required
+            data-agentom-redact
         />
         <i18n-t tag="div" keypath="signl4Docs" class="form-text">
             <a href="https://docs.signl4.com/integrations/uptime-kuma/uptime-kuma.html" target="_blank">SIGNL4 Docs</a>

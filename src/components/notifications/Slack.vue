@@ -9,6 +9,7 @@
             v-model="$parent.notification.slackwebhookURL"
             type="text"
             class="form-control"
+            data-agentom-redact
             required
         />
         <label for="slack-username" class="form-label">{{ $t("Username") }}</label>
@@ -18,8 +19,14 @@
         </div>
         <label for="slack-iconemo" class="form-label">{{ $t("Icon Emoji") }}</label>
         <input id="slack-iconemo" v-model="$parent.notification.slackiconemo" type="text" class="form-control" />
-        <label for="slack-channel" class="form-label">{{ $t("Channel Name") }}</label>
-        <input id="slack-channel-name" v-model="$parent.notification.slackchannel" type="text" class="form-control" />
+        <label id="slack-channel-label" for="slack-channel" class="form-label">{{ $t("Channel Name") }}</label>
+        <input
+            id="slack-channel-name"
+            v-model="$parent.notification.slackchannel"
+            type="text"
+            class="form-control"
+            aria-labelledby="slack-channel-label"
+        />
 
         <label class="form-label">{{ $t("Message format") }}</label>
         <div class="form-check form-switch">
@@ -49,8 +56,13 @@
 
         <div class="mb-3">
             <div class="form-check form-switch">
-                <input v-model="$parent.notification.slackUseTemplate" class="form-check-input" type="checkbox" />
-                <label class="form-check-label">{{ $t("slackUseTemplate") }}</label>
+                <input
+                    v-model="$parent.notification.slackUseTemplate"
+                    class="form-check-input"
+                    type="checkbox"
+                    aria-labelledby="slack-use-template-label"
+                />
+                <label id="slack-use-template-label" class="form-check-label">{{ $t("slackUseTemplate") }}</label>
             </div>
             <div class="form-text">
                 {{ $t("slackUseTemplateDescription") }}

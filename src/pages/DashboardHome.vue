@@ -7,31 +7,54 @@
 
             <div class="shadow-box big-padding text-center mb-3">
                 <div class="row">
-                    <div class="col">
-                        <h3>{{ $t("Up") }}</h3>
-                        <span class="num" :class="$root.stats.up === 0 && 'text-secondary'">
+                    <div class="col" role="group" aria-labelledby="stat-up-label" aria-describedby="stat-up-value">
+                        <h3 id="stat-up-label">{{ $t("Up") }}</h3>
+                        <span id="stat-up-value" class="num" :class="$root.stats.up === 0 && 'text-secondary'">
                             {{ $root.stats.up }}
                         </span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Down") }}</h3>
-                        <span class="num" :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'">
+                    <div class="col" role="group" aria-labelledby="stat-down-label" aria-describedby="stat-down-value">
+                        <h3 id="stat-down-label">{{ $t("Down") }}</h3>
+                        <span
+                            id="stat-down-value"
+                            class="num"
+                            :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'"
+                        >
                             {{ $root.stats.down }}
                         </span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Maintenance") }}</h3>
-                        <span class="num" :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'">
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-maintenance-label"
+                        aria-describedby="stat-maintenance-value"
+                    >
+                        <h3 id="stat-maintenance-label">{{ $t("Maintenance") }}</h3>
+                        <span
+                            id="stat-maintenance-value"
+                            class="num"
+                            :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'"
+                        >
                             {{ $root.stats.maintenance }}
                         </span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Unknown") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.unknown }}</span>
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-unknown-label"
+                        aria-describedby="stat-unknown-value"
+                    >
+                        <h3 id="stat-unknown-label">{{ $t("Unknown") }}</h3>
+                        <span id="stat-unknown-value" class="num text-secondary">{{ $root.stats.unknown }}</span>
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("pauseDashboardHome") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.pause }}</span>
+                    <div
+                        class="col"
+                        role="group"
+                        aria-labelledby="stat-paused-label"
+                        aria-describedby="stat-paused-value"
+                    >
+                        <h3 id="stat-paused-label">{{ $t("pauseDashboardHome") }}</h3>
+                        <span id="stat-paused-value" class="num text-secondary">{{ $root.stats.pause }}</span>
                     </div>
                 </div>
             </div>
@@ -40,6 +63,8 @@
                 <div class="mb-3 text-end">
                     <button
                         class="btn btn-sm btn-outline-danger"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
                         :disabled="clearingAllEvents"
                         @click="clearAllEventsDialog"
                     >
@@ -47,6 +72,9 @@
                     </button>
                 </div>
                 <table class="table table-borderless table-hover">
+                    <caption class="visually-hidden">
+                        {{ $t("importantEventsCaption", { page, pages: pageCount }) }}
+                    </caption>
                     <thead>
                         <tr>
                             <th v-if="showGroupColumn">{{ $t("Group Name") }}</th>
@@ -89,7 +117,15 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-center kuma_pagination">
+                <div
+                    v-pagination-a11y="{
+                        label: $t('eventsPages'),
+                        previous: $t('previousEventsPage'),
+                        next: $t('nextEventsPage'),
+                        page: (n) => $t('eventsPageN', [n]),
+                    }"
+                    class="d-flex justify-content-center kuma_pagination"
+                >
                     <pagination
                         v-model="page"
                         :records="importantHeartBeatListLength"
@@ -103,6 +139,7 @@
     <Confirm
         ref="confirmClearEvents"
         btn-style="btn-danger"
+        yes-risk="destructive"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
         @yes="clearAllEvents"
@@ -146,6 +183,9 @@ export default {
         };
     },
     computed: {
+        pageCount() {
+            return Math.max(1, Math.ceil(this.importantHeartBeatListLength / this.perPage));
+        },
         showGroupColumn() {
             return Object.values(this.$root.monitorList).some((m) => m.parent != null);
         },

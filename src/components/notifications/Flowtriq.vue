@@ -12,6 +12,7 @@
             required
             autocomplete="false"
             placeholder="https://app.flowtriq.com/api/webhooks/..."
+            data-agentom-redact
         />
     </div>
     <div class="mb-3">

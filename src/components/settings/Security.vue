@@ -17,12 +17,13 @@
                 <h5 class="my-4 settings-subheading">{{ $t("Change Password") }}</h5>
                 <form class="mb-3" @submit.prevent="savePassword">
                     <div class="mb-3">
-                        <label for="current-password" class="form-label">
+                        <label id="security-current-password-label" for="current-password" class="form-label">
                             {{ $t("Current Password") }}
                         </label>
                         <input
                             id="current-password"
                             v-model="password.currentPassword"
+                            aria-labelledby="security-current-password-label"
                             type="password"
                             class="form-control"
                             autocomplete="current-password"
@@ -98,6 +99,8 @@
                         v-if="!settings.disableAuth"
                         id="disableAuth-btn"
                         class="btn btn-primary me-2 mb-2"
+                        data-agentom-risk="sensitive"
+                        data-agentom-confirmation="required"
                         @click="confirmDisableAuth"
                     >
                         {{ $t("Disable Auth") }}
@@ -111,6 +114,7 @@
         <Confirm
             ref="confirmDisableAuth"
             btn-style="btn-danger"
+            yes-risk="sensitive"
             :yes-text="$t('I understand, please disable')"
             :no-text="$t('Leave')"
             @yes="disableAuth"

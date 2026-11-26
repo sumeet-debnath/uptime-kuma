@@ -3,10 +3,15 @@
         <form class="my-4" autocomplete="off" @submit.prevent="saveGeneral">
             <!-- Client side Timezone -->
             <div class="mb-4">
-                <label for="timezone" class="form-label">
+                <label id="display-timezone-label" for="timezone" class="form-label">
                     {{ $t("Display Timezone") }}
                 </label>
-                <select id="timezone" v-model="$root.userTimezone" class="form-select">
+                <select
+                    id="timezone"
+                    v-model="$root.userTimezone"
+                    class="form-select"
+                    aria-labelledby="display-timezone-label"
+                >
                     <option value="auto">{{ $t("Auto") }}: {{ guessTimezone }}</option>
                     <option v-for="(timezone, index) in timezoneList" :key="index" :value="timezone.value">
                         {{ timezone.name }}
@@ -16,10 +21,15 @@
 
             <!-- Server Timezone -->
             <div class="mb-4">
-                <label for="timezone" class="form-label">
+                <label id="server-timezone-label" for="timezone" class="form-label">
                     {{ $t("Server Timezone") }}
                 </label>
-                <select id="timezone" v-model="settings.serverTimezone" class="form-select">
+                <select
+                    id="timezone"
+                    v-model="settings.serverTimezone"
+                    class="form-select"
+                    aria-labelledby="server-timezone-label"
+                >
                     <option value="UTC">UTC</option>
                     <option v-for="(timezone, index) in timezoneList" :key="index" :value="timezone.value">
                         {{ timezone.name }}
@@ -100,7 +110,7 @@
 
             <!-- Primary Base URL -->
             <div class="mb-4">
-                <label class="form-label" for="primaryBaseURL">
+                <label id="primary-base-url-label" class="form-label" for="primaryBaseURL">
                     {{ $t("Primary Base URL") }}
                 </label>
 
@@ -109,6 +119,7 @@
                         id="primaryBaseURL"
                         v-model="settings.primaryBaseURL"
                         class="form-control"
+                        aria-labelledby="primary-base-url-label"
                         name="primaryBaseURL"
                         placeholder="https://"
                         pattern="https?://.+"
@@ -189,7 +200,7 @@
 
             <!-- Chrome Executable -->
             <div class="mb-4">
-                <label class="form-label" for="primaryBaseURL">
+                <label id="chrome-executable-label" class="form-label" for="primaryBaseURL">
                     {{ $t("chromeExecutable") }}
                 </label>
 
@@ -198,6 +209,7 @@
                         id="primaryBaseURL"
                         v-model="settings.chromeExecutable"
                         class="form-control"
+                        aria-labelledby="chrome-executable-label"
                         name="primaryBaseURL"
                         :placeholder="$t('chromeExecutableAutoDetect')"
                     />

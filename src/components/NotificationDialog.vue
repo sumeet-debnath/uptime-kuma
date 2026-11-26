@@ -1,10 +1,10 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="exampleModalLabel" class="modal-title">
+                        <h5 :id="titleId" class="modal-title">
                             {{ $t("Setup Notification") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -115,8 +115,15 @@
                             <hr class="dropdown-divider mb-4" />
 
                             <div class="form-check form-switch">
-                                <input v-model="notification.isDefault" class="form-check-input" type="checkbox" />
-                                <label class="form-check-label">{{ $t("Default enabled") }}</label>
+                                <input
+                                    v-model="notification.isDefault"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    aria-labelledby="notification-default-label"
+                                />
+                                <label id="notification-default-label" class="form-check-label">
+                                    {{ $t("Default enabled") }}
+                                </label>
                             </div>
                             <div class="form-text">
                                 {{ $t("enableDefaultNotificationDescription") }}
@@ -125,8 +132,15 @@
                             <br />
 
                             <div class="form-check form-switch">
-                                <input v-model="notification.applyExisting" class="form-check-input" type="checkbox" />
-                                <label class="form-check-label">{{ $t("Apply on all existing monitors") }}</label>
+                                <input
+                                    v-model="notification.applyExisting"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    aria-labelledby="notification-apply-existing-label"
+                                />
+                                <label id="notification-apply-existing-label" class="form-check-label">
+                                    {{ $t("Apply on all existing monitors") }}
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -136,12 +150,20 @@
                             v-if="id"
                             type="button"
                             class="btn btn-danger"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
                             :disabled="processing"
                             @click="deleteConfirm"
                         >
                             {{ $t("Delete") }}
                         </button>
-                        <button type="button" class="btn btn-warning" :disabled="processing" @click="test">
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            data-agentom-risk="sensitive"
+                            :disabled="processing"
+                            @click="test"
+                        >
                             {{ $t("Test") }}
                         </button>
                         <button type="submit" class="btn btn-primary" :disabled="processing">
@@ -157,6 +179,7 @@
     <Confirm
         ref="confirmDelete"
         btn-style="btn-danger"
+        yes-risk="destructive"
         :yes-text="$t('Yes')"
         :no-text="$t('No')"
         @yes="deleteNotification"
@@ -179,6 +202,7 @@ export default {
     emits: ["added"],
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             model: null,
             processing: false,
             id: null,
@@ -461,7 +485,7 @@ export default {
         submit() {
             this.processing = true;
             this.$root.getSocket().emit("addNotification", this.notification, this.id, (res) => {
-                this.$root.toastRes(res);
+                this.$root.toastRes(res, this.$t("toastAboutNotification", [this.notification.name]));
                 this.processing = false;
 
                 if (res.ok) {

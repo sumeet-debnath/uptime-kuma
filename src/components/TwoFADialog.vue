@@ -1,10 +1,10 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 :id="titleId" class="modal-title">
                             {{ $t("Setup 2FA") }}
                             <span v-if="twoFAStatus == true" class="badge bg-primary">{{ $t("Active") }}</span>
                             <span v-if="twoFAStatus == false" class="badge bg-primary">{{ $t("Inactive") }}</span>
@@ -39,12 +39,13 @@
                             <p v-if="showURI && twoFAStatus == false" class="text-break mt-2">{{ uri }}</p>
 
                             <div v-if="!(uri && twoFAStatus == false)" class="mb-3">
-                                <label for="current-password" class="form-label">
+                                <label id="twofa-current-password-label" for="current-password" class="form-label">
                                     {{ $t("Current Password") }}
                                 </label>
                                 <input
                                     id="current-password"
                                     v-model="currentPassword"
+                                    aria-labelledby="twofa-current-password-label"
                                     type="password"
                                     class="form-control"
                                     autocomplete="current-password"
@@ -137,6 +138,7 @@ export default {
     props: {},
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             currentPassword: "",
             processing: false,
             uri: null,

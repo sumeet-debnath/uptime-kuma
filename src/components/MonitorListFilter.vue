@@ -1,5 +1,9 @@
 <template>
-    <MonitorListFilterDropdown :filterActive="filterState.status?.length > 0 || filterState.active?.length > 0">
+    <MonitorListFilterDropdown
+        :filterActive="filterState.status?.length > 0 || filterState.active?.length > 0"
+        :menu-label="$t('filterByStatus')"
+        :button-label="statusButtonLabel"
+    >
         <template #status>
             <Status
                 v-if="filterState.status?.length === 1 && !filterState.active?.length"
@@ -18,11 +22,19 @@
             </span>
         </template>
         <template #dropdown>
-            <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(1)">
+            <li role="none">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="menuitemcheckbox"
+                    :aria-checked="String(!!filterState.status?.includes(1))"
+                    aria-labelledby="status-filter-1"
+                    aria-describedby="status-filter-1-count"
+                    @click.stop="toggleStatusFilter(1)"
+                >
                     <div class="d-flex align-items-center justify-content-between">
-                        <Status :status="1" />
-                        <span class="ps-3">
+                        <Status id="status-filter-1" :status="1" />
+                        <span id="status-filter-1-count" class="ps-3">
                             {{ $root.stats.up }}
                             <span v-if="filterState.status?.includes(1)" class="px-1 filter-active">
                                 <font-awesome-icon icon="check" />
@@ -31,11 +43,19 @@
                     </div>
                 </div>
             </li>
-            <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(0)">
+            <li role="none">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="menuitemcheckbox"
+                    :aria-checked="String(!!filterState.status?.includes(0))"
+                    aria-labelledby="status-filter-0"
+                    aria-describedby="status-filter-0-count"
+                    @click.stop="toggleStatusFilter(0)"
+                >
                     <div class="d-flex align-items-center justify-content-between">
-                        <Status :status="0" />
-                        <span class="ps-3">
+                        <Status id="status-filter-0" :status="0" />
+                        <span id="status-filter-0-count" class="ps-3">
                             {{ $root.stats.down }}
                             <span v-if="filterState.status?.includes(0)" class="px-1 filter-active">
                                 <font-awesome-icon icon="check" />
@@ -44,11 +64,19 @@
                     </div>
                 </div>
             </li>
-            <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(2)">
+            <li role="none">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="menuitemcheckbox"
+                    :aria-checked="String(!!filterState.status?.includes(2))"
+                    aria-labelledby="status-filter-2"
+                    aria-describedby="status-filter-2-count"
+                    @click.stop="toggleStatusFilter(2)"
+                >
                     <div class="d-flex align-items-center justify-content-between">
-                        <Status :status="2" />
-                        <span class="ps-3">
+                        <Status id="status-filter-2" :status="2" />
+                        <span id="status-filter-2-count" class="ps-3">
                             {{ $root.stats.pending }}
                             <span v-if="filterState.status?.includes(2)" class="px-1 filter-active">
                                 <font-awesome-icon icon="check" />
@@ -57,11 +85,19 @@
                     </div>
                 </div>
             </li>
-            <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(3)">
+            <li role="none">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="menuitemcheckbox"
+                    :aria-checked="String(!!filterState.status?.includes(3))"
+                    aria-labelledby="status-filter-3"
+                    aria-describedby="status-filter-3-count"
+                    @click.stop="toggleStatusFilter(3)"
+                >
                     <div class="d-flex align-items-center justify-content-between">
-                        <Status :status="3" />
-                        <span class="ps-3">
+                        <Status id="status-filter-3" :status="3" />
+                        <span id="status-filter-3-count" class="ps-3">
                             {{ $root.stats.maintenance }}
                             <span v-if="filterState.status?.includes(3)" class="px-1 filter-active">
                                 <font-awesome-icon icon="check" />
@@ -70,17 +106,25 @@
                     </div>
                 </div>
             </li>
-            <li>
+            <li role="none">
                 <hr class="dropdown-divider" />
             </li>
-            <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(true)">
+            <li role="none">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="menuitemcheckbox"
+                    :aria-checked="String(!!filterState.active?.includes(true))"
+                    aria-labelledby="status-filter-running"
+                    aria-describedby="status-filter-running-count"
+                    @click.stop="toggleActiveFilter(true)"
+                >
                     <div class="d-flex align-items-center justify-content-between">
-                        <span class="badge status-pill running">
+                        <span id="status-filter-running" class="badge status-pill running">
                             <font-awesome-icon icon="play" class="icon-small" />
                             {{ $t("Running") }}
                         </span>
-                        <span class="ps-3">
+                        <span id="status-filter-running-count" class="ps-3">
                             {{ $root.stats.active }}
                             <span v-if="filterState.active?.includes(true)" class="px-1 filter-active">
                                 <font-awesome-icon icon="check" />
@@ -89,14 +133,22 @@
                     </div>
                 </div>
             </li>
-            <li>
-                <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(false)">
+            <li role="none">
+                <div
+                    class="dropdown-item"
+                    tabindex="0"
+                    role="menuitemcheckbox"
+                    :aria-checked="String(!!filterState.active?.includes(false))"
+                    aria-labelledby="status-filter-paused"
+                    aria-describedby="status-filter-paused-count"
+                    @click.stop="toggleActiveFilter(false)"
+                >
                     <div class="d-flex align-items-center justify-content-between">
-                        <span class="badge status-pill paused">
+                        <span id="status-filter-paused" class="badge status-pill paused">
                             <font-awesome-icon icon="pause" class="icon-small" />
                             {{ $t("filterActivePaused") }}
                         </span>
-                        <span class="ps-3">
+                        <span id="status-filter-paused-count" class="ps-3">
                             {{ $root.stats.pause }}
                             <span v-if="filterState.active?.includes(false)" class="px-1 filter-active">
                                 <font-awesome-icon icon="check" />
@@ -107,7 +159,12 @@
             </li>
         </template>
     </MonitorListFilterDropdown>
-    <MonitorListFilterDropdown :filterActive="filterState.tags?.length > 0" @open-menu="getExistingTags">
+    <MonitorListFilterDropdown
+        :filterActive="filterState.tags?.length > 0"
+        :menu-label="$t('filterByTag')"
+        :button-label="tagButtonLabel"
+        @open-menu="getExistingTags"
+    >
         <template #status>
             <span
                 v-if="filterState.tags?.length === 1"
@@ -121,16 +178,30 @@
             </span>
         </template>
         <template #dropdown>
-            <li class="list-unstyled m-0 p-0">
-                <div class="tags-dropdown-scroll">
-                    <ul class="list-unstyled m-0 p-0">
-                        <li v-for="tag in tagsList" :key="tag.id">
-                            <div class="dropdown-item" tabindex="0" @click.stop="toggleTagFilter(tag)">
+            <li class="list-unstyled m-0 p-0" role="none">
+                <div class="tags-dropdown-scroll" role="none">
+                    <ul class="list-unstyled m-0 p-0" role="none">
+                        <li v-for="tag in tagsList" :key="tag.id" role="none">
+                            <div
+                                class="dropdown-item"
+                                tabindex="0"
+                                role="menuitemcheckbox"
+                                :aria-checked="String(!!filterState.tags?.includes(tag.id))"
+                                :aria-labelledby="`tag-filter-${tag.id}`"
+                                :aria-describedby="`tag-filter-${tag.id}-count`"
+                                @click.stop="toggleTagFilter(tag)"
+                            >
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="tag-name-wrapper" :title="tag.name">
-                                        <Tag :item="tag" :size="'sm'" :scrollable="true" :constrained="true" />
+                                        <Tag
+                                            :id="`tag-filter-${tag.id}`"
+                                            :item="tag"
+                                            :size="'sm'"
+                                            :scrollable="true"
+                                            :constrained="true"
+                                        />
                                     </span>
-                                    <span class="ps-3">
+                                    <span :id="`tag-filter-${tag.id}-count`" class="ps-3">
                                         {{ getTaggedMonitorCount(tag) }}
                                         <span v-if="filterState.tags?.includes(tag.id)" class="px-1 filter-active">
                                             <font-awesome-icon icon="check" />
@@ -139,7 +210,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li v-if="tagsList.length === 0">
+                        <li v-if="tagsList.length === 0" role="none">
                             <div class="dropdown-item disabled px-3">
                                 {{ $t("No tags found.") }}
                             </div>
@@ -192,6 +263,31 @@ export default {
         };
     },
     computed: {
+        // the Status button's name when it shows one chosen status: "Down, Status filter"
+        statusButtonLabel() {
+            const words = {
+                0: this.$t("Down"),
+                1: this.$t("Up"),
+                2: this.$t("Pending"),
+                3: this.$t("statusMaintenance"),
+            };
+            if (this.filterState.status?.length === 1 && !this.filterState.active?.length) {
+                return this.$t("chosenFilterAria", [words[this.filterState.status[0]], this.$t("Status")]);
+            }
+            if (!this.filterState.status?.length && this.filterState.active?.length === 1) {
+                const word = this.filterState.active[0] ? this.$t("Running") : this.$t("filterActivePaused");
+                return this.$t("chosenFilterAria", [word, this.$t("Status")]);
+            }
+            return undefined;
+        },
+        // the Tags button's name when it shows one chosen tag
+        tagButtonLabel() {
+            if (this.filterState.tags?.length === 1) {
+                const tag = this.tagsList.find((t) => t.id === this.filterState.tags[0]);
+                return tag ? this.$t("chosenFilterAria", [tag.name, this.$t("Tags")]) : undefined;
+            }
+            return undefined;
+        },
         numFiltersActive() {
             let num = 0;
 

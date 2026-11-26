@@ -8,6 +8,7 @@
             pattern="https?://.+"
             class="form-control"
             required
+            data-agentom-redact
         />
         <div class="form-text">
             <i18n-t tag="p" keypath="Read more:">

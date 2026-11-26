@@ -21,6 +21,7 @@ import timezone from "./modules/dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { loadToastSettings } from "./util-frontend";
+import { multiselectA11y, paginationA11y, datepickerA11y, prismA11y, datepickerMenuA11y } from "./a11y-attributes";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
@@ -37,6 +38,11 @@ const app = createApp({
 
 app.use(router);
 app.use(i18n);
+app.directive("multiselect-a11y", multiselectA11y);
+app.directive("pagination-a11y", paginationA11y);
+app.directive("datepicker-a11y", datepickerA11y);
+app.directive("prism-a11y", prismA11y);
+datepickerMenuA11y(i18n.global.t);
 
 app.use(Toast, loadToastSettings());
 app.component("Editable", contenteditable);

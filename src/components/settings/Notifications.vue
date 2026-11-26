@@ -12,7 +12,14 @@
                 <li v-for="(notification, index) in $root.notificationList" :key="index" class="list-group-item">
                     {{ notification.name }}
                     <br />
-                    <a href="#" @click="$refs.notificationDialog.show(notification.id)">{{ $t("Edit") }}</a>
+                    <a
+                        href="#"
+                        role="button"
+                        :aria-label="$t('editNamed', [notification.name])"
+                        @click="$refs.notificationDialog.show(notification.id)"
+                    >
+                        {{ $t("Edit") }}
+                    </a>
                 </li>
             </ul>
 
@@ -68,7 +75,7 @@
                     <button
                         type="button"
                         class="btn-rm-expiry btn btn-outline-danger ms-2 py-1"
-                        :aria-label="$t('Remove the expiry notification')"
+                        :aria-label="$t('removeExpiryDay', [$t('days', day), $t('settingsCertificateExpiry')])"
                         @click="removeTlsExpiryNotifDay(day)"
                     >
                         <font-awesome-icon icon="times" />
@@ -80,13 +87,19 @@
                     v-model="tlsExpiryNotifInput"
                     :type="'number'"
                     :placeholder="$t('days', 1)"
+                    :input-aria-label="$t('newExpiryDay', [$t('settingsCertificateExpiry')])"
                     :icon="'plus'"
                     :action="() => addTlsExpiryNotifDay(tlsExpiryNotifInput)"
-                    :action-aria-label="$t('Add a new expiry notification day')"
+                    :action-aria-label="$t('addExpiryDayFor', [$t('settingsCertificateExpiry')])"
                 />
             </div>
             <div>
-                <button class="btn btn-primary" type="button" @click="saveSettings()">
+                <button
+                    class="btn btn-primary"
+                    type="button"
+                    :aria-label="$t('saveExpiryDays', [$t('settingsCertificateExpiry')])"
+                    @click="saveSettings()"
+                >
                     {{ $t("Save") }}
                 </button>
             </div>
@@ -106,7 +119,7 @@
                     <button
                         type="button"
                         class="btn-rm-expiry btn btn-outline-danger ms-2 py-1"
-                        :aria-label="$t('Remove the expiry notification')"
+                        :aria-label="$t('removeExpiryDay', [$t('days', day), $t('settingsDomainExpiry')])"
                         @click="removeDomainExpiryNotifDay(day)"
                     >
                         <font-awesome-icon icon="times" />
@@ -118,13 +131,19 @@
                     v-model="domainExpiryNotifInput"
                     :type="'number'"
                     :placeholder="$t('days', 1)"
+                    :input-aria-label="$t('newExpiryDay', [$t('settingsDomainExpiry')])"
                     :icon="'plus'"
                     :action="() => addDomainExpiryNotifDay(domainExpiryNotifInput)"
-                    :action-aria-label="$t('Add a new expiry notification day')"
+                    :action-aria-label="$t('addExpiryDayFor', [$t('settingsDomainExpiry')])"
                 />
             </div>
             <div>
-                <button class="btn btn-primary" type="button" @click="saveSettings()">
+                <button
+                    class="btn btn-primary"
+                    type="button"
+                    :aria-label="$t('saveExpiryDays', [$t('settingsDomainExpiry')])"
+                    @click="saveSettings()"
+                >
                     {{ $t("Save") }}
                 </button>
             </div>

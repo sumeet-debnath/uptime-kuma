@@ -7,38 +7,48 @@
             </button>
         </div>
 
-        <div class="tags-list my-3">
-            <div
-                v-for="(tag, index) in tagsList"
-                :key="tag.id"
-                class="d-flex align-items-center mx-0 mx-lg-4 py-1 tags-list-row"
-                :disabled="processing"
-                @click="editTag(index)"
-            >
-                <div class="flex-grow-1 overflow-hidden pe-3">
-                    <Tag :item="tag" :title="tag.name" :scrollable="true" :constrained="true" />
-                </div>
+        <div class="tags-list my-3" role="list">
+            <div v-for="(tag, index) in tagsList" :key="tag.id" role="listitem" style="display: contents">
+                <div
+                    class="d-flex align-items-center mx-0 mx-lg-4 py-1 tags-list-row"
+                    :disabled="processing"
+                    @click="editTag(index)"
+                >
+                    <div class="flex-grow-1 overflow-hidden pe-3">
+                        <Tag :item="tag" :title="tag.name" :scrollable="true" :constrained="true" />
+                    </div>
 
-                <div class="flex-shrink-0 px-1">
-                    <span class="d-none d-lg-inline">{{ $t("Monitors", monitorsByTag(tag.id).length) }}</span>
-                    <span class="d-lg-none">{{ monitorsByTag(tag.id).length }} M</span>
-                </div>
+                    <div class="flex-shrink-0 px-1">
+                        <span class="d-none d-lg-inline">{{ $t("Monitors", monitorsByTag(tag.id).length) }}</span>
+                        <span class="d-lg-none">{{ monitorsByTag(tag.id).length }} M</span>
+                    </div>
 
-                <div class="flex-shrink-0 pe-2 pe-lg-3">
-                    <button
-                        type="button"
-                        class="btn-rm-tag btn btn-outline-danger ms-2 py-1"
-                        :disabled="processing"
-                        @click.stop="deleteConfirm(index)"
-                    >
-                        <font-awesome-icon class="" icon="trash" />
-                    </button>
+                    <div class="flex-shrink-0 pe-2 pe-lg-3">
+                        <button
+                            type="button"
+                            class="btn-rm-tag btn btn-outline-danger ms-2 py-1"
+                            :aria-label="$t('deleteTagAria', [tag.name])"
+                            data-agentom-risk="destructive"
+                            data-agentom-confirmation="required"
+                            :disabled="processing"
+                            @click.stop="deleteConfirm(index)"
+                        >
+                            <font-awesome-icon class="" icon="trash" />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <TagEditDialog ref="tagEditDialog" :updated="tagsUpdated" :existing-tags="tagsList" />
-        <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteTag">
+        <Confirm
+            ref="confirmDelete"
+            btn-style="btn-danger"
+            yes-risk="destructive"
+            :yes-text="$t('Yes')"
+            :no-text="$t('No')"
+            @yes="deleteTag"
+        >
             {{ $t("confirmDeleteTagMsg") }}
         </Confirm>
     </div>

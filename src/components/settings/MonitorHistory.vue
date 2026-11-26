@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="my-4">
-            <label for="keepDataPeriodDays" class="form-label">
+            <label id="keep-data-period-desc" for="keepDataPeriodDays" class="form-label">
                 {{ $t("clearDataOlderThan", [settings.keepDataPeriodDays]) }}
                 {{ $t("infiniteRetention") }}
             </label>
@@ -10,6 +10,8 @@
                 v-model="settings.keepDataPeriodDays"
                 type="number"
                 class="form-control"
+                :aria-label="$t('keepHistoryDays')"
+                aria-describedby="keep-data-period-desc"
                 required
                 min="0"
                 step="1"
@@ -37,13 +39,20 @@
                     </template>
                 </i18n-t>
             </div>
-            <button id="clearAllStats-btn" class="btn btn-outline-danger me-2 mb-2" @click="confirmClearStatistics">
+            <button
+                id="clearAllStats-btn"
+                class="btn btn-outline-danger me-2 mb-2"
+                data-agentom-risk="destructive"
+                data-agentom-confirmation="required"
+                @click="confirmClearStatistics"
+            >
                 {{ $t("Clear all statistics") }}
             </button>
         </div>
         <Confirm
             ref="confirmClearStatistics"
             btn-style="btn-danger"
+            yes-risk="destructive"
             :yes-text="$t('Yes')"
             :no-text="$t('No')"
             @yes="clearStatistics"

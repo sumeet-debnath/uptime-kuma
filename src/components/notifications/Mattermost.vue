@@ -10,6 +10,7 @@
             type="text"
             class="form-control"
             required
+            data-agentom-redact
         />
         <label for="mattermost-username" class="form-label">{{ $t("Username") }}</label>
         <input

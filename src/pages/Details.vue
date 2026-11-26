@@ -101,7 +101,7 @@
                     }}
                 </span>
                 <span v-if="monitor.type === 'postgres'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
-                <span v-if="monitor.type === 'push'">
+                <span v-if="monitor.type === 'push'" data-agentom-ignore>
                     Push:
                     <a :href="pushURL" target="_blank" rel="noopener noreferrer">{{ pushURL }}</a>
                 </span>
@@ -117,7 +117,13 @@
 
             <div class="functions">
                 <div class="btn-group" role="group">
-                    <button v-if="monitor.active" class="btn btn-normal" @click="pauseDialog">
+                    <button
+                        v-if="monitor.active"
+                        class="btn btn-normal"
+                        data-agentom-risk="sensitive"
+                        data-agentom-confirmation="required"
+                        @click="pauseDialog"
+                    >
                         <font-awesome-icon icon="pause" />
                         {{ $t("Pause") }}
                     </button>
@@ -138,7 +144,12 @@
                         <font-awesome-icon icon="clone" />
                         {{ $t("Clone") }}
                     </router-link>
-                    <button class="btn btn-normal text-danger" @click="deleteDialog">
+                    <button
+                        class="btn btn-normal text-danger"
+                        data-agentom-risk="destructive"
+                        data-agentom-confirmation="required"
+                        @click="deleteDialog"
+                    >
                         <font-awesome-icon icon="trash" />
                         {{ $t("Delete") }}
                     </button>
@@ -195,6 +206,7 @@
 
                         <prism-editor
                             v-model="pushMonitor.code"
+                            data-agentom-ignore
                             class="css-editor mt-3"
                             :highlight="pushExampleHighlighter"
                             line-numbers
@@ -210,61 +222,93 @@
                     <div
                         v-if="monitor.type !== 'group'"
                         class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-ping-title stat-ping-period"
+                        aria-describedby="stat-ping-value"
                     >
-                        <h4 class="col-4 col-sm-12">{{ pingTitle() }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("Current") }})</p>
+                        <h4 id="stat-ping-title" class="col-4 col-sm-12">{{ pingTitle() }}</h4>
+                        <p id="stat-ping-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("Current") }})</p>
                         <span class="col-4 col-sm-12 num">
-                            <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                <CountUp :value="ping" />
+                            <a
+                                href="#"
+                                role="button"
+                                :aria-expanded="String(showPingChartBox)"
+                                @click.prevent="showPingChartBox = !showPingChartBox"
+                            >
+                                <span id="stat-ping-value" style="display: contents"><CountUp :value="ping" /></span>
                             </a>
                         </span>
                     </div>
                     <div
                         v-if="monitor.type !== 'group'"
                         class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-avg-ping-title stat-avg-ping-period"
+                        aria-describedby="stat-avg-ping-value"
                     >
-                        <h4 class="col-4 col-sm-12">{{ pingTitle(true) }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                        <h4 id="stat-avg-ping-title" class="col-4 col-sm-12">{{ pingTitle(true) }}</h4>
+                        <p id="stat-avg-ping-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
+                        <span id="stat-avg-ping-value" class="col-4 col-sm-12 num">
                             <CountUp :value="avgPing" />
                         </span>
                     </div>
 
                     <!-- Uptime (24-hour) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                    <div
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-uptime-24h-title stat-uptime-24h-period"
+                        aria-describedby="stat-uptime-24h-value"
+                    >
+                        <h4 id="stat-uptime-24h-title" class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p id="stat-uptime-24h-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
+                        <span id="stat-uptime-24h-value" class="col-4 col-sm-12 num">
                             <Uptime :monitor="monitor" type="24" />
                         </span>
                     </div>
 
                     <!-- Uptime (30-day) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("days", 30) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                    <div
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-uptime-30d-title stat-uptime-30d-period"
+                        aria-describedby="stat-uptime-30d-value"
+                    >
+                        <h4 id="stat-uptime-30d-title" class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p id="stat-uptime-30d-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("days", 30) }})</p>
+                        <span id="stat-uptime-30d-value" class="col-4 col-sm-12 num">
                             <Uptime :monitor="monitor" type="720" />
                         </span>
                     </div>
 
                     <!-- Uptime (1-year) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("years", 1) }})</p>
-                        <span class="col-4 col-sm-12 num">
+                    <div
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-uptime-1y-title stat-uptime-1y-period"
+                        aria-describedby="stat-uptime-1y-value"
+                    >
+                        <h4 id="stat-uptime-1y-title" class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p id="stat-uptime-1y-period" class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("years", 1) }})</p>
+                        <span id="stat-uptime-1y-value" class="col-4 col-sm-12 num">
                             <Uptime :monitor="monitor" type="1y" />
                         </span>
                     </div>
 
-                    <div v-if="tlsInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Cert Exp.") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
+                    <div
+                        v-if="tlsInfo"
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-cert-title stat-cert-period"
+                        aria-describedby="stat-cert-value"
+                    >
+                        <h4 id="stat-cert-title" class="col-4 col-sm-12">{{ $t("Cert Exp.") }}</h4>
+                        <p id="stat-cert-period" class="col-4 col-sm-12 mb-0 mb-sm-2">
                             (
                             <Datetime :value="tlsInfo.certInfo.validTo" date-only />
                             )
                         </p>
-                        <span class="col-4 col-sm-12 num">
+                        <span id="stat-cert-value" class="col-4 col-sm-12 num">
                             <a href="#" @click.prevent="toggleCertInfoBox = !toggleCertInfoBox">
                                 {{ $t("days", tlsInfo.certInfo.daysRemaining) }}
                             </a>
@@ -276,14 +320,20 @@
                             />
                         </span>
                     </div>
-                    <div v-if="domainInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("labelDomainExpiry") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
+                    <div
+                        v-if="domainInfo"
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                        role="group"
+                        aria-labelledby="stat-domain-title stat-domain-period"
+                        aria-describedby="stat-domain-value"
+                    >
+                        <h4 id="stat-domain-title" class="col-4 col-sm-12">{{ $t("labelDomainExpiry") }}</h4>
+                        <p id="stat-domain-period" class="col-4 col-sm-12 mb-0 mb-sm-2">
                             (
                             <Datetime :value="domainInfo.expiresOn" date-only />
                             )
                         </p>
-                        <span class="col-4 col-sm-12 num">
+                        <span id="stat-domain-value" class="col-4 col-sm-12 num">
                             {{ $t("days", domainInfo.daysRemaining) }}
                         </span>
                     </div>
@@ -302,7 +352,13 @@
             </transition>
 
             <!-- Ping Chart -->
-            <div v-if="showPingChartBox" class="shadow-box big-padding text-center ping-chart-wrapper">
+            <div
+                v-if="showPingChartBox"
+                class="shadow-box big-padding text-center ping-chart-wrapper"
+                role="group"
+                :aria-label="$t('responseTimeChart')"
+                aria-describedby="ping-chart-summary"
+            >
                 <div class="row">
                     <div class="col">
                         <PingChart :monitor-id="monitor.id" />
@@ -337,18 +393,33 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <button type="button" class="dropdown-item" @click="clearEventsDialog">
+                            <button
+                                type="button"
+                                class="dropdown-item"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
+                                @click="clearEventsDialog"
+                            >
                                 {{ $t("Events") }}
                             </button>
                         </li>
                         <li>
-                            <button type="button" class="dropdown-item" @click="clearHeartbeatsDialog">
+                            <button
+                                type="button"
+                                class="dropdown-item"
+                                data-agentom-risk="destructive"
+                                data-agentom-confirmation="required"
+                                @click="clearHeartbeatsDialog"
+                            >
                                 {{ $t("Heartbeats") }}
                             </button>
                         </li>
                     </ul>
                 </div>
                 <table class="table table-borderless table-hover">
+                    <caption class="visually-hidden">
+                        {{ $t("monitorEventsCaption", { name: monitor.name, page, pages: pageCount }) }}
+                    </caption>
                     <thead>
                         <tr>
                             <th>{{ $t("Status") }}</th>
@@ -373,7 +444,15 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-center kuma_pagination">
+                <div
+                    v-pagination-a11y="{
+                        label: $t('eventsPages'),
+                        previous: $t('previousEventsPage'),
+                        next: $t('nextEventsPage'),
+                        page: (n) => $t('eventsPageN', [n]),
+                    }"
+                    class="d-flex justify-content-center kuma_pagination"
+                >
                     <pagination
                         v-model="page"
                         :records="importantHeartBeatListLength"
@@ -383,13 +462,20 @@
                 </div>
             </div>
 
-            <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="pauseMonitor">
+            <Confirm
+                ref="confirmPause"
+                yes-risk="sensitive"
+                :yes-text="$t('Yes')"
+                :no-text="$t('No')"
+                @yes="pauseMonitor"
+            >
                 {{ $t("pauseMonitorMsg") }}
             </Confirm>
 
             <Confirm
                 ref="confirmDelete"
                 btn-style="btn-danger"
+                yes-risk="destructive"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
                 @yes="deleteMonitor"
@@ -416,6 +502,7 @@
             <Confirm
                 ref="confirmClearEvents"
                 btn-style="btn-danger"
+                yes-risk="destructive"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
                 @yes="clearEvents"
@@ -426,12 +513,16 @@
             <Confirm
                 ref="confirmClearHeartbeats"
                 btn-style="btn-danger"
+                yes-risk="destructive"
                 :yes-text="$t('Yes')"
                 :no-text="$t('No')"
                 @yes="clearHeartbeats"
             >
                 {{ $t("clearHeartbeatsMsg") }}
             </Confirm>
+        </div>
+        <div v-else-if="$root.monitorListLoaded" class="visually-hidden" role="alert">
+            {{ $t("monitorNotFound", [$route.params.id]) }}
         </div>
     </transition>
 </template>
@@ -501,6 +592,9 @@ export default {
         };
     },
     computed: {
+        pageCount() {
+            return Math.max(1, Math.ceil(this.importantHeartBeatListLength / this.perPage));
+        },
         monitor() {
             let id = this.$route.params.id;
             return this.$root.monitorList[id];

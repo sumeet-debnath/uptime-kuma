@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div role="listitem">
         <div
             class="draggable-item"
             :style="depthMargin"
@@ -15,17 +15,24 @@
                 <input
                     class="form-check-input select-input"
                     type="checkbox"
-                    :aria-label="$t('Check/Uncheck')"
+                    :aria-label="$t('selectMonitorAria', [monitor.name])"
                     :checked="isSelected(monitor.id)"
                     @click.stop="toggleSelection"
                 />
             </div>
 
-            <router-link :to="monitorURL(monitor.id)" class="item" :class="{ disabled: !monitor.active }">
+            <router-link
+                :to="monitorURL(monitor.id)"
+                class="item"
+                :class="{ disabled: !monitor.active }"
+                :aria-labelledby="`monitor-name-${monitor.id}`"
+                :aria-describedby="describedBy"
+                :aria-current="currentValue"
+            >
                 <div class="row">
                     <div class="small-padding d-flex gap-2 align-items-center" :class="monitorStyle">
                         <div class="me-1">
-                            <Uptime :monitor="monitor" type="24" :pill="true" />
+                            <Uptime :id="`monitor-uptime-${monitor.id}`" :monitor="monitor" type="24" :pill="true" />
                         </div>
                         <div class="d-flex align-items-center gap-2 flex-fill" style="min-width: 0">
                             <span v-if="hasChildren" class="collapse-padding" @click.prevent="changeCollapsed">
@@ -36,8 +43,12 @@
                                 />
                             </span>
                             <div class="flex-fill text-truncate" style="min-width: 0">
-                                <div class="text-truncate">{{ monitor.name }}</div>
-                                <div v-if="monitor.tags.length > 0" class="tags gap-1">
+                                <div :id="`monitor-name-${monitor.id}`" class="text-truncate">{{ monitor.name }}</div>
+                                <div
+                                    v-if="monitor.tags.length > 0"
+                                    :id="`monitor-tags-${monitor.id}`"
+                                    class="tags gap-1"
+                                >
                                     <Tag
                                         v-for="tag in monitor.tags"
                                         :key="tag"
@@ -54,20 +65,37 @@
                         :key="$root.userHeartbeatBar"
                         class="col-3 col-xl-6"
                     >
-                        <HeartbeatBar ref="heartbeatBar" size="small" :monitor-id="monitor.id" />
+                        <HeartbeatBar
+                            :id="`monitor-beats-${monitor.id}`"
+                            ref="heartbeatBar"
+                            size="small"
+                            :monitor-id="monitor.id"
+                        />
                     </div>
                 </div>
 
                 <div v-if="$root.userHeartbeatBar == 'bottom'" class="row">
                     <div class="col-12 bottom-style">
-                        <HeartbeatBar ref="heartbeatBar" size="small" :monitor-id="monitor.id" />
+                        <HeartbeatBar
+                            :id="`monitor-beats-bottom-${monitor.id}`"
+                            ref="heartbeatBar"
+                            size="small"
+                            :monitor-id="monitor.id"
+                        />
                     </div>
                 </div>
+                <span v-if="!monitor.active" :id="`monitor-paused-${monitor.id}`" hidden>
+                    {{ $t("pausedMonitor") }}
+                </span>
+                <!-- what the chevron shows: a control of its own inside the link would be a control in a control -->
+                <span v-if="hasChildren" :id="`monitor-group-${monitor.id}`" hidden>
+                    {{ $t(isCollapsed ? "groupCollapsed" : "groupExpanded", sortedChildMonitorList.length) }}
+                </span>
             </router-link>
         </div>
 
         <transition name="slide-fade-up">
-            <div v-if="!isCollapsed" class="childs">
+            <div v-if="!isCollapsed" class="childs" role="list" :aria-label="$t('monitorsInGroup', [monitor.name])">
                 <MonitorListItem
                     v-for="(item, index) in sortedChildMonitorList"
                     :key="index"
@@ -147,6 +175,32 @@ export default {
         };
     },
     computed: {
+        describedBy() {
+            const ids = [];
+            if (!this.monitor.active) {
+                ids.push(`monitor-paused-${this.monitor.id}`);
+            }
+            if (this.hasChildren) {
+                ids.push(`monitor-group-${this.monitor.id}`);
+            }
+            ids.push(`monitor-uptime-${this.monitor.id}`);
+            if (this.monitor.tags.length > 0) {
+                ids.push(`monitor-tags-${this.monitor.id}`);
+            }
+            if (this.$root.userHeartbeatBar === "normal") {
+                ids.push(`monitor-beats-${this.monitor.id}`);
+            } else if (this.$root.userHeartbeatBar === "bottom") {
+                ids.push(`monitor-beats-bottom-${this.monitor.id}`);
+            }
+            return ids.join(" ");
+        },
+        // "page" on the monitor's own page (router-link says so there now); "true" on its edit and clone pages
+        currentValue() {
+            if (String(this.$route.params.id) !== String(this.monitor.id)) {
+                return null;
+            }
+            return this.$route.path.startsWith("/dashboard/") ? "page" : "true";
+        },
         sortedChildMonitorList() {
             let result = Object.values(this.$root.monitorList);
 

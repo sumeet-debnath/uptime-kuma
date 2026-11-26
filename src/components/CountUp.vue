@@ -1,6 +1,7 @@
 <template>
-    <span v-if="isNum" ref="output">{{ outputFixed }}</span>
-    <span v-if="isNum">{{ unit }}</span>
+    <span v-if="isNum" ref="output" aria-hidden="true">{{ outputFixed }}</span>
+    <span v-if="isNum" aria-hidden="true">{{ unit }}</span>
+    <span v-if="isNum" class="visually-hidden">{{ settled }}{{ unit }}</span>
     <span v-else>{{ value }}</span>
 </template>
 
@@ -33,6 +34,13 @@ export default {
     },
 
     computed: {
+        // the value the count ends on, formatted as outputFixed formats it
+        settled() {
+            if (this.value < 1) {
+                return "<1";
+            }
+            return Number.isInteger(this.value) ? this.value : this.value.toFixed(2);
+        },
         isNum() {
             return typeof this.value === "number";
         },

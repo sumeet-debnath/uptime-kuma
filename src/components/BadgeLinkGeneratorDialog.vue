@@ -1,9 +1,15 @@
 <template>
-    <div ref="BadgeGeneratorModal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+    <div
+        ref="BadgeGeneratorModal"
+        class="modal fade"
+        tabindex="-1"
+        :aria-labelledby="titleId"
+        data-bs-backdrop="static"
+    >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 :id="titleId" class="modal-title">
                         {{ $t("Badge Link Generator", [monitor.name]) }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -198,7 +204,13 @@
 
                     <div class="my-3">
                         <label for="badge-url" class="form-label">{{ $t("Badge URL") }}</label>
-                        <CopyableInput id="badge-url" v-model="badgeURL" type="url" disabled="disabled" />
+                        <CopyableInput
+                            id="badge-url"
+                            v-model="badgeURL"
+                            type="url"
+                            disabled="disabled"
+                            :copy-label="$t('copyBadgeUrl')"
+                        />
                     </div>
                 </div>
 
@@ -225,6 +237,7 @@ export default {
     emits: [],
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             model: null,
             processing: false,
             monitor: {

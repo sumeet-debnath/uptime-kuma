@@ -1,10 +1,10 @@
 <template>
     <form @submit.prevent="submit">
-        <div ref="keyaddmodal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div ref="keyaddmodal" class="modal fade" tabindex="-1" :aria-labelledby="addTitleId" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 :id="addTitleId" class="modal-title">
                             {{ $t("Add API Key") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -23,6 +23,7 @@
                                 <div class="col-6">
                                     <Datepicker
                                         v-model="key.expires"
+                                        v-datepicker-a11y="{ label: $t('apiKeyExpiryField') }"
                                         :dark="$root.isDark"
                                         :monthChangeOnScroll="false"
                                         :minDate="minDate"
@@ -54,11 +55,11 @@
                 </div>
             </div>
         </div>
-        <div ref="keymodal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+        <div ref="keymodal" class="modal fade" tabindex="-1" :aria-labelledby="keyTitleId" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 :id="keyTitleId" class="modal-title">
                             {{ $t("Key Added") }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -69,7 +70,13 @@
                             {{ $t("apiKeyAddedMsg") }}
                         </div>
                         <div class="mb-3">
-                            <CopyableInput v-model="clearKey" disabled="disabled" />
+                            <CopyableInput
+                                v-model="clearKey"
+                                disabled="disabled"
+                                secret
+                                :aria-label="$t('newApiKeyField')"
+                                :copy-label="$t('copyApiKey')"
+                            />
                         </div>
                     </div>
 
@@ -99,6 +106,8 @@ export default {
     // emits: [ "added" ],
     data() {
         return {
+            addTitleId: `modal-title-${this.$.uid}-add`,
+            keyTitleId: `modal-title-${this.$.uid}-key`,
             keyaddmodal: null,
             keymodal: null,
             processing: false,

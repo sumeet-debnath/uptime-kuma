@@ -8,6 +8,7 @@
             type="url"
             class="form-control"
             required
+            data-agentom-redact
         />
     </div>
     <div class="mb-3">

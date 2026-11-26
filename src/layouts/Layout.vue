@@ -40,14 +40,20 @@
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
-                    <router-link to="/dashboard" class="nav-link">
+                    <router-link to="/dashboard" class="nav-link" :aria-current="dashboardCurrent">
                         <font-awesome-icon icon="tachometer-alt" />
                         {{ $t("Dashboard") }}
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item">
                     <div class="dropdown dropdown-profile-pic">
-                        <div class="nav-link" data-bs-toggle="dropdown">
+                        <div
+                            class="nav-link"
+                            data-bs-toggle="dropdown"
+                            role="button"
+                            aria-expanded="false"
+                            :aria-label="$t('accountMenuAria', [$root.username ?? ''])"
+                        >
                             <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
                             <font-awesome-icon icon="angle-down" />
                         </div>
@@ -125,7 +131,7 @@
             </router-link>
         </header>
 
-        <main>
+        <main :data-agentom-screen="agentomScreen" :data-agentom-state="agentomState">
             <router-view v-if="$root.loggedIn" />
             <Login v-if="!$root.loggedIn && $root.allowLoginDialog" />
         </main>
@@ -158,6 +164,7 @@
             v-if="numActiveToasts != 0"
             type="button"
             class="btn btn-normal clear-all-toast-btn"
+            :aria-label="$t('clearAllNotifications')"
             @click="clearToasts"
         >
             <font-awesome-icon icon="times" />
@@ -185,6 +192,27 @@ export default {
     },
 
     computed: {
+        // "page" on the dashboard itself (as router-link says now), "true" on a monitor's pages under it
+        dashboardCurrent() {
+            if (this.$route.path === "/dashboard") {
+                return "page";
+            }
+            return /^\/(dashboard|edit)\//.test(this.$route.path) ? "true" : null;
+        },
+        agentomScreen() {
+            return this.$root.loggedIn ? this.$route.meta.screen : "sign-in";
+        },
+        agentomState() {
+            if (!this.$root.loggedIn) {
+                return this.$root.allowLoginDialog ? "ready" : "loading";
+            }
+            if (!this.$root.socket.connected || !this.$root.monitorListLoaded) {
+                return "loading";
+            }
+            const id = this.$route.params.id;
+            const monitorPage = ["monitor.details", "monitor.edit", "monitor.clone"].includes(this.$route.meta.screen);
+            return monitorPage && !this.$root.monitorList[id] ? "error" : "ready";
+        },
         // Theme or Mobile
         classes() {
             const classes = {};

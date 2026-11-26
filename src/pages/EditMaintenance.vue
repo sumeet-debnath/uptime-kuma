@@ -42,6 +42,10 @@
                                 <VueMultiselect
                                     id="affected_monitors"
                                     v-model="affectedMonitors"
+                                    v-multiselect-a11y="{
+                                        label: $t('affectedMonitorsField'),
+                                        removeLabel: (v) => $t('removeChoice', [v]),
+                                    }"
                                     :options="affectedMonitorsOptionsWithSelectAll"
                                     track-by="id"
                                     label="pathName"
@@ -77,8 +81,9 @@
                                         v-model="showOnAllPages"
                                         class="form-check-input"
                                         type="checkbox"
+                                        aria-labelledby="show-on-all-pages-label"
                                     />
-                                    <label class="form-check-label" for="show-powered-by">
+                                    <label id="show-on-all-pages-label" class="form-check-label" for="show-powered-by">
                                         {{ $t("All Status Pages") }}
                                     </label>
                                 </div>
@@ -87,6 +92,10 @@
                                     <VueMultiselect
                                         id="selected_status_pages"
                                         v-model="selectedStatusPages"
+                                        v-multiselect-a11y="{
+                                            label: $t('statusPagesField'),
+                                            removeLabel: (v) => $t('removeChoice', [v]),
+                                        }"
                                         :options="selectedStatusPagesOptions"
                                         track-by="id"
                                         label="name"
@@ -186,12 +195,12 @@
                             <!-- Recurring - Weekday -->
                             <template v-if="maintenance.strategy === 'recurring-weekday'">
                                 <div class="my-3">
-                                    <label for="interval-day" class="form-label">
+                                    <label id="weekday-picker-label" for="interval-day" class="form-label">
                                         {{ $t("dayOfWeek") }}
                                     </label>
 
                                     <!-- Weekday Picker -->
-                                    <div class="weekday-picker">
+                                    <div class="weekday-picker" role="group" aria-labelledby="weekday-picker-label">
                                         <div v-for="(weekday, index) in weekdays" :key="index">
                                             <label class="form-check-label" :for="weekday.id">
                                                 {{ $t(weekday.langKey) }}
@@ -213,12 +222,12 @@
                             <!-- Recurring - Day of month -->
                             <template v-if="maintenance.strategy === 'recurring-day-of-month'">
                                 <div class="my-3">
-                                    <label for="interval-day" class="form-label">
+                                    <label id="day-picker-label" for="interval-day" class="form-label">
                                         {{ $t("dayOfMonth") }}
                                     </label>
 
                                     <!-- Day Picker -->
-                                    <div class="day-picker">
+                                    <div class="day-picker" role="group" aria-labelledby="day-picker-label">
                                         <div v-for="index in 31" :key="index">
                                             <label class="form-check-label" :for="'day' + index">{{ index }}</label>
                                             <div class="form-check-inline">
@@ -262,6 +271,7 @@
                                     <label class="form-label">{{ $t("Maintenance Time Window of a Day") }}</label>
                                     <Datepicker
                                         v-model="maintenance.timeRange"
+                                        v-datepicker-a11y="{ label: $t('maintenanceTimeWindowField') }"
                                         :dark="$root.isDark"
                                         timePicker
                                         disableTimeRangeValidation
@@ -305,10 +315,13 @@
 
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-2">{{ $t("startDateTime") }}</div>
+                                            <div id="maintenance-start-label" class="mb-2">
+                                                {{ $t("startDateTime") }}
+                                            </div>
                                             <input
                                                 v-model="maintenance.dateRange[0]"
                                                 type="datetime-local"
+                                                aria-labelledby="maintenance-start-label"
                                                 max="9999-12-31T23:59"
                                                 class="form-control"
                                                 :required="maintenance.strategy === 'single'"
@@ -316,10 +329,11 @@
                                         </div>
 
                                         <div class="col">
-                                            <div class="mb-2">{{ $t("endDateTime") }}</div>
+                                            <div id="maintenance-end-label" class="mb-2">{{ $t("endDateTime") }}</div>
                                             <input
                                                 v-model="maintenance.dateRange[1]"
                                                 type="datetime-local"
+                                                aria-labelledby="maintenance-end-label"
                                                 max="9999-12-31T23:59"
                                                 class="form-control"
                                                 :required="maintenance.strategy === 'single'"
@@ -832,7 +846,7 @@ export default {
                     if (res.ok) {
                         await this.addMonitorMaintenance(res.maintenanceID, async () => {
                             await this.addMaintenanceStatusPage(res.maintenanceID, () => {
-                                this.$root.toastRes(res);
+                                this.$root.toastRes(res, this.$t("toastAboutMaintenance", [this.maintenance.title]));
                                 this.processing = false;
                                 this.$root.getMaintenanceList();
                                 this.$router.push("/maintenance");
@@ -849,7 +863,7 @@ export default {
                         await this.addMonitorMaintenance(res.maintenanceID, async () => {
                             await this.addMaintenanceStatusPage(res.maintenanceID, () => {
                                 this.processing = false;
-                                this.$root.toastRes(res);
+                                this.$root.toastRes(res, this.$t("toastAboutMaintenance", [this.maintenance.title]));
                                 this.init();
                                 this.$router.push("/maintenance");
                             });

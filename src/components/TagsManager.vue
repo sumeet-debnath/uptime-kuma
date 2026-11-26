@@ -24,7 +24,14 @@
                 {{ $t("Add") }}
             </button>
         </div>
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div
+            ref="modal"
+            class="modal fade"
+            tabindex="-1"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            :aria-label="$t('addTagsDialog')"
+        >
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -44,6 +51,7 @@
 
                         <vue-multiselect
                             v-model="newDraftTag.select"
+                            v-multiselect-a11y="{ label: $t('tagPickerField') }"
                             class="mb-2"
                             :options="tagOptions"
                             :multiple="false"
@@ -78,6 +86,7 @@
                                 <input
                                     v-model="newDraftTag.name"
                                     class="form-control"
+                                    :aria-label="$t('newTagName')"
                                     :class="{
                                         'is-invalid':
                                             validateDraftTag.invalid &&
@@ -92,6 +101,7 @@
                             <div class="w-50 ps-2">
                                 <vue-multiselect
                                     v-model="newDraftTag.color"
+                                    v-multiselect-a11y="{ label: $t('tagColourField') }"
                                     :options="colorOptions"
                                     :multiple="false"
                                     :searchable="true"
@@ -127,6 +137,7 @@
                             <input
                                 v-model="newDraftTag.value"
                                 class="form-control"
+                                :aria-label="$t('tagValueField')"
                                 :class="{
                                     'is-invalid':
                                         validateDraftTag.invalid &&

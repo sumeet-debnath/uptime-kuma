@@ -11,12 +11,24 @@
             :required="required"
             :readonly="readonly"
             :disabled="disabled"
+            :aria-label="ariaLabel"
+            :data-agentom-redact="secret ? '' : undefined"
         />
 
         <!-- A hidden textarea for copying text on non-https -->
-        <textarea ref="hiddenTextarea" style="position: fixed; left: -999999px; top: -999999px"></textarea>
+        <textarea
+            ref="hiddenTextarea"
+            style="position: fixed; left: -999999px; top: -999999px"
+            :aria-label="copyLabel || $t('copyValue')"
+            data-agentom-redact
+        ></textarea>
 
-        <a class="btn btn-outline-primary" @click="copyToClipboard(model)">
+        <a
+            class="btn btn-outline-primary"
+            role="button"
+            :aria-label="copyLabel || $t('copyValue')"
+            @click="copyToClipboard(model)"
+        >
             <font-awesome-icon :icon="icon" />
         </a>
     </div>
@@ -63,6 +75,21 @@ export default {
         },
         /** Is the input disabled? */
         disabled: {
+            type: String,
+            default: undefined,
+        },
+        /** The value is a secret: kept out of what an agent reads */
+        secret: {
+            type: Boolean,
+            default: false,
+        },
+        /** The copy button's name ("Copy API key") */
+        copyLabel: {
+            type: String,
+            default: "",
+        },
+        /** The field's name, when no <label for> names it */
+        ariaLabel: {
             type: String,
             default: undefined,
         },

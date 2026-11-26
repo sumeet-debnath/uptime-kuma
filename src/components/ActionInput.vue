@@ -7,6 +7,7 @@
             :type="type"
             :placeholder="placeholder"
             :disabled="!enabled"
+            :aria-label="inputAriaLabel"
         />
         <button type="button" class="btn btn-outline-primary" :aria-label="actionAriaLabel" @click="action()">
             <font-awesome-icon :icon="icon" />
@@ -21,6 +22,11 @@
  */
 export default {
     props: {
+        /** The field's name (its placeholder is only an example) */
+        inputAriaLabel: {
+            type: String,
+            default: undefined,
+        },
         /**
          * The value of the input field.
          */

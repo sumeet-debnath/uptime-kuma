@@ -13,7 +13,13 @@
         :style="{ backgroundColor: item.color, fontSize: size == 'sm' ? '0.7em' : '1em' }"
     >
         <span class="tag-text">{{ displayText }}</span>
-        <span v-if="remove != null" class="ps-1 btn-remove" @click="remove(item)">
+        <span
+            v-if="remove != null"
+            class="ps-1 btn-remove"
+            role="button"
+            :aria-label="$t('removeTagAria', [displayText])"
+            @click="remove(item)"
+        >
             <font-awesome-icon icon="times" />
         </span>
     </div>

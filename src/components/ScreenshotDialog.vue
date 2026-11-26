@@ -1,9 +1,9 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1" :aria-labelledby="titleId">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 :id="titleId" class="modal-title">
                         {{ $t("Browser Screenshot") }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')" />
@@ -27,6 +27,7 @@ export default {
     },
     data() {
         return {
+            titleId: `modal-title-${this.$.uid}`,
             modal: null,
         };
     },
